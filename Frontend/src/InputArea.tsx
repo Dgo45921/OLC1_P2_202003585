@@ -6,6 +6,11 @@ import './InputArea.css';
 import { Button } from 'react-bootstrap';
 
 function InputArea() {
+    const [outputText, setOutputText] = useState("");
+
+    const updateOutputText = (text:string) => {
+        setOutputText(text);
+    };
     const [tabs, setTabs] = useState([
         { language: "java", code: "" },
     ]);
@@ -37,7 +42,7 @@ function InputArea() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'codigo.txt';
+        link.download = 'codigo.tw';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -46,6 +51,7 @@ function InputArea() {
     const handleLogCode = () => {
         const currentTab = tabs[currentTabIndex];
         console.log(currentTab.code);
+        updateOutputText(currentTab.code)
     }
 
     const handleNewFile = () => {
@@ -117,6 +123,11 @@ function InputArea() {
 
                 <Button onClick={handleLogCode} className="analyze-btn">Ejecutar</Button>
             </div>
+
+            <h4 style={{color:"white", marginTop:"50px"}}>Salida:</h4>
+
+            <textarea className="output-textarea" readOnly value={outputText} />
+
 
         </div>
     )
