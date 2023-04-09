@@ -25,17 +25,11 @@ function NavBarPrincipal() {
         <ReactBootstrap.Navbar bg="dark" variant="dark" style={{marginBottom: 10}}>
             <ReactBootstrap.Navbar.Brand style={{marginLeft: 50}}>TypeWise</ReactBootstrap.Navbar.Brand>
             <ReactBootstrap.Nav className="mr-auto">
-                <ReactBootstrap.NavDropdown title="File" id="reportes-dropdown">
-                    <ReactBootstrap.NavDropdown.Item>Nuevo</ReactBootstrap.NavDropdown.Item>
-                    <ReactBootstrap.NavDropdown.Item>Abrir</ReactBootstrap.NavDropdown.Item>
-                    <ReactBootstrap.NavDropdown.Item>Guardar</ReactBootstrap.NavDropdown.Item>
-                </ReactBootstrap.NavDropdown>
                 <ReactBootstrap.NavDropdown title="Reportes" id="reportes-dropdown">
                     <ReactBootstrap.NavDropdown.Item onClick={errorReport}>Reporte de errores</ReactBootstrap.NavDropdown.Item>
                     <ReactBootstrap.NavDropdown.Item onClick={ASTreport}>Reporte AST</ReactBootstrap.NavDropdown.Item>
                     <ReactBootstrap.NavDropdown.Item onClick={SymbolTableReport}>Reporte Tabla de símbolos</ReactBootstrap.NavDropdown.Item>
                 </ReactBootstrap.NavDropdown>
-                <ReactBootstrap.Nav.Link>Pricing</ReactBootstrap.Nav.Link>
             </ReactBootstrap.Nav>
         </ReactBootstrap.Navbar>
     );

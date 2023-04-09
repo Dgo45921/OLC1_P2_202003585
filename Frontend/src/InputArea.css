@@ -5,7 +5,7 @@
   background-color: #333;
   color: #fff;
   border: none;
-  border-radius: 4px 4px 0 0;
+  border-radius: 4px 15px 0 0;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -14,19 +14,7 @@
 }
 
 
-.tab2 {
-  padding: 8px;
-  width: 25px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 4px 4px 0 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px; /* reduced font size */
-}
+
 
 .tab2:hover {
   background-color: greenyellow;
@@ -78,4 +66,13 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.analyze-btn {
+  margin-left: auto;
 }
