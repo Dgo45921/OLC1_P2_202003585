@@ -2,6 +2,7 @@ import express from 'express'
 const morgan = require("morgan")
 const cors = require("cors")
 const corsOptions = {origin: true, optionsSuccessStatus: 200};
+import router from "./routes/interpreterRoutes";
 
 
 const app = express();
@@ -18,6 +19,9 @@ const PORT = 5000;
 app.listen(PORT, () =>{
     console.log(`Server running on port: ${PORT}`)
 })
+
+app.use('/interpreter', router)
+
 
 app.get('/ping', morgan('tiny'), (req, res) =>{
     console.log("me han hecho ping")

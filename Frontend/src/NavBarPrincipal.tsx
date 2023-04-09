@@ -5,16 +5,8 @@ import * as ReactBootstrap from 'react-bootstrap';
 
 async function errorReport() {
     const response = await fetch("http://localhost:5000/ping");
-    const jsonData = await response
-    console.log(jsonData);
-}
-
-
-function errorRepot() {
-    console.log("reporte errores")
-    fetch("localhost:5000/ping")
-        .then(data => console.log(data))
-
+    const textData = await response.text();
+    console.log(textData);
 }
 
 function ASTreport() {
@@ -30,7 +22,7 @@ function NavBarPrincipal() {
 
 
     return (
-        <ReactBootstrap.Navbar bg="dark" variant="dark">
+        <ReactBootstrap.Navbar bg="dark" variant="dark" style={{marginBottom: 10}}>
             <ReactBootstrap.Navbar.Brand style={{marginLeft: 50}}>TypeWise</ReactBootstrap.Navbar.Brand>
             <ReactBootstrap.Nav className="mr-auto">
                 <ReactBootstrap.NavDropdown title="File" id="reportes-dropdown">
