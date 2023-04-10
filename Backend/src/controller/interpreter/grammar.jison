@@ -1,61 +1,87 @@
 /* Definición Léxica */
 %lex
 
-%options case-insensitive
+%options {
+dotall: true
+case-insensitive
+}
 %x string
 
 %%
 
 
-// simbolos reservados
-";"                 return 'PTCOMAAA';
-"("                 return 'PARIZQ';
-")"                 return 'PARDER';
-"."                 return 'PUNTO';
-":"                 return 'DOSPUNTOS';
-","                 return 'COMA';
-"["                 return 'CORIZR';
-"]"                 return 'CORDER';
-"{"                 return 'LLAVEIZQ';
-"}"                 return "LLAVEDER";
-"?"                 return 'KLEENE';
-"="                 return 'IGUAL';
+// reserved symbols
+"+"                 {console.log("Se encontró token con valor: " + yytext);     return 'plus';}
+"-"                 {console.log("Se encontró token con valor: " + yytext);     return 'minus';}
+"*"                 {console.log("Se encontró token con valor: " + yytext);     return 'multiply';}
+"/"                 {console.log("Se encontró token con valor: " + yytext);     return 'division';}
+"^"                 {console.log("Se encontró token con valor: " + yytext);     return 'power';}
+"%"                 {console.log("Se encontró token con valor: " + yytext);     return 'module';}
+"="                 {console.log("Se encontró token con valor: " + yytext);     return 'equals';}
+"<"                 {console.log("Se encontró token con valor: " + yytext);     return 'lessThan';}
+">"                 {console.log("Se encontró token con valor: " + yytext);     return 'greaterThan';}
+"!"                 {console.log("Se encontró token con valor: " + yytext);     return "exclamation";}
+"?"                 {console.log("Se encontró token con valor: " + yytext);     return 'interrogation';}
+":"                 {console.log("Se encontró token con valor: " + yytext);     return 'colon';}
+";"                 {console.log("Se encontró token con valor: " + yytext);     return 'semiColon';}
+"|"                 {console.log("Se encontró token con valor: " + yytext);     return 'vBar';}
+"&"                 {console.log("Se encontró token con valor: " + yytext);     return 'ampersand';}
+"("                 {console.log("Se encontró token con valor: " + yytext);     return 'openParenthesis';}
+")"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedParenthesis';}
+"{"                 {console.log("Se encontró token con valor: " + yytext);     return 'openBracket';}
+"}"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedBracket';}
+","                 {console.log("Se encontró token con valor: " + yytext);     return 'coma';}
+"["                 {console.log("Se encontró token con valor: " + yytext);     return 'openSquareBracket';}
+"]"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedSquareBracket';}
 
-// palabras reservadas
-"print"          return 'RPRIN';   // funcion de imprimir
-"true"              return 'TRUE';
-"false"             return 'FALSE';
+// reserved words
+"int"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_int';}
+"true"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_true';}
+"false"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_false';}
+"double"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_double';}
+"boolean"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_boolean';}
+"char"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_char';}
+"string"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_string';}
+"list"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_list';}
+"add"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_add';}
+"if"                  {console.log("Se encontró token con valor: " + yytext); return 'reserved_if';}
+"else"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_else';}
+"print"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_print';}
+"switch"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_switch';}
+"case"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_case';}
+"default"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_default';}
+"break"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_break';}
+"while"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_while';}
+"for"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_for';}
+"do"                  {console.log("Se encontró token con valor: " + yytext); return 'reserved_do';}
+"continue"            {console.log("Se encontró token con valor: " + yytext); return 'reserved_continue';}
+"return"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_return';}
+"void"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_void';}
+"toLower"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_toLower';}
+"toUpper"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_toUpper';}
+"Length"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_length';}
+"Truncate"            {console.log("Se encontró token con valor: " + yytext); return 'reserved_truncate';}
+"round"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_round';}
+"typeof"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_typeof';}
+"tostring"            {console.log("Se encontró token con valor: " + yytext); return 'reserved_tostring';}
+"toCharArray"         {console.log("Se encontró token con valor: " + yytext); return 'reserved_toCharArray';}
+"main"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_main';}
 
-// aritmeticos
-"+"                 return 'MAS';
-"-"                 return 'MENOS';
-"*"                 return 'POR';
-"/"                 return 'DIVISION';
-"^"                 return 'POTENCIA';
-"%"                 return 'MODULO';
 
 
 
 
-// tipos de variables
-"int"               return 'RENTERO';
-"string"               return 'RSTRING';
-"char"               return 'RCHAR';
-"boolean"               return 'RBOOLEAN';
-"double"               return 'RDOUBLE';
+/* Whitespaces */
+[\r|\f|\s|\t|\n]                   {}              // white spaces
+(\/\/).*                           {}              // oneLineComment
+\/\*[\s\S]*?\*\/                   {}              // multilineComment
 
+/*  regex   */
 
-
-/* Espacios en blanco */
-[ \r\t]+            {}                      // espacio en blanco
-\n                  {}                      // salto
-(\/\/).*                             {}     // comentario linea
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]  {}     // comentario multilinea
-
-[a-zA-Z][a-zA-Z0-9_]*   return 'ID';
-[0-9]+("."[0-9]+)\b     return 'DECIMAL';
-[0-9]+\b                return 'ENTERO';
-\'((\\\')|[^\n\'])*\'	{ yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
+[a-zA-Z][a-zA-Z0-9_]*        {console.log("Se encontró token con valor: " + yytext); return 'identifier';}
+[0-9]+.[0-9]+                {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
+[0-9]+                       {console.log("Se encontró token con valor: " + yytext); return 'num';}
+'\\\'.'\\\''                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
 ["]                             {cadena="";this.begin("string");}
 <string>[^"\\]+                 {cadena+=yytext;}
 <string>"\\\""                  {cadena+="\"";}
@@ -65,7 +91,7 @@
 <string>"\\\'"                  {cadena+="\'";}
 <string>["]                     {yytext=cadena; this.popState(); return 'CADENA';}
 
-//\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); 	return 'CADENA'; }
+//\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); console.log("Se encontró token con valor: " + yytext);  	return 'CADENA'; }
 
 
 <<EOF>>                 return 'EOF';
