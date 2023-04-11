@@ -15,8 +15,6 @@ function InputArea() {
         { language: "java", code: "" },
     ]);
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
-    const inputFileRef = useRef<HTMLInputElement | null>(null);
-
     const handleTabAdd = () => {
         setTabs([...tabs, { language: "java", code: "" }]);
     }

@@ -78,20 +78,20 @@ case-insensitive
 
 /*  regex   */
 
-[a-zA-Z][a-zA-Z0-9_]*        {console.log("Se encontró token con valor: " + yytext); return 'identifier';}
-[0-9]+.[0-9]+                {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
-[0-9]+                       {console.log("Se encontró token con valor: " + yytext); return 'num';}
-'\\\'.'\\\''                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
-["]                             {cadena="";this.begin("string");}
-<string>[^"\\]+                 {cadena+=yytext;}
-<string>"\\\""                  {cadena+="\"";}
-<string>"\\n"                   {cadena+="\n";}
-<string>"\\t"                   {cadena+="\t";}
-<string>"\\\\"                  {cadena+="\\";}
-<string>"\\\'"                  {cadena+="\'";}
-<string>["]                     {yytext=cadena; this.popState(); return 'CADENA';}
+[a-zA-Z][a-zA-Z0-9_]*                                {console.log("Se encontró token con valor: " + yytext); return 'identifier';}
+[0-9]+.[0-9]+                                        {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
+[0-9]+                                               {console.log("Se encontró token con valor: " + yytext); return 'integerNum';}
+[\']([^']|"\\n"|"\\t"|(\\)(\\))?[\']                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
+["]                                                  {cadena="";this.begin("string");}
+<string>[^"\\]+                                      {cadena+=yytext;}
+<string>"\\\""                                       {cadena+="\"";}
+<string>"\\n"                                        {cadena+="\n";}
+<string>"\\t"                                        {cadena+="\t";}
+<string>"\\\\"                                       {cadena+="\\";}
+<string>"\\\'"                                       {cadena+="\'";}
+<string>["]                                          {console.log("Se encontró token con valor: " + yytext); yytext=cadena; this.popState(); return 'CADENA';}
 
-//\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); console.log("Se encontró token con valor: " + yytext);  	return 'CADENA'; }
+//\"[^\"]*\"				                         { yytext = yytext.substr(1,yyleng-2); console.log("Se encontró token con valor: " + yytext);  	return 'CADENA'; }
 
 
 <<EOF>>                 return 'EOF';
@@ -104,6 +104,8 @@ case-insensitive
   const {Type} = require('./abstract/Return');
   const {Primitivo} = require('./expression/Primitivo');
   const {Print} = require('./instruction/Print');
+
+
 
 %}
 
