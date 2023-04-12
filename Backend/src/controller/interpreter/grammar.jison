@@ -18,14 +18,18 @@ case-insensitive
 "^"                 {console.log("Se encontró token con valor: " + yytext);     return 'power';}
 "%"                 {console.log("Se encontró token con valor: " + yytext);     return 'module';}
 "="                 {console.log("Se encontró token con valor: " + yytext);     return 'equals';}
+"=="                {console.log("Se encontró token con valor: " + yytext);     return 'equals_equals';}
+"!="                {console.log("Se encontró token con valor: " + yytext);     return 'not_equal';}
 "<"                 {console.log("Se encontró token con valor: " + yytext);     return 'lessThan';}
 ">"                 {console.log("Se encontró token con valor: " + yytext);     return 'greaterThan';}
-"!"                 {console.log("Se encontró token con valor: " + yytext);     return "exclamation";}
+"<="                {console.log("Se encontró token con valor: " + yytext);     return 'lessOrEqual';}
+">="                {console.log("Se encontró token con valor: " + yytext);     return 'greatOrEqual';}
+"!"                 {console.log("Se encontró token con valor: " + yytext);     return "not";}
 "?"                 {console.log("Se encontró token con valor: " + yytext);     return 'interrogation';}
 ":"                 {console.log("Se encontró token con valor: " + yytext);     return 'colon';}
 ";"                 {console.log("Se encontró token con valor: " + yytext);     return 'semiColon';}
-"|"                 {console.log("Se encontró token con valor: " + yytext);     return 'vBar';}
-"&"                 {console.log("Se encontró token con valor: " + yytext);     return 'ampersand';}
+"||"                {console.log("Se encontró token con valor: " + yytext);     return 'or';}
+"&&"                {console.log("Se encontró token con valor: " + yytext);     return 'and';}
 "("                 {console.log("Se encontró token con valor: " + yytext);     return 'openParenthesis';}
 ")"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedParenthesis';}
 "{"                 {console.log("Se encontró token con valor: " + yytext);     return 'openBracket';}
@@ -89,7 +93,7 @@ case-insensitive
 <string>"\\t"                                        {cadena+="\t";}
 <string>"\\\\"                                       {cadena+="\\";}
 <string>"\\\'"                                       {cadena+="\'";}
-<string>["]                                          {console.log("Se encontró token con valor: " + yytext); yytext=cadena; this.popState(); return 'CADENA';}
+<string>["]                                          {console.log("Se encontró token con valor: " + yytext); yytext=cadena; this.popState(); return 'stringValue';}
 
 //\"[^\"]*\"				                         { yytext = yytext.substr(1,yyleng-2); console.log("Se encontró token con valor: " + yytext);  	return 'CADENA'; }
 
@@ -98,57 +102,132 @@ case-insensitive
 
 .                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 /lex
+%left 'or'
+%left 'and'
+%left 'equals_equals' 'not_equal' 'lessThan' 'lessOrEqual' 'greaterThan' 'greatOrEqual'
+%left 'plus' 'minus'
+%left 'division' 'multiply' 'module'
+%left 'power'
+%right 'not'
+%right 'Uminus'
+
+
 
 %{
   // importar tipos
-  const {Type} = require('./abstract/Return');
-  const {Primitivo} = require('./expression/Primitivo');
-  const {Print} = require('./instruction/Print');
-
-
+  // const {Type} = require('./abstract/Return');
+  // const {Primitivo} = require('./expression/Primitivo');
+  // const {Print} = require('./instruction/Print');
 
 %}
 
 
-// PRECEDENCIA DE OPERADORES
-%left 'MAS' 'MENOS'
-%left 'POR' 'DIVISION' 'MODULO'
-%right 'UMENOS '
 
 %start INICIO
 
 %% /* Definición de la gramática */
 
 INICIO
-	: INSTRUCCIONES EOF {return $1;}
-;
-
-INSTRUCCIONES
-	: INSTRUCCIONES INSTRUCCION     { $1.push($2); $$ = $1; }
-	| INSTRUCCION                   { $$ = [$1]; }
-;
-
-INSTRUCCION
-	: DEFPRINT          { $$ = $1; }
-	| error PTCOMA
-  {   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
-;
-
-// GRAMATICA IMPRIMIR
-DEFPRINT
-    : RPRIN PARIZQ EXPRESION PARDER PTCOMA  { $$ = new Print(@1.first_line, @1.first_column,$3); }
+	: EXPRESSIONS EOF {console.log('ya entre')}
 ;
 
 
-EXPRESION
-  : PRIMITIVO       { $$ = $1; }
+TYPE:
+reserved_char
+|reserved_boolean
+|reserved_int
+|reserved_double
+|reserved_string 
 ;
 
-PRIMITIVO
-  : ENTERO          { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.INT); }
-  | DECIMAL         { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.DOUBLE); }
-  | CADENA          { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.STRING);}
-  | CARACTER        { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.CHAR); }
-  | TRUE            { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.BOOLEAN); }
-  | FALSE           { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.BOOLEAN); }
+CAST: openParenthesis TYPE closedParenthesis EXPRESSION  ;
+
+
+INCREASE: identifier plus plus semiColon;
+
+DECREASE: identifier minus minus semiColon;
+
+EXPRESSIONS: EXPRESSIONS EXPRESSION
+          |  EXPRESSION ;
+            
+EXPRESSION: minus EXPRESSION  %prec Uminus                             {console.log('encontre un negativo a una expresion')} // -(4+5)
+          | not EXPRESSION                                             {console.log('encontre una negacion de expresion')}
+          | EXPRESSION plus EXPRESSION                                 {console.log('encontre una suma')}
+          | EXPRESSION minus EXPRESSION                                {console.log('encontre una resta')}
+          | EXPRESSION multiply EXPRESSION                             {console.log('encontre una multiplicacion')}
+          | EXPRESSION division EXPRESSION                             {console.log('encontre una division')}
+          | EXPRESSION power EXPRESSION                                {console.log('encontre una potencia')}
+          | EXPRESSION module EXPRESSION                               {console.log('encontre un modulo')}
+          | EXPRESSION equals_equals EXPRESSION                        {console.log('encontre una comparacion')}
+          | EXPRESSION equals EXPRESSION                               {console.log('encontre una asignacion')}
+          | EXPRESSION not_equal EXPRESSION                            {console.log('encontre un "no igual a "')}
+          | EXPRESSION not                                             {console.log('encontre una negacion')}
+          | EXPRESSION lessThan EXPRESSION                             {console.log('encontre una comparacion menor que')}
+          | EXPRESSION greaterThan EXPRESSION                          {console.log('encontre una comparacion mayor que')}
+          | EXPRESSION lessOrEqual EXPRESSION                          {console.log('encontre una comparacion menor o igual que')}
+          | EXPRESSION greatOrEqual EXPRESSION                         {console.log('encontre una comparacion mayor o igual que')}
+          | EXPRESSION or  EXPRESSION                                  {console.log('encontre una comparacion or')}
+          | EXPRESSION and EXPRESSION                                  {console.log('encontre una comparacion and')}
+          | openParenthesis EXPRESSION closedParenthesis               {console.log('encontre una expresion entre parentesis')}
+          | INCREASE                                                   {console.log('encontre un aumento de variable ++')}
+          | DECREASE                                                   {console.log('encontre un decremento de variable --')}
+          | TERNARY                                                    {console.log('encontre un operador ternario')}
+          | CAST                                                       {console.log('encontre un casteo')}  
+          | OPERAND                                                    {console.log('encontre un operador')}
+          | FUNCTION_CALL                                              {console.log('encontre una llamada a funcion')}
+          | LOWER_UPPER
+          | ROUND
+          | LENGTH
+          | TO_STRING
+          | TO_CHAR_ARRAY
+          | TRUNCATE
+          | TYPE_OF
+          | LENGTH
+          ;
+
+LOWER_UPPER: reserved_toLower openParenthesis EXPRESSION closedParenthesis 
+            | reserved_toUpper openParenthesis EXPRESSION closedParenthesis
+        
+;
+
+LENGTH:reserved_length openParenthesis EXPRESSION closedParenthesis;
+
+ROUND: reserved_round openParenthesis EXPRESSION openParenthesis;
+
+TO_STRING: reserved_tostring openParenthesis EXPRESSION closedParenthesis;
+
+TO_CHAR_ARRAY: reserved_toCharArray openParenthesis EXPRESSION closedParenthesis;
+
+TRUNCATE:reserved_truncate openParenthesis EXPRESSION closedParenthesis;
+
+TYPE_OF:reserved_typeof openParenthesis EXPRESSION closedParenthesis;
+
+OPERAND:  integerNum
+        | decimalNum
+        | charValue
+        | stringValue
+        | reserved_false
+        | reserved_true 
+        ;
+
+TERNARY: EXPRESSION interrogation EXPRESSION colon EXPRESSION ;
+
+VECTOR_ACCESS: identifier openSquareBracket EXPRESSION closedSquareBracket
+               ;
+
+LIST_ACCESS: identifier openSquareBracket openSquareBracket EXPRESSION closedSquareBracket closedSquareBracket ;
+
+PARAMETERS:
+           PARAMETERS coma TYPE identifier
+          |TYPE identifier
+;
+
+FUNCTION_CALL:
+              identifier openParenthesis PARAMETERS_CALL closedParenthesis
+              | identifier openParenthesis closedParenthesis 
+;
+
+PARAMETERS_CALL:
+                PARAMETERS_CALL coma EXPRESSION
+               |EXPRESSION
 ;
