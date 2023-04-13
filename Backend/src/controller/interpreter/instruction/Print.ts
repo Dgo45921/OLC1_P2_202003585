@@ -8,8 +8,9 @@ export abstract class Print extends Instruction {
     }
     
     public execute() {
-        const value = this.expression.execute();
-        console.log(value)
+        // const value = this.expression.execute();
+        // console.log(value)
+        console.log('entre a print')
     }
 }
 

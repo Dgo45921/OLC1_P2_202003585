@@ -5,7 +5,9 @@ const morgan = require("morgan")
 const router = express.Router()
 
 
-router.get('/parse', morgan('tiny'), interpreterController.pong)
+router.get('/ping', morgan('tiny'), interpreterController.parsear)
+
+router.post('/parse', morgan('tiny'), interpreterController.interpretar)
 
 router.get('/', morgan('tiny'), (req, res) =>{
 

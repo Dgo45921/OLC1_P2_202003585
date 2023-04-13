@@ -1,5 +1,5 @@
 import { Expression } from "../abstract/Expression";
-import { Return, Type } from "../symbols/type";
+import { Return, Type } from "../abstract/Type";
 
 export class Primitive extends Expression{
     constructor(

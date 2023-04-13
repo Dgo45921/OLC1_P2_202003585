@@ -46,10 +46,37 @@ function InputArea() {
         document.body.removeChild(link);
     };
 
-    const handleLogCode = () => {
+    const handleLogCode = async () => {
         const currentTab = tabs[currentTabIndex];
         console.log(currentTab.code);
         updateOutputText(currentTab.code)
+
+
+    let data = {
+            'code' : currentTab.code
+        }
+
+
+        try {
+            const response = await fetch("http://localhost:5000/interpreter/parse", {
+              method: "POST", // or 'PUT'
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+        
+            const result = await response.json();
+            console.log("Success:", result);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        
+
+
+        
+
+
     }
 
     const handleNewFile = () => {

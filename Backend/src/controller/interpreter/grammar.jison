@@ -1,6 +1,8 @@
 %{
   // importar tipos
-
+  const {Primitive} = require('./expressions/Primitive')
+  const {Print} = require('./instruction/Print')
+  const {Type} = require('./abstract/Type')
 
 %}
 
@@ -15,35 +17,10 @@
 
 %%
 
-
-// reserved symbols
-"+"                 {console.log("Se encontró token con valor: " + yytext);     return 'plus';}
-"-"                 {console.log("Se encontró token con valor: " + yytext);     return 'minus';}
-"*"                 {console.log("Se encontró token con valor: " + yytext);     return 'multiply';}
-"/"                 {console.log("Se encontró token con valor: " + yytext);     return 'division';}
-"^"                 {console.log("Se encontró token con valor: " + yytext);     return 'power';}
-"%"                 {console.log("Se encontró token con valor: " + yytext);     return 'module';}
-"="                 {console.log("Se encontró token con valor: " + yytext);     return 'equals';}
-"=="                {console.log("Se encontró token con valor: " + yytext);     return 'equals_equals';}
-"!="                {console.log("Se encontró token con valor: " + yytext);     return 'not_equal';}
-"<"                 {console.log("Se encontró token con valor: " + yytext);     return 'lessThan';}
-">"                 {console.log("Se encontró token con valor: " + yytext);     return 'greaterThan';}
-"<="                {console.log("Se encontró token con valor: " + yytext);     return 'lessOrEqual';}
-">="                {console.log("Se encontró token con valor: " + yytext);     return 'greatOrEqual';}
-"!"                 {console.log("Se encontró token con valor: " + yytext);     return "not";}
-"?"                 {console.log("Se encontró token con valor: " + yytext);     return 'interrogation';}
-":"                 {console.log("Se encontró token con valor: " + yytext);     return 'colon';}
-";"                 {console.log("Se encontró token con valor: " + yytext);     return 'semiColon';}
-"||"                {console.log("Se encontró token con valor: " + yytext);     return 'or';}
-"&&"                {console.log("Se encontró token con valor: " + yytext);     return 'and';}
-"("                 {console.log("Se encontró token con valor: " + yytext);     return 'openParenthesis';}
-")"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedParenthesis';}
-"{"                 {console.log("Se encontró token con valor: " + yytext);     return 'openBracket';}
-"}"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedBracket';}
-","                 {console.log("Se encontró token con valor: " + yytext);     return 'coma';}
-"["                 {console.log("Se encontró token con valor: " + yytext);     return 'openSquareBracket';}
-"]"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedSquareBracket';}
-"."                 {console.log("Se encontró token con valor: " + yytext);     return 'dot';}
+/* Whitespaces */
+[\r|\f|\s|\t|\n]                   {}              // white spaces
+\/\/.*                           {}              // oneLineComment
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]   {}           // multilineComment
 
 // reserved words
 "int"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_int';}
@@ -57,7 +34,7 @@
 "add"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_add';}
 "if"                  {console.log("Se encontró token con valor: " + yytext); return 'reserved_if';}
 "else"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_else';}
-"print"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_print';}
+"print"               {console.log("Se encontró token print con valor: " + yytext); return 'reserved_print';}
 "switch"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_switch';}
 "case"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_case';}
 "default"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_default';}
@@ -77,31 +54,57 @@
 "tostring"            {console.log("Se encontró token con valor: " + yytext); return 'reserved_tostring';}
 "toCharArray"         {console.log("Se encontró token con valor: " + yytext); return 'reserved_toCharArray';}
 "main"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_main';}
-"new"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_new';}
-
-
-
-
-
-/* Whitespaces */
-[\r|\f|\s|\t|\n]                   {}              // white spaces
-(\/\/.*[^\n])                           {}              // oneLineComment
-(\/\*([^*/]|[^*]\/|\*[^/])*\*\/)   {}           // multilineComment
+"new"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_new';}
 
 /*  regex   */
 
-[a-zA-Z][a-zA-Z0-9_]*                                {console.log("Se encontró token con valor: " + yytext); return 'identifier';}
+[a-zA-Z][a-zA-Z0-9_]*                                {console.log("Se encontró token id con valor: " + yytext); return 'identifier';}
 [0-9]+"."[0-9]+                                      {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
 [0-9]+                                               {console.log("Se encontró token con valor: " + yytext); return 'integerNum';}
 [\']([^']|"\\n"|"\\t"|(\\)(\\))?[\']                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
-["]                                                  {cadena=""; this.begin("string");}
-<string>[^"\\]+                                      {cadena+=yytext;}
-<string>"\\\""                                       {cadena+="\"";}
-<string>"\\n"                                        {cadena+="\n";}
-<string>"\\t"                                        {cadena+="\t";}
-<string>"\\\\"                                       {cadena+="\\";}
-<string>"\\\'"                                       {cadena+="\'";}
-<string>["]                                          {console.log("Se encontró token con valor: " + yytext); yytext=cadena; this.popState(); return 'stringValue';}
+[\"]("\\""\""|[^"])*[\"]                             {console.log("Se encontró token con valor: " + yytext); return 'stringValue';}
+
+
+
+// reserved symbols
+";"                 {console.log("Se encontró token con valor: " + yytext);     return ';';}
+"+"                 {console.log("Se encontró token con valor: " + yytext);     return '+';}
+"-"                 {console.log("Se encontró token con valor: " + yytext);     return '-';}
+"++"                 {console.log("Se encontró token con valor: " + yytext);    return '++';}
+"--"                 {console.log("Se encontró token con valor: " + yytext);    return '--';}
+"*"                 {console.log("Se encontró token con valor: " + yytext);     return '*';}
+"/"                 {console.log("Se encontró token con valor: " + yytext);     return '/';}
+"^"                 {console.log("Se encontró token con valor: " + yytext);     return '^';}
+"%"                 {console.log("Se encontró token con valor: " + yytext);     return '%';}
+"="                 {console.log("Se encontró token con valor: " + yytext);     return '=';}
+"=="                {console.log("Se encontró token con valor: " + yytext);     return '==';}
+"!="                {console.log("Se encontró token con valor: " + yytext);     return '!=';}
+"<"                 {console.log("Se encontró token con valor: " + yytext);     return '<';}
+">"                 {console.log("Se encontró token con valor: " + yytext);     return '>';}
+"<="                {console.log("Se encontró token con valor: " + yytext);     return '<=';}
+">="                {console.log("Se encontró token con valor: " + yytext);     return '>=';}
+"!"                 {console.log("Se encontró token con valor: " + yytext);     return '!';}
+"?"                 {console.log("Se encontró token con valor: " + yytext);     return '?';}
+":"                 {console.log("Se encontró token con valor: " + yytext);     return ':';}
+"||"                {console.log("Se encontró token con valor: " + yytext);     return '||';}
+"&&"                {console.log("Se encontró token con valor: " + yytext);     return '&&';}
+"("                 {console.log("Se encontró token con valor: " + yytext);     return '(';}
+")"                 {console.log("Se encontró token con valor: " + yytext);     return ')';}
+"{"                 {console.log("Se encontró token con valor: " + yytext);     return '{';}
+"}"                 {console.log("Se encontró token con valor: " + yytext);     return '}';}
+","                 {console.log("Se encontró token con valor: " + yytext);     return ',';}
+"["                 {console.log("Se encontró token con valor: " + yytext);     return '[';}
+"]"                 {console.log("Se encontró token con valor: " + yytext);     return ']';}
+"."                 {console.log("Se encontró token con valor: " + yytext);     return '.';}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -114,14 +117,20 @@
 
 
 
-%left 'or'
-%left 'and'
-%left 'equals_equals' 'not_equal' 'lessThan' 'lessOrEqual' 'greaterThan' 'greatOrEqual'
-%left 'plus' 'minus'
-%left 'division' 'multiply' 'module'
-%left 'power'
-%right 'not'
-%right 'Uminus'
+/*Operaciones logicas*/
+%left '?'
+%left '++' '--'
+%left '^'
+%left '||'
+%left '&&'
+%left '!=' '==' '==='
+%left '>' '<' '<=' '>=' 
+
+/*Operaciones numericas*/
+%left '+' '-'
+%left '*' '/' '%' 
+%right negativo '!' '(' 
+
 
 
 
@@ -131,7 +140,7 @@
 %% /* Definición de la gramática */
 
 INICIO
-	: INSTRUCTIONS EOF {console.log('ya entre');}
+	: INSTRUCTIONS EOF {console.log('ya entre'); return $1;}
 ;
 
 
@@ -148,125 +157,112 @@ reserved_char
 //=========================================================================================================================
 
 // primitive values
-OPERAND:  integerNum
-        | decimalNum
-        | charValue
-        | stringValue
-        | reserved_false
-        | reserved_true 
+OPERAND:  integerNum {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.INT);}
+        | decimalNum {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.DOUBLE);}
+        | charValue  {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.CHAR);}
+        | stringValue {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.STRING);} 
+        | reserved_false {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.BOOLEAN);}
+        | reserved_true  {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type.BOOLEAN);}
         ;
 
 // =========================================================================================================================
 
 // built-in functions
 
-CAST: openParenthesis TYPE closedParenthesis EXPRESSION  ;
+CAST: '(' TYPE ')' EXPRESSION  ;
 
 
-LOWER_UPPER: reserved_toLower openParenthesis EXPRESSION closedParenthesis 
-            | reserved_toUpper openParenthesis EXPRESSION closedParenthesis
+LOWER_UPPER: reserved_toLower '(' EXPRESSION ')' 
+            | reserved_toUpper '(' EXPRESSION ')'
         
 ;
 
-LENGTH:reserved_length openParenthesis EXPRESSION closedParenthesis;
+LENGTH:reserved_length '(' EXPRESSION ')';
 
-ROUND: reserved_round openParenthesis EXPRESSION openParenthesis;
+ROUND: reserved_round '(' EXPRESSION ')';
 
-TO_STRING: reserved_tostring openParenthesis EXPRESSION closedParenthesis;
+TO_STRING: reserved_tostring '(' EXPRESSION ')';
 
-TO_CHAR_ARRAY: reserved_toCharArray openParenthesis EXPRESSION closedParenthesis;
+TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')';
 
-TRUNCATE:reserved_truncate openParenthesis EXPRESSION closedParenthesis;
+TRUNCATE:reserved_truncate '(' EXPRESSION ')';
 
-TYPE_OF:reserved_typeof openParenthesis EXPRESSION closedParenthesis;
+TYPE_OF:reserved_typeof '(' EXPRESSION ')';
+
 
 // ============================================================================================================================
 
 // statements
-INCREASE: identifier plus plus semiColon;
+INCREASE: identifier '++' ';';
 
-DECREASE: identifier minus minus semiColon;
+DECREASE: identifier '--' ';';
+
+
 
 // ============================================================================================================================
 
 // list of expressions
 
-EXPRESSIONS: EXPRESSIONS EXPRESSION
+EXPRESSIONS: EXPRESSIONS ',' EXPRESSION
           |  EXPRESSION ;
             
-EXPRESSION: minus EXPRESSION  %prec Uminus                             {console.log('encontre un negativo a una expresion');} // -(4+5)
-          | not EXPRESSION                                             {console.log('encontre una negacion de expresion');}
-          | EXPRESSION plus EXPRESSION                                 {console.log('encontre una suma');}
-          | EXPRESSION minus EXPRESSION                                {console.log('encontre una resta');}
-          | EXPRESSION multiply EXPRESSION                             {console.log('encontre una multiplicacion');}
-          | EXPRESSION division EXPRESSION                             {console.log('encontre una division');}
-          | EXPRESSION power EXPRESSION                                {console.log('encontre una potencia');}
-          | EXPRESSION module EXPRESSION                               {console.log('encontre un modulo');}
-          | EXPRESSION equals_equals EXPRESSION                        {console.log('encontre una comparacion');}
-          | EXPRESSION equals EXPRESSION                               {console.log('encontre una asignacion');}
-          | EXPRESSION not_equal EXPRESSION                            {console.log('encontre un "no igual a "');}
-          | EXPRESSION not                                             {console.log('encontre una negacion');}
-          | EXPRESSION lessThan EXPRESSION                             {console.log('encontre una comparacion menor que');}
-          | EXPRESSION greaterThan EXPRESSION                          {console.log('encontre una comparacion mayor que');}
-          | EXPRESSION lessOrEqual EXPRESSION                          {console.log('encontre una comparacion menor o igual que');}
-          | EXPRESSION greatOrEqual EXPRESSION                         {console.log('encontre una comparacion mayor o igual que');}
-          | EXPRESSION or  EXPRESSION                                  {console.log('encontre una comparacion or');}
-          | EXPRESSION and EXPRESSION                                  {console.log('encontre una comparacion and');}
-          | openParenthesis EXPRESSION closedParenthesis               {console.log('encontre una expresion entre parentesis');}
-          | INCREASE                                                   {console.log('encontre un aumento de variable ++');}
-          | DECREASE                                                   {console.log('encontre un decremento de variable --');}
-          | TERNARY                                                    {console.log('encontre un operador ternario');}
-          | CAST                                                       {console.log('encontre un casteo');}  
-          | OPERAND                                                    {console.log('encontre un operador');}
-          | FUNCTION_CALL                                              {console.log('encontre una llamada a funcion');}
-          | LOWER_UPPER                                                {console.log('encontre una llamada a to lower o to upper');}
-          | ROUND                                                      {console.log('encontre una llamada a round');}
-          | LENGTH                                                     {console.log('encontre una llamada a length');}
-          | TO_STRING                                                  {console.log('encontre una llamada a tostring');}
-          | TO_CHAR_ARRAY                                              {console.log('encontre una llamada a toCharArray');}
-          | TRUNCATE                                                   {console.log('encontre una llamada a truncate');}
-          | TYPE_OF                                                    {console.log('encontre una llamada a typeof');}
-          | identifier
-          ;
-// ====================================================================================================================================
+EXPRESSION : OPERAND
 
+    | EXPRESSION '+' EXPRESSION                     
+    | EXPRESSION '-' EXPRESSION                     
+    | EXPRESSION '*' EXPRESSION                     
+    | EXPRESSION '/' EXPRESSION                     
+    | '-' EXPRESSION %prec negativo  
+    | '!' EXPRESION	      
+    | '(' EXPRESSION ')'                     
+    | EXPRESSION '=='  EXPRESSION                   
+    | EXPRESSION '!='  EXPRESSION                   
+    | EXPRESSION '<'   EXPRESSION                  
+    | EXPRESSION '>'   EXPRESSION                  
+    | EXPRESSION '<='  EXPRESSION                   
+    | EXPRESSION '>='  EXPRESSION                   
+    | EXPRESSION '&&'  EXPRESSION                  
+    | EXPRESSION '||'  EXPRESSION                                                                    
+    | CAST                                                                                                                                                  
+    | LOWER_UPPER                                               
+    | ROUND                                                     
+    | LENGTH                                                    
+    | TO_STRING                                                
+    | TO_CHAR_ARRAY                                             
+    | TRUNCATE                                                  
+    | TYPE_OF     
+    | VECTOR_ACCESS
+    | LIST_ACCESS
+    | FUNCTION_CALL
+    | TERNARY                              
+    | identifier
+    ;         
+// ====================================================================================================================================
 // basic expressions
 
-TERNARY: EXPRESSION interrogation EXPRESSION colon EXPRESSION ;
 
-VECTOR_ACCESS: identifier openSquareBracket EXPRESSION closedSquareBracket
+
+VECTOR_ACCESS: identifier '[' EXPRESSION ']'
                ;
 
-LIST_ACCESS: identifier openSquareBracket openSquareBracket EXPRESSION closedSquareBracket closedSquareBracket ;
+LIST_ACCESS: identifier '[' '[' EXPRESSION ']' ']' ;
 
 
-FUNCTION_CALL:
-              identifier openParenthesis PARAMETERS_CALL closedParenthesis
-              | identifier openParenthesis closedParenthesis 
+
+FUNCTION_CALL: identifier '(' EXPRESSIONS ')' 
+                | identifier  '('')' 
 ;
 
-FUNCTION_CALL2:
-              identifier openParenthesis PARAMETERS_CALL closedParenthesis semiColon
-              | identifier openParenthesis closedParenthesis semiColon 
+TERNARY:	EXPRESSION '?' EXPRESSION ':' EXPRESSION 
 ;
-
-PARAMETERS_CALL:
-                PARAMETERS_CALL coma EXPRESSION
-               |EXPRESSION
-               |
-;
-
-// ===========================================================================================================================================
-
-
 
 
 
 
 // list of instructions
 
-INSTRUCTIONS: INSTRUCTIONS INSTRUCTION
-            | INSTRUCTION
+INSTRUCTIONS: INSTRUCTIONS INSTRUCTION {$1.push($2); $$=$1; console.log('entre a instrucciones');}
+            | INSTRUCTION              {$$ = [$1]; console.log('entre a instruccion');}
 
 ;
 
@@ -274,7 +270,7 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
             | INSTRUCTION2
 
 ;
-
+ 
 INSTRUCTION: DECLARATION 
            | LIST_ADDITION
            | INCREASE
@@ -285,7 +281,8 @@ INSTRUCTION: DECLARATION
            | DO_WHILE_STATEMENT
            | FUNCTION_DECLARATION
            | FUNCTION_CALL2
-           |
+           | PRINT {$$ = $1;}
+           
 ;
 
 INSTRUCTION2: DECLARATION 
@@ -296,16 +293,20 @@ INSTRUCTION2: DECLARATION
            | SWITCH_STATEMENT
            | FOR_STATEMENT
            | DO_WHILE_STATEMENT
-           | reserved_break semiColon
-           | reserved_continue semiColon
+           | reserved_break ';'
+           | reserved_continue ';'
            | RETURN_STATEMENT
            | FUNCTION_CALL2
-           | 
+           | PRINT {$$ = $1;}
+           
 ;
 
 
-RETURN_STATEMENT: reserved_return semiColon
-       | reserved_return EXPRESSION semiColon
+PRINT : reserved_print '(' EXPRESSION ')' ';'  {$$ = new Print(@1.first_line,@1.first_column ,$3)} ;
+
+
+RETURN_STATEMENT: reserved_return ';'
+       | reserved_return EXPRESSION ';'
 
 ;
 
@@ -315,55 +316,55 @@ DECLARATION: VARIABLE_DECLARATION
 ;
 
 
-VARIABLE_DECLARATION: TYPE identifier semiColon 
-                    | TYPE identifier equals EXPRESSION semiColon
+VARIABLE_DECLARATION: TYPE identifier ';' 
+                    | TYPE identifier '=' EXPRESSION ';'
                     ;
 
-VARIABLE_ASIGNATION: identifier equals OPERAND semiColon
-                     |identifier equals identifier semiColon
+VARIABLE_ASIGNATION: identifier '=' OPERAND ';'
+                     |identifier '=' identifier ';'
                    ;       
 
-VECTOR_DECLARATION:TYPE openSquareBracket closedSquareBracket identifier equals reserved_new TYPE openSquareBracket EXPRESSION closedSquareBracket semiColon 
-                   |TYPE openSquareBracket closedSquareBracket identifier equals openBracket VALUE_LIST closedBracket semiColon
+VECTOR_DECLARATION:TYPE '[' ']' identifier '=' reserved_new TYPE '[' EXPRESSION ']' ';' 
+                   |TYPE '[' ']' identifier '=' '{' VALUE_LIST '}' ';'
                     ;
 
 
-VALUE_LIST: VALUE_LIST coma EXPRESSION
+VALUE_LIST: VALUE_LIST ',' EXPRESSION
           |EXPRESSION
 ;
 
 
-LIST_DECLARATION:reserved_list lessThan TYPE greaterThan identifier equals reserved_new reserved_list lessThan TYPE greaterThan semiColon;
+LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';';
 
-LIST_ADDITION:identifier dot reserved_add openParenthesis EXPRESSION closedParenthesis semiColon ;
+LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' ;
 
 
-IF_STATEMENT: reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
-            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket reserved_else openBracket INSTRUCTIONS2 closedBracket
-            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket ELSE_IF_STATEMENT
-            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket ELSE_IF_STATEMENT reserved_else openBracket INSTRUCTIONS2 closedBracket
+IF_STATEMENT: reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
+            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' reserved_else '{' INSTRUCTIONS2 '}'
+            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' ELSE_IF_STATEMENT
+            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' ELSE_IF_STATEMENT reserved_else '{' INSTRUCTIONS2 '}'
             ;
 
-ELSE_IF_STATEMENT: ELSE_IF_STATEMENT reserved_else reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
-                  | reserved_else reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+ELSE_IF_STATEMENT: ELSE_IF_STATEMENT reserved_else reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
+                  | reserved_else reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
                   ;
 
 
-SWITCH_STATEMENT: reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket CASE_LIST closedBracket
-                  | reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket reserved_default colon INSTRUCTIONS2 closedBracket
-                  | reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket CASE_LIST reserved_default colon INSTRUCTIONS2 closedBracket
+SWITCH_STATEMENT: reserved_switch '(' EXPRESSION ')' '{' CASE_LIST '}'
+                  | reserved_switch '(' EXPRESSION ')' '{' reserved_default ':' INSTRUCTIONS2 '}'
+                  | reserved_switch '(' EXPRESSION ')' '{' CASE_LIST reserved_default ':' INSTRUCTIONS2 '}'
 ;
 
-CASE_LIST: CASE_LIST reserved_case EXPRESSION colon INSTRUCTIONS2
-          | reserved_case EXPRESSION colon INSTRUCTIONS2
+CASE_LIST: CASE_LIST reserved_case EXPRESSION ':' INSTRUCTIONS2
+          | reserved_case EXPRESSION ':' INSTRUCTIONS2
 
 
  ;
 
- WHILE_STATEMENT:reserved_while openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket;
+ WHILE_STATEMENT:reserved_while '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}';
 
 
- FOR_STATEMENT: reserved_for openParenthesis FOR_FIRST_CONDITION EXPRESSION semiColon closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+ FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION EXPRESSION ';' ')' '{' INSTRUCTIONS2 '}'
 
  
               ;
@@ -376,25 +377,22 @@ FOR_FIRST_CONDITION:
 
 FOR_THIRD_CONDITION: EXPRESSION INCREASE
                     | EXPRESSION DECREASE
-                    | identifier equals EXPRESSION
+                    | identifier '=' EXPRESSION
 
                     ;
 
 
-DO_WHILE_STATEMENT: reserved_do openBracket INSTRUCTIONS2 closedBracket reserved_while openParenthesis EXPRESSION closedParenthesis semiColon;                    
+DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESSION ')' ';';                    
 
 
-FUNCTION_DECLARATION: TYPE identifier openParenthesis PARAMETERS closedParenthesis openBracket INSTRUCTIONS2 closedBracket
-                    | reserved_void identifier openParenthesis PARAMETERS closedParenthesis openBracket INSTRUCTIONS2 closedBracket                    
+FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'
+                    | reserved_void identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'                    
                     
 
 ;
 
 PARAMETERS:
-           PARAMETERS coma TYPE identifier
+           PARAMETERS ',' TYPE identifier
           |TYPE identifier
-          |
-;
-
-PRINT : reserved_print openParenthesis EXPRESSION closedParenthesis semiColon
+          
 ;
