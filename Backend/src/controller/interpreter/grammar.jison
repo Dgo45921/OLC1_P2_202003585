@@ -37,6 +37,7 @@ case-insensitive
 ","                 {console.log("Se encontró token con valor: " + yytext);     return 'coma';}
 "["                 {console.log("Se encontró token con valor: " + yytext);     return 'openSquareBracket';}
 "]"                 {console.log("Se encontró token con valor: " + yytext);     return 'closedSquareBracket';}
+"."                 {console.log("Se encontró token con valor: " + yytext);     return 'dot';}
 
 // reserved words
 "int"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_int';}
@@ -70,6 +71,7 @@ case-insensitive
 "tostring"            {console.log("Se encontró token con valor: " + yytext); return 'reserved_tostring';}
 "toCharArray"         {console.log("Se encontró token con valor: " + yytext); return 'reserved_toCharArray';}
 "main"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_main';}
+"new"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_new';}
 
 
 
@@ -86,7 +88,7 @@ case-insensitive
 [0-9]+.[0-9]+                                        {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
 [0-9]+                                               {console.log("Se encontró token con valor: " + yytext); return 'integerNum';}
 [\']([^']|"\\n"|"\\t"|(\\)(\\))?[\']                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
-["]                                                  {cadena="";this.begin("string");}
+["]                                                  {cadena=""; this.begin("string");}
 <string>[^"\\]+                                      {cadena+=yytext;}
 <string>"\\\""                                       {cadena+="\"";}
 <string>"\\n"                                        {cadena+="\n";}
@@ -95,7 +97,6 @@ case-insensitive
 <string>"\\\'"                                       {cadena+="\'";}
 <string>["]                                          {console.log("Se encontró token con valor: " + yytext); yytext=cadena; this.popState(); return 'stringValue';}
 
-//\"[^\"]*\"				                         { yytext = yytext.substr(1,yyleng-2); console.log("Se encontró token con valor: " + yytext);  	return 'CADENA'; }
 
 
 <<EOF>>                 return 'EOF';
@@ -115,9 +116,7 @@ case-insensitive
 
 %{
   // importar tipos
-  // const {Type} = require('./abstract/Return');
-  // const {Primitivo} = require('./expression/Primitivo');
-  // const {Print} = require('./instruction/Print');
+
 
 %}
 
@@ -128,10 +127,11 @@ case-insensitive
 %% /* Definición de la gramática */
 
 INICIO
-	: EXPRESSIONS EOF {console.log('ya entre')}
+	: INSTRUCTIONS EOF {console.log('ya entre')}
 ;
 
 
+// reserved words for type of variables
 TYPE:
 reserved_char
 |reserved_boolean
@@ -140,12 +140,52 @@ reserved_char
 |reserved_string 
 ;
 
+
+//=========================================================================================================================
+
+// primitive values
+OPERAND:  integerNum
+        | decimalNum
+        | charValue
+        | stringValue
+        | reserved_false
+        | reserved_true 
+        ;
+
+// =========================================================================================================================
+
+// built-in functions
+
 CAST: openParenthesis TYPE closedParenthesis EXPRESSION  ;
 
 
+LOWER_UPPER: reserved_toLower openParenthesis EXPRESSION closedParenthesis 
+            | reserved_toUpper openParenthesis EXPRESSION closedParenthesis
+        
+;
+
+LENGTH:reserved_length openParenthesis EXPRESSION closedParenthesis;
+
+ROUND: reserved_round openParenthesis EXPRESSION openParenthesis;
+
+TO_STRING: reserved_tostring openParenthesis EXPRESSION closedParenthesis;
+
+TO_CHAR_ARRAY: reserved_toCharArray openParenthesis EXPRESSION closedParenthesis;
+
+TRUNCATE:reserved_truncate openParenthesis EXPRESSION closedParenthesis;
+
+TYPE_OF:reserved_typeof openParenthesis EXPRESSION closedParenthesis;
+
+// ============================================================================================================================
+
+// statements
 INCREASE: identifier plus plus semiColon;
 
 DECREASE: identifier minus minus semiColon;
+
+// ============================================================================================================================
+
+// list of expressions
 
 EXPRESSIONS: EXPRESSIONS EXPRESSION
           |  EXPRESSION ;
@@ -175,40 +215,18 @@ EXPRESSION: minus EXPRESSION  %prec Uminus                             {console.
           | CAST                                                       {console.log('encontre un casteo')}  
           | OPERAND                                                    {console.log('encontre un operador')}
           | FUNCTION_CALL                                              {console.log('encontre una llamada a funcion')}
-          | LOWER_UPPER
-          | ROUND
-          | LENGTH
-          | TO_STRING
-          | TO_CHAR_ARRAY
-          | TRUNCATE
-          | TYPE_OF
-          | LENGTH
+          | LOWER_UPPER                                                {console.log('encontre una llamada a to lower o to upper')}
+          | ROUND                                                      {console.log('encontre una llamada a round')}
+          | LENGTH                                                     {console.log('encontre una llamada a length')}
+          | TO_STRING                                                  {console.log('encontre una llamada a tostring')}
+          | TO_CHAR_ARRAY                                              {console.log('encontre una llamada a toCharArray')}
+          | TRUNCATE                                                   {console.log('encontre una llamada a truncate')}
+          | TYPE_OF                                                    {console.log('encontre una llamada a typeof')}
+          | identifier
           ;
+// ====================================================================================================================================
 
-LOWER_UPPER: reserved_toLower openParenthesis EXPRESSION closedParenthesis 
-            | reserved_toUpper openParenthesis EXPRESSION closedParenthesis
-        
-;
-
-LENGTH:reserved_length openParenthesis EXPRESSION closedParenthesis;
-
-ROUND: reserved_round openParenthesis EXPRESSION openParenthesis;
-
-TO_STRING: reserved_tostring openParenthesis EXPRESSION closedParenthesis;
-
-TO_CHAR_ARRAY: reserved_toCharArray openParenthesis EXPRESSION closedParenthesis;
-
-TRUNCATE:reserved_truncate openParenthesis EXPRESSION closedParenthesis;
-
-TYPE_OF:reserved_typeof openParenthesis EXPRESSION closedParenthesis;
-
-OPERAND:  integerNum
-        | decimalNum
-        | charValue
-        | stringValue
-        | reserved_false
-        | reserved_true 
-        ;
+// basic expressions
 
 TERNARY: EXPRESSION interrogation EXPRESSION colon EXPRESSION ;
 
@@ -217,17 +235,162 @@ VECTOR_ACCESS: identifier openSquareBracket EXPRESSION closedSquareBracket
 
 LIST_ACCESS: identifier openSquareBracket openSquareBracket EXPRESSION closedSquareBracket closedSquareBracket ;
 
-PARAMETERS:
-           PARAMETERS coma TYPE identifier
-          |TYPE identifier
-;
 
 FUNCTION_CALL:
               identifier openParenthesis PARAMETERS_CALL closedParenthesis
               | identifier openParenthesis closedParenthesis 
 ;
 
+FUNCTION_CALL2:
+              identifier openParenthesis PARAMETERS_CALL closedParenthesis semiColon
+              | identifier openParenthesis closedParenthesis semiColon 
+;
+
 PARAMETERS_CALL:
                 PARAMETERS_CALL coma EXPRESSION
                |EXPRESSION
+               |
+;
+
+// ===========================================================================================================================================
+
+
+
+
+
+
+// list of instructions
+
+INSTRUCTIONS: INSTRUCTIONS INSTRUCTION
+            | INSTRUCTION
+
+;
+
+INSTRUCTIONS2: INSTRUCTIONS INSTRUCTION2
+            | INSTRUCTION2
+
+;
+
+INSTRUCTION: DECLARATION 
+           | LIST_ADDITION
+           | INCREASE
+           | DECREASE
+           | IF_STATEMENT
+           | SWITCH_STATEMENT
+           | FOR_STATEMENT
+           | DO_WHILE_STATEMENT
+           | FUNCTION_DECLARATION
+           | FUNCTION_CALL2
+           |
+;
+
+INSTRUCTION2: DECLARATION 
+           | LIST_ADDITION
+           | INCREASE
+           | DECREASE
+           | IF_STATEMENT
+           | SWITCH_STATEMENT
+           | FOR_STATEMENT
+           | DO_WHILE_STATEMENT
+           | reserved_break semiColon
+           | reserved_continue semiColon
+           | RETURN_STATEMENT
+           | FUNCTION_CALL2
+           | 
+;
+
+
+RETURN_STATEMENT: reserved_return semiColon
+       | reserved_return EXPRESSION semiColon
+
+;
+
+DECLARATION: VARIABLE_DECLARATION
+           | VECTOR_DECLARATION
+           | LIST_DECLARATION
+;
+
+
+VARIABLE_DECLARATION: TYPE identifier semiColon 
+                    | TYPE identifier equals EXPRESSION semiColon
+                    ;
+
+VARIABLE_ASIGNATION: identifier equals OPERAND semiColon
+                     identifier equals identifier semiColon
+                   ;       
+
+VECTOR_DECLARATION:TYPE openSquareBracket closedSquareBracket identifier equals reserved_new TYPE openSquareBracket EXPRESSION closedSquareBracket semiColon 
+                   TYPE openSquareBracket closedSquareBracket identifier equals openBracket VALUE_LIST closedBracket semiColon
+                    ;
+
+
+VALUE_LIST: VALUE_LIST coma EXPRESSION
+          |EXPRESSION
+;
+
+
+LIST_DECLARATION:reserved_list lessThan TYPE greaterThan identifier equals reserved_new reserved_list lessThan TYPE greaterThan semiColon;
+
+LIST_ADDITION:identifier dot reserved_add openParenthesis EXPRESSION closedParenthesis semiColon ;
+
+
+IF_STATEMENT: reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket reserved_else openBracket INSTRUCTIONS2 closedBracket
+            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket ELSE_IF_STATEMENT
+            | reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket ELSE_IF_STATEMENT reserved_else openBracket INSTRUCTIONS2 closedBracket
+            ;
+
+ELSE_IF_STATEMENT: ELSE_IF_STATEMENT reserved_else reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+                  | reserved_else reserved_if openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+                  ;
+
+
+SWITCH_STATEMENT: reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket CASE_LIST closedBracket
+                  | reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket reserved_default colon INSTRUCTIONS2 closedBracket
+                  | reserved_switch openParenthesis EXPRESSION closedParenthesis openBracket CASE_LIST reserved_default colon INSTRUCTIONS2 closedBracket
+;
+
+CASE_LIST: CASE_LIST reserved_case EXPRESSION colon INSTRUCTIONS2
+          | reserved_case EXPRESSION colon INSTRUCTIONS2
+
+
+ ;
+
+ WHILE_STATEMENT:reserved_while openParenthesis EXPRESSION closedParenthesis openBracket INSTRUCTIONS2 closedBracket;
+
+
+ FOR_STATEMENT: reserved_for openParenthesis FOR_FIRST_CONDITION EXPRESSION semiColon closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+
+ 
+              ;
+
+FOR_FIRST_CONDITION:
+                    VARIABLE_ASIGNATION
+                    | VARIABLE_DECLARATION
+
+;              
+
+FOR_THIRD_CONDITION: EXPRESSION INCREASE
+                    | EXPRESSION DECREASE
+                    | identifier equals EXPRESSION
+
+                    ;
+
+
+DO_WHILE_STATEMENT: reserved_do openBracket INSTRUCTIONS2 closedBracket reserved_while openParenthesis EXPRESSION closedParenthesis semiColon;                    
+
+
+FUNCTION_DECLARATION: TYPE identifier openParenthesis PARAMETERS closedParenthesis openBracket INSTRUCTIONS2 closedBracket
+                    | reserved_void identifier openParenthesis PARAMETERS closedParenthesis openBracket INSTRUCTIONS2 closedBracket                    
+                    
+
+;
+
+PARAMETERS:
+           PARAMETERS coma TYPE identifier
+          |TYPE identifier
+          |
+;
+
+PRINT : reserved_print openParenthesis EXPRESSION closedParenthesis semiColon
 ;
