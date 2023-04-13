@@ -1,10 +1,16 @@
+%{
+  // importar tipos
+
+
+%}
+
+
+
 /* Definición Léxica */
 %lex
 
-%options {
-dotall: true
-case-insensitive
-}
+%options case-insensitive
+
 %x string
 
 %%
@@ -79,13 +85,13 @@ case-insensitive
 
 /* Whitespaces */
 [\r|\f|\s|\t|\n]                   {}              // white spaces
-(\/\/).*                           {}              // oneLineComment
-\/\*[\s\S]*?\*\/                   {}              // multilineComment
+(\/\/.*[^\n])                           {}              // oneLineComment
+(\/\*([^*/]|[^*]\/|\*[^/])*\*\/)   {}           // multilineComment
 
 /*  regex   */
 
 [a-zA-Z][a-zA-Z0-9_]*                                {console.log("Se encontró token con valor: " + yytext); return 'identifier';}
-[0-9]+.[0-9]+                                        {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
+[0-9]+"."[0-9]+                                      {console.log("Se encontró token con valor: " + yytext); return 'decimalNum';}
 [0-9]+                                               {console.log("Se encontró token con valor: " + yytext); return 'integerNum';}
 [\']([^']|"\\n"|"\\t"|(\\)(\\))?[\']                 {console.log("Se encontró token con valor: " + yytext); return 'charValue';}
 ["]                                                  {cadena=""; this.begin("string");}
@@ -103,6 +109,11 @@ case-insensitive
 
 .                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 /lex
+
+
+
+
+
 %left 'or'
 %left 'and'
 %left 'equals_equals' 'not_equal' 'lessThan' 'lessOrEqual' 'greaterThan' 'greatOrEqual'
@@ -114,20 +125,13 @@ case-insensitive
 
 
 
-%{
-  // importar tipos
-
-
-%}
-
-
 
 %start INICIO
 
 %% /* Definición de la gramática */
 
 INICIO
-	: INSTRUCTIONS EOF {console.log('ya entre')}
+	: INSTRUCTIONS EOF {console.log('ya entre');}
 ;
 
 
@@ -190,38 +194,38 @@ DECREASE: identifier minus minus semiColon;
 EXPRESSIONS: EXPRESSIONS EXPRESSION
           |  EXPRESSION ;
             
-EXPRESSION: minus EXPRESSION  %prec Uminus                             {console.log('encontre un negativo a una expresion')} // -(4+5)
-          | not EXPRESSION                                             {console.log('encontre una negacion de expresion')}
-          | EXPRESSION plus EXPRESSION                                 {console.log('encontre una suma')}
-          | EXPRESSION minus EXPRESSION                                {console.log('encontre una resta')}
-          | EXPRESSION multiply EXPRESSION                             {console.log('encontre una multiplicacion')}
-          | EXPRESSION division EXPRESSION                             {console.log('encontre una division')}
-          | EXPRESSION power EXPRESSION                                {console.log('encontre una potencia')}
-          | EXPRESSION module EXPRESSION                               {console.log('encontre un modulo')}
-          | EXPRESSION equals_equals EXPRESSION                        {console.log('encontre una comparacion')}
-          | EXPRESSION equals EXPRESSION                               {console.log('encontre una asignacion')}
-          | EXPRESSION not_equal EXPRESSION                            {console.log('encontre un "no igual a "')}
-          | EXPRESSION not                                             {console.log('encontre una negacion')}
-          | EXPRESSION lessThan EXPRESSION                             {console.log('encontre una comparacion menor que')}
-          | EXPRESSION greaterThan EXPRESSION                          {console.log('encontre una comparacion mayor que')}
-          | EXPRESSION lessOrEqual EXPRESSION                          {console.log('encontre una comparacion menor o igual que')}
-          | EXPRESSION greatOrEqual EXPRESSION                         {console.log('encontre una comparacion mayor o igual que')}
-          | EXPRESSION or  EXPRESSION                                  {console.log('encontre una comparacion or')}
-          | EXPRESSION and EXPRESSION                                  {console.log('encontre una comparacion and')}
-          | openParenthesis EXPRESSION closedParenthesis               {console.log('encontre una expresion entre parentesis')}
-          | INCREASE                                                   {console.log('encontre un aumento de variable ++')}
-          | DECREASE                                                   {console.log('encontre un decremento de variable --')}
-          | TERNARY                                                    {console.log('encontre un operador ternario')}
-          | CAST                                                       {console.log('encontre un casteo')}  
-          | OPERAND                                                    {console.log('encontre un operador')}
-          | FUNCTION_CALL                                              {console.log('encontre una llamada a funcion')}
-          | LOWER_UPPER                                                {console.log('encontre una llamada a to lower o to upper')}
-          | ROUND                                                      {console.log('encontre una llamada a round')}
-          | LENGTH                                                     {console.log('encontre una llamada a length')}
-          | TO_STRING                                                  {console.log('encontre una llamada a tostring')}
-          | TO_CHAR_ARRAY                                              {console.log('encontre una llamada a toCharArray')}
-          | TRUNCATE                                                   {console.log('encontre una llamada a truncate')}
-          | TYPE_OF                                                    {console.log('encontre una llamada a typeof')}
+EXPRESSION: minus EXPRESSION  %prec Uminus                             {console.log('encontre un negativo a una expresion');} // -(4+5)
+          | not EXPRESSION                                             {console.log('encontre una negacion de expresion');}
+          | EXPRESSION plus EXPRESSION                                 {console.log('encontre una suma');}
+          | EXPRESSION minus EXPRESSION                                {console.log('encontre una resta');}
+          | EXPRESSION multiply EXPRESSION                             {console.log('encontre una multiplicacion');}
+          | EXPRESSION division EXPRESSION                             {console.log('encontre una division');}
+          | EXPRESSION power EXPRESSION                                {console.log('encontre una potencia');}
+          | EXPRESSION module EXPRESSION                               {console.log('encontre un modulo');}
+          | EXPRESSION equals_equals EXPRESSION                        {console.log('encontre una comparacion');}
+          | EXPRESSION equals EXPRESSION                               {console.log('encontre una asignacion');}
+          | EXPRESSION not_equal EXPRESSION                            {console.log('encontre un "no igual a "');}
+          | EXPRESSION not                                             {console.log('encontre una negacion');}
+          | EXPRESSION lessThan EXPRESSION                             {console.log('encontre una comparacion menor que');}
+          | EXPRESSION greaterThan EXPRESSION                          {console.log('encontre una comparacion mayor que');}
+          | EXPRESSION lessOrEqual EXPRESSION                          {console.log('encontre una comparacion menor o igual que');}
+          | EXPRESSION greatOrEqual EXPRESSION                         {console.log('encontre una comparacion mayor o igual que');}
+          | EXPRESSION or  EXPRESSION                                  {console.log('encontre una comparacion or');}
+          | EXPRESSION and EXPRESSION                                  {console.log('encontre una comparacion and');}
+          | openParenthesis EXPRESSION closedParenthesis               {console.log('encontre una expresion entre parentesis');}
+          | INCREASE                                                   {console.log('encontre un aumento de variable ++');}
+          | DECREASE                                                   {console.log('encontre un decremento de variable --');}
+          | TERNARY                                                    {console.log('encontre un operador ternario');}
+          | CAST                                                       {console.log('encontre un casteo');}  
+          | OPERAND                                                    {console.log('encontre un operador');}
+          | FUNCTION_CALL                                              {console.log('encontre una llamada a funcion');}
+          | LOWER_UPPER                                                {console.log('encontre una llamada a to lower o to upper');}
+          | ROUND                                                      {console.log('encontre una llamada a round');}
+          | LENGTH                                                     {console.log('encontre una llamada a length');}
+          | TO_STRING                                                  {console.log('encontre una llamada a tostring');}
+          | TO_CHAR_ARRAY                                              {console.log('encontre una llamada a toCharArray');}
+          | TRUNCATE                                                   {console.log('encontre una llamada a truncate');}
+          | TYPE_OF                                                    {console.log('encontre una llamada a typeof');}
           | identifier
           ;
 // ====================================================================================================================================
@@ -266,7 +270,7 @@ INSTRUCTIONS: INSTRUCTIONS INSTRUCTION
 
 ;
 
-INSTRUCTIONS2: INSTRUCTIONS INSTRUCTION2
+INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
             | INSTRUCTION2
 
 ;
@@ -316,11 +320,11 @@ VARIABLE_DECLARATION: TYPE identifier semiColon
                     ;
 
 VARIABLE_ASIGNATION: identifier equals OPERAND semiColon
-                     identifier equals identifier semiColon
+                     |identifier equals identifier semiColon
                    ;       
 
 VECTOR_DECLARATION:TYPE openSquareBracket closedSquareBracket identifier equals reserved_new TYPE openSquareBracket EXPRESSION closedSquareBracket semiColon 
-                   TYPE openSquareBracket closedSquareBracket identifier equals openBracket VALUE_LIST closedBracket semiColon
+                   |TYPE openSquareBracket closedSquareBracket identifier equals openBracket VALUE_LIST closedBracket semiColon
                     ;
 
 
