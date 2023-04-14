@@ -1,8 +1,10 @@
 %{
   // importar tipos
   const {Primitive} = require('./expressions/Primitive')
+  const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
   const {Print} = require('./instruction/Print')
   const {Type} = require('./abstract/Type')
+  
 
 %}
 
@@ -206,13 +208,13 @@ DECREASE: identifier '--' ';';
 EXPRESSIONS: EXPRESSIONS ',' EXPRESSION
           |  EXPRESSION ;
             
-EXPRESSION : OPERAND
-
-    | EXPRESSION '+' EXPRESSION                     
-    | EXPRESSION '-' EXPRESSION                     
-    | EXPRESSION '*' EXPRESSION                     
-    | EXPRESSION '/' EXPRESSION                     
-    | '-' EXPRESSION %prec negativo  
+EXPRESSION : OPERAND  {$$=$1;}
+    | EXPRESSION '+' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'plus', @1.first_line, @1.first_column);}       
+    | EXPRESSION '-' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'minus', @1.first_line, @1.first_column);}           
+    | EXPRESSION '*' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'multiply', @1.first_line, @1.first_column);}            
+    | EXPRESSION '/' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'division', @1.first_line, @1.first_column);}
+    | EXPRESSION '^' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'power', @1.first_line, @1.first_column);}        
+    | '-' EXPRESSION %prec negativo     {$$= new ArithmeticOperation($2,$2,'negation', @1.first_line, @1.first_column);}
     | '!' EXPRESION	      
     | '(' EXPRESSION ')'                     
     | EXPRESSION '=='  EXPRESSION                   

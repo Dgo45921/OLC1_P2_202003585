@@ -8,9 +8,9 @@ export abstract class Print extends Instruction {
         super(line, column)
     }
     
-    public execute(env: Environment) {
-        const value = this.expression.execute(env);
-        console.log(value.value)
+    public execute() {
+        const value = this.expression.execute();
+        console.log(value.value, value.type)
 
     }
 }
