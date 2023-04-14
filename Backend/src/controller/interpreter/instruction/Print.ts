@@ -1,3 +1,4 @@
+import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression"
 import { Instruction } from "../abstract/Instruction"
 
@@ -7,10 +8,10 @@ export abstract class Print extends Instruction {
         super(line, column)
     }
     
-    public execute() {
-        // const value = this.expression.execute();
-        // console.log(value)
-        console.log('entre a print')
+    public execute(env: Environment) {
+        const value = this.expression.execute(env);
+        console.log(value.value)
+
     }
 }
-
+    

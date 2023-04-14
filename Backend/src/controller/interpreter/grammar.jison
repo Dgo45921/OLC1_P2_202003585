@@ -272,15 +272,7 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
 ;
  
 INSTRUCTION: DECLARATION 
-           | LIST_ADDITION
-           | INCREASE
-           | DECREASE
-           | IF_STATEMENT
-           | SWITCH_STATEMENT
-           | FOR_STATEMENT
-           | DO_WHILE_STATEMENT
-           | FUNCTION_DECLARATION
-           | FUNCTION_CALL2
+           | reserved_main FUNCTION_CALL
            | PRINT {$$ = $1;}
            
 ;
@@ -296,7 +288,7 @@ INSTRUCTION2: DECLARATION
            | reserved_break ';'
            | reserved_continue ';'
            | RETURN_STATEMENT
-           | FUNCTION_CALL2
+           | FUNCTION_CALL
            | PRINT {$$ = $1;}
            
 ;

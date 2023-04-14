@@ -14,7 +14,28 @@ export class Primitive extends Expression{
     }
 
     public execute():Return {
-        return {value:this.value, type: this.type}
+        switch(this.type){
+            case Type.INT:
+                return {value:parseInt(this.value), type: this.type}
+            case Type.DOUBLE:
+                return {value:parseFloat(this.value), type: this.type}
+            case Type.CHAR:
+                this.value = (this.value).replaceAll("'","");
+                this.value = (this.value).replaceAll("\\n","\n");
+                this.value = (this.value).replaceAll("\\t","\t");
+                return { value: this.value, type: Type.CHAR }
+            case Type.STRING:
+                this.value = (this.value).replaceAll('"','');
+                this.value = (this.value).replaceAll("\\n","\n");
+                this.value = (this.value).replaceAll("\\t","\t");
+                return { value: this.value, type: Type.STRING }
+            case Type.BOOLEAN:
+                return(this.value === 'true' ? { value: true, type: Type.BOOLEAN } : { value: false, type: Type.BOOLEAN })
+
+            default:
+                return { value: this.value, type: Type.NULL}
+
+        }
     }
 }
 
