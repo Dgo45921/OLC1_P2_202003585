@@ -128,6 +128,24 @@ break;
 case 35:
 this.$=$$[$0-1];
 break;
+case 36:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'==', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
+case 37:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'!=', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
+case 38:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'<', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
+case 39:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'>', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
+case 40:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'<=', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
+case 41:
+this.$= new RelationalOperation($$[$0-2],$$[$0],'>=', _$[$0-2].first_line, _$[$0-2].first_column);
+break;
 case 62:
 $$[$0-1].push($$[$0]); this.$=$$[$0-1]; console.log('entre a instrucciones');
 break;
@@ -294,6 +312,7 @@ parse: function parse(input) {
   // importar tipos
   const {Primitive} = require('./expressions/Primitive')
   const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
+  const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {Print} = require('./instruction/Print')
   const {Type} = require('./abstract/Type')
   
@@ -708,35 +727,35 @@ case 39:console.log("Se encontró token con valor: " + yy_.yytext); return 16;
 break;
 case 40:console.log("Se encontró token con valor: " + yy_.yytext);     return 41;
 break;
-case 41:console.log("Se encontró token con valor: " + yy_.yytext);     return 46;
+case 41:console.log("Se encontró token con valor: " + yy_.yytext);    return 40;
 break;
-case 42:console.log("Se encontró token con valor: " + yy_.yytext);     return 47;
+case 42:console.log("Se encontró token con valor: " + yy_.yytext);    return 43;
 break;
-case 43:console.log("Se encontró token con valor: " + yy_.yytext);    return 40;
+case 43:console.log("Se encontró token con valor: " + yy_.yytext);     return 58;
 break;
-case 44:console.log("Se encontró token con valor: " + yy_.yytext);    return 43;
+case 44:console.log("Se encontró token con valor: " + yy_.yytext);     return 59;
 break;
-case 45:console.log("Se encontró token con valor: " + yy_.yytext);     return 48;
+case 45:console.log("Se encontró token con valor: " + yy_.yytext);     return 46;
 break;
-case 46:console.log("Se encontró token con valor: " + yy_.yytext);     return 49;
+case 46:console.log("Se encontró token con valor: " + yy_.yytext);     return 47;
 break;
-case 47:console.log("Se encontró token con valor: " + yy_.yytext);     return 50;
+case 47:console.log("Se encontró token con valor: " + yy_.yytext);     return 48;
 break;
-case 48:console.log("Se encontró token con valor: " + yy_.yytext);     return 51;
+case 48:console.log("Se encontró token con valor: " + yy_.yytext);     return 49;
 break;
-case 49:console.log("Se encontró token con valor: " + yy_.yytext);     return 89;
+case 49:console.log("Se encontró token con valor: " + yy_.yytext);     return 50;
 break;
-case 50:console.log("Se encontró token con valor: " + yy_.yytext);     return 54;
+case 50:console.log("Se encontró token con valor: " + yy_.yytext);     return 51;
 break;
-case 51:console.log("Se encontró token con valor: " + yy_.yytext);     return 55;
+case 51:console.log("Se encontró token con valor: " + yy_.yytext);     return 89;
 break;
-case 52:console.log("Se encontró token con valor: " + yy_.yytext);     return 56;
+case 52:console.log("Se encontró token con valor: " + yy_.yytext);     return 54;
 break;
-case 53:console.log("Se encontró token con valor: " + yy_.yytext);     return 57;
+case 53:console.log("Se encontró token con valor: " + yy_.yytext);     return 55;
 break;
-case 54:console.log("Se encontró token con valor: " + yy_.yytext);     return 58;
+case 54:console.log("Se encontró token con valor: " + yy_.yytext);     return 56;
 break;
-case 55:console.log("Se encontró token con valor: " + yy_.yytext);     return 59;
+case 55:console.log("Se encontró token con valor: " + yy_.yytext);     return 57;
 break;
 case 56:console.log("Se encontró token con valor: " + yy_.yytext);     return 52;
 break;
@@ -770,7 +789,7 @@ case 70: console.error('Este es un error léxico: ' + yy_.yytext + ', en la line
 break;
 }
 },
-rules: [/^(?:[\r|\f|\s|\t|\n])/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:int\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:double\b)/i,/^(?:boolean\b)/i,/^(?:char\b)/i,/^(?:string\b)/i,/^(?:list\b)/i,/^(?:add\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:print\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:break\b)/i,/^(?:while\b)/i,/^(?:for\b)/i,/^(?:do\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:void\b)/i,/^(?:toLower\b)/i,/^(?:toUpper\b)/i,/^(?:Length\b)/i,/^(?:Truncate\b)/i,/^(?:round\b)/i,/^(?:typeof\b)/i,/^(?:tostring\b)/i,/^(?:toCharArray\b)/i,/^(?:main\b)/i,/^(?:new\b)/i,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/i,/^(?:[0-9]+\.[0-9]+)/i,/^(?:[0-9]+)/i,/^(?:[\']([^']|\\n|\\t|(\\)(\\))?[\'])/i,/^(?:[\"](\\"|[^"])*[\"])/i,/^(?:;)/i,/^(?:\+)/i,/^(?:-)/i,/^(?:\+\+)/i,/^(?:--)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:\^)/i,/^(?:%)/i,/^(?:=)/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<)/i,/^(?:>)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:!)/i,/^(?:\?)/i,/^(?::)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\{)/i,/^(?:\})/i,/^(?:,)/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\.)/i,/^(?:$)/i,/^(?:.)/i],
+rules: [/^(?:[\r|\f|\s|\t|\n])/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:int\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:double\b)/i,/^(?:boolean\b)/i,/^(?:char\b)/i,/^(?:string\b)/i,/^(?:list\b)/i,/^(?:add\b)/i,/^(?:if\b)/i,/^(?:else\b)/i,/^(?:print\b)/i,/^(?:switch\b)/i,/^(?:case\b)/i,/^(?:default\b)/i,/^(?:break\b)/i,/^(?:while\b)/i,/^(?:for\b)/i,/^(?:do\b)/i,/^(?:continue\b)/i,/^(?:return\b)/i,/^(?:void\b)/i,/^(?:toLower\b)/i,/^(?:toUpper\b)/i,/^(?:Length\b)/i,/^(?:Truncate\b)/i,/^(?:round\b)/i,/^(?:typeof\b)/i,/^(?:tostring\b)/i,/^(?:toCharArray\b)/i,/^(?:main\b)/i,/^(?:new\b)/i,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/i,/^(?:[0-9]+\.[0-9]+)/i,/^(?:[0-9]+)/i,/^(?:[\']([^']|\\n|\\t|(\\)(\\))?[\'])/i,/^(?:[\"](\\"|[^"])*[\"])/i,/^(?:;)/i,/^(?:\+\+)/i,/^(?:--)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:\+)/i,/^(?:-)/i,/^(?:\*)/i,/^(?:\/)/i,/^(?:\^)/i,/^(?:%)/i,/^(?:=)/i,/^(?:==)/i,/^(?:!=)/i,/^(?:<)/i,/^(?:>)/i,/^(?:!)/i,/^(?:\?)/i,/^(?::)/i,/^(?:\|\|)/i,/^(?:&&)/i,/^(?:\()/i,/^(?:\))/i,/^(?:\{)/i,/^(?:\})/i,/^(?:,)/i,/^(?:\[)/i,/^(?:\])/i,/^(?:\.)/i,/^(?:$)/i,/^(?:.)/i],
 conditions: {"string":{"rules":[],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70],"inclusive":true}}
 });
 return lexer;

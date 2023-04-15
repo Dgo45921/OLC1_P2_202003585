@@ -2,6 +2,7 @@
   // importar tipos
   const {Primitive} = require('./expressions/Primitive')
   const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
+  const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {Print} = require('./instruction/Print')
   const {Type} = require('./abstract/Type')
   
@@ -70,10 +71,12 @@
 
 // reserved symbols
 ";"                 {console.log("Se encontró token con valor: " + yytext);     return ';';}
+"++"                {console.log("Se encontró token con valor: " + yytext);    return '++';}
+"--"                {console.log("Se encontró token con valor: " + yytext);    return '--';}
+"<="                {console.log("Se encontró token con valor: " + yytext);     return '<=';}
+">="                {console.log("Se encontró token con valor: " + yytext);     return '>=';}
 "+"                 {console.log("Se encontró token con valor: " + yytext);     return '+';}
 "-"                 {console.log("Se encontró token con valor: " + yytext);     return '-';}
-"++"                 {console.log("Se encontró token con valor: " + yytext);    return '++';}
-"--"                 {console.log("Se encontró token con valor: " + yytext);    return '--';}
 "*"                 {console.log("Se encontró token con valor: " + yytext);     return '*';}
 "/"                 {console.log("Se encontró token con valor: " + yytext);     return '/';}
 "^"                 {console.log("Se encontró token con valor: " + yytext);     return '^';}
@@ -83,8 +86,6 @@
 "!="                {console.log("Se encontró token con valor: " + yytext);     return '!=';}
 "<"                 {console.log("Se encontró token con valor: " + yytext);     return '<';}
 ">"                 {console.log("Se encontró token con valor: " + yytext);     return '>';}
-"<="                {console.log("Se encontró token con valor: " + yytext);     return '<=';}
-">="                {console.log("Se encontró token con valor: " + yytext);     return '>=';}
 "!"                 {console.log("Se encontró token con valor: " + yytext);     return '!';}
 "?"                 {console.log("Se encontró token con valor: " + yytext);     return '?';}
 ":"                 {console.log("Se encontró token con valor: " + yytext);     return ':';}
@@ -216,15 +217,15 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '^' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'power', @1.first_line, @1.first_column);} 
     | EXPRESSION '%' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'module', @1.first_line, @1.first_column);}         
     | '-' EXPRESSION %prec negativo     {$$= new ArithmeticOperation($2,$2,'negation', @1.first_line, @1.first_column);}
-    | '!' EXPRESION	      
+    | '!' EXPRESION	                    
     | '(' EXPRESSION ')'                {$$=$2;}           
-    | EXPRESSION '=='  EXPRESSION                   
-    | EXPRESSION '!='  EXPRESSION                   
-    | EXPRESSION '<'   EXPRESSION                  
-    | EXPRESSION '>'   EXPRESSION                  
-    | EXPRESSION '<='  EXPRESSION                   
-    | EXPRESSION '>='  EXPRESSION                   
-    | EXPRESSION '&&'  EXPRESSION                  
+    | EXPRESSION '=='  EXPRESSION       {$$= new RelationalOperation($1,$3,'==', @1.first_line, @1.first_column);}              
+    | EXPRESSION '!='  EXPRESSION       {$$= new RelationalOperation($1,$3,'!=', @1.first_line, @1.first_column);}           
+    | EXPRESSION '<'   EXPRESSION       {$$= new RelationalOperation($1,$3,'<', @1.first_line, @1.first_column);}          
+    | EXPRESSION '>'   EXPRESSION       {$$= new RelationalOperation($1,$3,'>', @1.first_line, @1.first_column);}           
+    | EXPRESSION '<='  EXPRESSION       {$$= new RelationalOperation($1,$3,'<=', @1.first_line, @1.first_column);}            
+    | EXPRESSION '>='  EXPRESSION       {$$= new RelationalOperation($1,$3,'>=', @1.first_line, @1.first_column);}            
+    | EXPRESSION '&&'  EXPRESSION       
     | EXPRESSION '||'  EXPRESSION                                                                    
     | CAST                                                                                                                                                  
     | LOWER_UPPER                                               
