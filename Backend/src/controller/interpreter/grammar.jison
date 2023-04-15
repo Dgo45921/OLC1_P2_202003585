@@ -120,18 +120,18 @@
 
 
 /*Operaciones logicas*/
-%left '?'
-%left '++' '--'
-%left '^'
+
 %left '||'
 %left '&&'
-%left '!=' '==' '==='
-%left '>' '<' '<=' '>=' 
+%left '>' '<' '<=' '>=' '!=' '=='
 
 /*Operaciones numericas*/
 %left '+' '-'
 %left '*' '/' '%' 
+%nonassoc  '^'
 %right negativo '!' '(' 
+%right '?'
+%left '++' '--' 
 
 
 
@@ -213,10 +213,11 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '-' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'minus', @1.first_line, @1.first_column);}           
     | EXPRESSION '*' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'multiply', @1.first_line, @1.first_column);}            
     | EXPRESSION '/' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'division', @1.first_line, @1.first_column);}
-    | EXPRESSION '^' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'power', @1.first_line, @1.first_column);}        
+    | EXPRESSION '^' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'power', @1.first_line, @1.first_column);} 
+    | EXPRESSION '%' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'module', @1.first_line, @1.first_column);}         
     | '-' EXPRESSION %prec negativo     {$$= new ArithmeticOperation($2,$2,'negation', @1.first_line, @1.first_column);}
     | '!' EXPRESION	      
-    | '(' EXPRESSION ')'                     
+    | '(' EXPRESSION ')'                {$$=$2;}           
     | EXPRESSION '=='  EXPRESSION                   
     | EXPRESSION '!='  EXPRESSION                   
     | EXPRESSION '<'   EXPRESSION                  

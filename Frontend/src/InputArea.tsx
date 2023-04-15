@@ -49,7 +49,8 @@ function InputArea() {
     const handleLogCode = async () => {
         const currentTab = tabs[currentTabIndex];
         console.log(currentTab.code);
-        updateOutputText(currentTab.code)
+        updateOutputText('')
+        
 
 
     let data = {
@@ -67,7 +68,7 @@ function InputArea() {
             });
         
             const result = await response.json();
-            console.log("Success:", result);
+            updateOutputText(result.console)
           } catch (error) {
             console.error("Error:", error);
           }

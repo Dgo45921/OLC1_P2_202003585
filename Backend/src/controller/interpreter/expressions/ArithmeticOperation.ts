@@ -464,6 +464,91 @@ export class ArithmeticOperation extends Expression {
                 }
                 
                 break;
+            
+            case 'power':
+                // case where the left expression is an integer
+                if(valueLeft.type === Type.INT){
+                    if(valueRight.type === Type.INT){
+                        return { value: Math.pow(valueLeft.value, valueRight.value), type: Type.INT}
+                    }
+                    else if(valueRight.type === Type.DOUBLE){
+                        return { value: Math.pow(parseFloat(valueLeft.value), parseFloat(valueRight.value)), type: Type.DOUBLE}
+                    }
+                   
+                    else{
+                        console.log('error semantico elevando int a tipo no valido')
+                        return { value: 'null', type: Type.NULL}
+                    }
+
+
+                }
+
+                else if(valueLeft.type === Type.DOUBLE){
+                    if(valueRight.type === Type.INT){
+                        return { value: Math.pow(parseFloat(valueLeft.value), parseFloat(valueRight.value)), type: Type.DOUBLE}
+                    }
+                    else if(valueRight.type === Type.DOUBLE){
+                        return { value: Math.pow(parseFloat(valueLeft.value), parseFloat(valueRight.value)), type: Type.DOUBLE}
+
+                    }
+                    
+                    else{
+                        console.log('error semantico elevando int a tipo no valido')
+                        return { value: 'null', type: Type.NULL}
+                    }
+
+
+
+                }
+                
+                else{
+                    console.log('error semantico elevando tipo invalido')
+                    return { value: 'null', type: Type.NULL} }
+
+                break;
+
+
+            case 'module':
+                 // case where the left expression is an integer
+                 if(valueLeft.type === Type.INT){
+                    if(valueRight.type === Type.INT){
+                        return { value:valueLeft.value % valueRight.value, type: Type.DOUBLE}
+                    }
+                    else if(valueRight.type === Type.DOUBLE){
+                        return { value: parseFloat(valueLeft.value) % parseFloat(valueRight.value), type: Type.DOUBLE}
+                    }
+                   
+                    else{
+                        console.log('error semantico sacando modulo a tipo no valido')
+                        return { value: 'null', type: Type.NULL}
+                    }
+
+
+                }
+
+                else if(valueLeft.type === Type.DOUBLE){
+                    if(valueRight.type === Type.INT){
+                        return { value:valueLeft.value % valueRight.value, type: Type.DOUBLE}
+                    }
+                    else if(valueRight.type === Type.DOUBLE){
+                        return { value:valueLeft.value % valueRight.value, type: Type.DOUBLE}
+
+                    }
+                    
+                    else{
+                        console.log('error semantico sacando modulo a tipo no valido')
+                        return { value: 'null', type: Type.NULL}
+                    }
+
+
+
+                }
+                
+                else{
+                    console.log('error semantico elevando tipo invalido')
+                    return { value: 'null', type: Type.NULL} }
+
+                break;
 
 
 
