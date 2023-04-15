@@ -3,6 +3,7 @@
   const {Primitive} = require('./expressions/Primitive')
   const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
   const {RelationalOperation} = require('./expressions/RelationalOperation')
+  const {LogicalOperation} = require('./expressions/LogicalOperation')
   const {Print} = require('./instruction/Print')
   const {Type} = require('./abstract/Type')
   
@@ -71,19 +72,19 @@
 
 // reserved symbols
 ";"                 {console.log("Se encontró token con valor: " + yytext);     return ';';}
+"=="                {console.log("Se encontró token con valor: " + yytext);     return '==';}
 "++"                {console.log("Se encontró token con valor: " + yytext);    return '++';}
 "--"                {console.log("Se encontró token con valor: " + yytext);    return '--';}
 "<="                {console.log("Se encontró token con valor: " + yytext);     return '<=';}
 ">="                {console.log("Se encontró token con valor: " + yytext);     return '>=';}
+"="                 {console.log("Se encontró token con valor: " + yytext);     return '=';}
+"!="                {console.log("Se encontró token con valor: " + yytext);     return '!=';}
 "+"                 {console.log("Se encontró token con valor: " + yytext);     return '+';}
 "-"                 {console.log("Se encontró token con valor: " + yytext);     return '-';}
 "*"                 {console.log("Se encontró token con valor: " + yytext);     return '*';}
 "/"                 {console.log("Se encontró token con valor: " + yytext);     return '/';}
 "^"                 {console.log("Se encontró token con valor: " + yytext);     return '^';}
 "%"                 {console.log("Se encontró token con valor: " + yytext);     return '%';}
-"="                 {console.log("Se encontró token con valor: " + yytext);     return '=';}
-"=="                {console.log("Se encontró token con valor: " + yytext);     return '==';}
-"!="                {console.log("Se encontró token con valor: " + yytext);     return '!=';}
 "<"                 {console.log("Se encontró token con valor: " + yytext);     return '<';}
 ">"                 {console.log("Se encontró token con valor: " + yytext);     return '>';}
 "!"                 {console.log("Se encontró token con valor: " + yytext);     return '!';}
@@ -216,17 +217,17 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '/' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'division', @1.first_line, @1.first_column);}
     | EXPRESSION '^' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'power', @1.first_line, @1.first_column);} 
     | EXPRESSION '%' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'module', @1.first_line, @1.first_column);}         
-    | '-' EXPRESSION %prec negativo     {$$= new ArithmeticOperation($2,$2,'negation', @1.first_line, @1.first_column);}
-    | '!' EXPRESION	                    
+    | '-' EXPRESSION %prec negativo     {$$= new ArithmeticOperation($2,$2,'negation', @1.first_line, @1.first_column);}              
     | '(' EXPRESSION ')'                {$$=$2;}           
     | EXPRESSION '=='  EXPRESSION       {$$= new RelationalOperation($1,$3,'==', @1.first_line, @1.first_column);}              
     | EXPRESSION '!='  EXPRESSION       {$$= new RelationalOperation($1,$3,'!=', @1.first_line, @1.first_column);}           
     | EXPRESSION '<'   EXPRESSION       {$$= new RelationalOperation($1,$3,'<', @1.first_line, @1.first_column);}          
     | EXPRESSION '>'   EXPRESSION       {$$= new RelationalOperation($1,$3,'>', @1.first_line, @1.first_column);}           
     | EXPRESSION '<='  EXPRESSION       {$$= new RelationalOperation($1,$3,'<=', @1.first_line, @1.first_column);}            
-    | EXPRESSION '>='  EXPRESSION       {$$= new RelationalOperation($1,$3,'>=', @1.first_line, @1.first_column);}            
-    | EXPRESSION '&&'  EXPRESSION       
-    | EXPRESSION '||'  EXPRESSION                                                                    
+    | EXPRESSION '>='  EXPRESSION       {$$= new RelationalOperation($1,$3,'>=', @1.first_line, @1.first_column);}    
+    | '!' EXPRESION	                    {$$= new LogicalOperation($2,$2,'!', @1.first_line, @1.first_column);}
+    | EXPRESSION '&&'  EXPRESSION       {$$= new LogicalOperation($1,$3,'&&', @1.first_line, @1.first_column);}
+    | EXPRESSION '||'  EXPRESSION       {$$= new LogicalOperation($1,$3,'||', @1.first_line, @1.first_column);}                                                             
     | CAST                                                                                                                                                  
     | LOWER_UPPER                                               
     | ROUND                                                     

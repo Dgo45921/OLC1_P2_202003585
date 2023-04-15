@@ -48,8 +48,6 @@ export class RelationalOperation extends Expression {
                 return { value: 'error', type: Type.NULL}
                 
 
-
-
         }
 
 
