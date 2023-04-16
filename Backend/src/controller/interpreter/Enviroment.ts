@@ -4,36 +4,49 @@ import { Symbol } from "./Symbol";
 
 
 export class Environment {
-    private symbolTable: Map<string, Symbol>;
+    private variables: Map<string, Symbol>;
     private method_symbolTable: Map<string, any>;
  
 
     constructor(public prev: Environment | null) {
-        this.symbolTable = new Map();
+        this.variables = new Map();
         this.method_symbolTable = new Map();
 
     }
 
 
-    public getSymbolTable() {
-        return this.symbolTable;
+    public getVariables() {
+        return this.variables;
     }
 
-    public saveVariable(name:string, value:any, type:Type, editable:boolean):boolean {
-        if(!(this.searchVariable(name))){
-            this.symbolTable.set(name, new Symbol(value, name, type, editable))
-            return true
-        }
+    public saveVariable(id:string, value:any, type:Type, line:number, column:number):void{
+        let env: Environment | null = this;
+  
+      if (!env.variables.has(id.toLowerCase())) {
 
-        return false
+        env.variables.set(id.toLowerCase(), new Symbol(value, id, type));
+      }else {
+        console.log('error, variable ya definida')
+
+      }
+  
 
     }
 
     public searchVariable(name: string): boolean {
-        for (let entry of Array.from(this.symbolTable.entries())) {
+        for (let entry of Array.from(this.variables.entries())) {
             if (entry[0] == name) return true;
         }
         return false;
+    }
+
+    public getVariable(nombre: string): Symbol | undefined | null {
+        let env: Environment | null = this;
+        while (env != null) {
+            if (env.variables.has(nombre)) return env.variables.get(nombre);
+            env = env.prev;
+        }
+        return null;
     }
 
 

@@ -1,4 +1,13 @@
 import { Type } from "./abstract/Type";
 export class Symbol {
-    constructor(public value: any, public id: string, public type: Type, public editable:boolean) {}
+
+    public value :any
+    public id:string
+    public type : Type
+
+    constructor( value: any,  id: string,  type: Type) {
+        this.value = value
+        this.id = id.toLowerCase()
+        this.type = type
+    }
 }

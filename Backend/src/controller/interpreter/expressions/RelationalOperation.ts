@@ -13,10 +13,10 @@ export class RelationalOperation extends Expression {
         super(line, column)
     }
 
-    public execute(): Return {
+    public execute(env:Environment): Return {
         let response:Return =  { value: 'error', type: Type.NULL}
-        let valueLeft = this.leftExp.execute()
-        let valueRight = this.rightExp.execute()
+        let valueLeft = this.leftExp.execute(env)
+        let valueRight = this.rightExp.execute(env)
 
         if (valueLeft.type === Type.NULL || valueRight.type === Type.NULL) {
             console.log('error semantico, operacion relacional con null')

@@ -4,7 +4,9 @@
   const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
+  const {VariableAccess} = require('./expressions/VariableAccess')
   const {Print} = require('./instruction/Print')
+  const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
   
 
@@ -150,11 +152,11 @@ INICIO
 
 // reserved words for type of variables
 TYPE:
-reserved_char
-|reserved_boolean
-|reserved_int
-|reserved_double
-|reserved_string 
+reserved_char      {$$ = Type.CHAR }
+|reserved_boolean  {$$ = Type.BOOLEAN}
+|reserved_int      {$$ = Type.INT}
+|reserved_double   {$$ = Type.DOUBLE}
+|reserved_string   {$$ = Type.STRING}
 ;
 
 
@@ -240,7 +242,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | LIST_ACCESS
     | FUNCTION_CALL
     | TERNARY                              
-    | identifier
+    | identifier                        {$$= new VariableAccess($1, @1.first_line, @1.first_column);} 
     ;         
 // ====================================================================================================================================
 // basic expressions
@@ -276,7 +278,7 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
 
 ;
  
-INSTRUCTION: DECLARATION 
+INSTRUCTION: DECLARATION {$$ = $1;}
            | reserved_main FUNCTION_CALL
            | PRINT {$$ = $1;}
            
@@ -307,14 +309,14 @@ RETURN_STATEMENT: reserved_return ';'
 
 ;
 
-DECLARATION: VARIABLE_DECLARATION
+DECLARATION: VARIABLE_DECLARATION  {$$=$1}
            | VECTOR_DECLARATION
            | LIST_DECLARATION
 ;
 
 
-VARIABLE_DECLARATION: TYPE identifier ';' 
-                    | TYPE identifier '=' EXPRESSION ';'
+VARIABLE_DECLARATION: TYPE identifier  ';'                {$$=new VariableDeclaration($2, $1, null, @1.first_line, @1.first_column )}
+                    | TYPE identifier '=' EXPRESSION ';'  {$$=new VariableDeclaration($2, $1, $4, @1.first_line, @1.first_column )}
                     ;
 
 VARIABLE_ASIGNATION: identifier '=' OPERAND ';'

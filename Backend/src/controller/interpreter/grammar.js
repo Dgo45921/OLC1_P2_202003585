@@ -86,6 +86,21 @@ switch (yystate) {
 case 1:
 console.log('ya entre'); return $$[$0-1];
 break;
+case 2:
+this.$ = Type.CHAR 
+break;
+case 3:
+this.$ = Type.BOOLEAN
+break;
+case 4:
+this.$ = Type.INT
+break;
+case 5:
+this.$ = Type.DOUBLE
+break;
+case 6:
+this.$ = Type.STRING
+break;
 case 7:
 this.$ = new Primitive(_$[$0].first_line,_$[$0].first_column ,$$[$0], Type.INT);
 break;
@@ -155,17 +170,29 @@ break;
 case 43:
 this.$= new LogicalOperation($$[$0-2],$$[$0],'||', _$[$0-2].first_line, _$[$0-2].first_column);
 break;
+case 56:
+this.$= new VariableAccess($$[$0], _$[$0].first_line, _$[$0].first_column);
+break;
 case 62:
 $$[$0-1].push($$[$0]); this.$=$$[$0-1]; console.log('entre a instrucciones');
 break;
 case 63:
 this.$ = [$$[$0]]; console.log('entre a instruccion');
 break;
-case 68: case 81:
+case 66: case 68: case 81:
 this.$ = $$[$0];
 break;
 case 82:
 this.$ = new Print(_$[$0-4].first_line,_$[$0-4].first_column ,$$[$0-2])
+break;
+case 85:
+this.$=$$[$0]
+break;
+case 88:
+this.$=new VariableDeclaration($$[$0-1], $$[$0-2], null, _$[$0-2].first_line, _$[$0-2].first_column )
+break;
+case 89:
+this.$=new VariableDeclaration($$[$0-3], $$[$0-4], $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column )
 break;
 }
 },
@@ -323,7 +350,9 @@ parse: function parse(input) {
   const {ArithmeticOperation} = require('./expressions/ArithmeticOperation')
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
+  const {VariableAccess} = require('./expressions/VariableAccess')
   const {Print} = require('./instruction/Print')
+  const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
   
 

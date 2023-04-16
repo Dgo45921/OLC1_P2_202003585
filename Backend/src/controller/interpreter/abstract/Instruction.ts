@@ -9,6 +9,6 @@ export abstract class Instruction {
     }
 
 
-    public abstract execute(): any;
+    public abstract execute(env:Environment): any;
 }
 

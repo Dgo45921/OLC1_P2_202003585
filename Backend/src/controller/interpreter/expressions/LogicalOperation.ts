@@ -14,9 +14,9 @@ export class LogicalOperation extends Expression {
     }
 
 
-    public execute(): Return {
-        let valueLeft = this.leftExp.execute()
-        let valueRight = this.rightExp.execute()
+    public execute(env:Environment): Return {
+        let valueLeft = this.leftExp.execute(env)
+        let valueRight = this.rightExp.execute(env)
 
         let response:Return =  { value: 'error', type: Type.NULL}
 

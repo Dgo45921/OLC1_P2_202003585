@@ -9,8 +9,8 @@ export abstract class Print extends Instruction {
         super(line, column)
     }
     
-    public execute() {
-        const value = this.expression.execute();
+    public execute(env:Environment) {
+        const value = this.expression.execute(env);
         //console.log(value.value, value.type)
         console.log(value.value)
         Singleton.getInstance().appendConsole(value.value + "\n")

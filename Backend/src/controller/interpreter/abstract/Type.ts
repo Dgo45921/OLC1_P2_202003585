@@ -4,9 +4,7 @@ export enum Type{
     STRING,         //2
     BOOLEAN,        //3
     CHAR,           //4
-    VECTOR,         //5
-    LIST,           //6
-    NULL,          //7
+    NULL,          //5
 }
 
 

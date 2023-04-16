@@ -10,6 +10,6 @@ export abstract class Expression {
     }
 
 
-    public abstract execute(): Return;
+    public abstract execute(env:Environment): Return;
 }
 
