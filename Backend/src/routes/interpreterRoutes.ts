@@ -9,6 +9,8 @@ router.get('/ping', morgan('tiny'), interpreterController.parsear)
 
 router.post('/parse', morgan('tiny'), interpreterController.interpretar)
 
+router.get('/getErrors', morgan('tiny'), interpreterController.getErrores)
+
 router.get('/', morgan('tiny'), (req, res) =>{
 
     res.send("hola")

@@ -2,6 +2,7 @@ import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Type } from "../abstract/Type";
+import { Error } from "../Error";
 
 
 export class VariableDeclaration extends Instruction{
@@ -22,7 +23,26 @@ export class VariableDeclaration extends Instruction{
             env.saveVariable(this.id, variable.value, this.type, this.line, this.column)
         }
         else{
-            console.log('guardo segun valores por defecto')
+           switch(this.type){
+            case Type.INT:
+                env.saveVariable(this.id, 0, this.type, this.line, this.column)
+                break
+            case Type.DOUBLE:
+                env.saveVariable(this.id, 0.0, this.type, this.line, this.column)
+                break
+
+            case Type.BOOLEAN:
+                env.saveVariable(this.id, true, this.type, this.line, this.column)
+                break
+            case Type.CHAR:
+                env.saveVariable(this.id, '\u0000', this.type, this.line, this.column)
+                break
+
+            case Type.STRING:
+                env.saveVariable(this.id, "", this.type, this.line, this.column)
+                break
+
+           }
         }
     }
 }

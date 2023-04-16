@@ -44,6 +44,20 @@ class InterpreterController{
     }
 
 
+    public getErrores(req:Request, res:Response){
+
+        console.log(singleton.getErrorsViz())
+        res.json(
+            {
+               dotCode: singleton.getErrorsViz()
+            }
+        )
+        
+       
+        
+    }
+
+
 }
 
 

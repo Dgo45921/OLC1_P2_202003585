@@ -8,6 +8,10 @@
   const {Print} = require('./instruction/Print')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
+  const {Singleton} = require('./Singleton')
+  const {Error} = require('./Error')
+
+  const instance = Singleton.getInstance();
   
 
 %}
@@ -116,7 +120,10 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                          const newError = new Error('Léxico', 'token desconocido: ' + yytext,  yylloc.first_line, yylloc.first_column)
+                          instance.addError(newError)
+                        }
 /lex
 
 

@@ -4,9 +4,15 @@ import * as ReactBootstrap from 'react-bootstrap';
 
 
 async function errorReport() {
-    const response = await fetch("http://localhost:5000/ping");
+    const response = await fetch("http://localhost:5000/interpreter/getErrors");
     const textData = await response.text();
-    console.log(textData);
+    const jsonbody = JSON.parse(textData)
+   // console.log(jsonbody.dotCode);
+    const url = "https://quickchart.io/graphviz?graph=" +  encodeURIComponent(jsonbody.dotCode);
+    console.log(url)
+    window.open(url, "_blank");
+
+
 }
 
 function ASTreport() {
