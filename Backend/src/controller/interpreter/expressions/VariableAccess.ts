@@ -24,7 +24,7 @@ export class VariableAccess extends Expression{
 
 
     public execute(env:Environment):Return{
-        let response:Return = {value:'null', type:Type.NULL}
+        let response:Return = {value:null, type:Type.NULL}
         const idTosearch=env.getVariable(this.id)
         if (idTosearch){
             response = {value:idTosearch.value, type: idTosearch.type}

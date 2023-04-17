@@ -3,6 +3,7 @@ import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Type } from "../abstract/Type";
 import { Error } from "../Error";
+import { Singleton } from "../Singleton";
 
 
 export class VariableDeclaration extends Instruction{
@@ -18,9 +19,18 @@ export class VariableDeclaration extends Instruction{
 
 
     public execute(env:Environment):any{
+        const singleton = Singleton.getInstance()
         if(this.value!= null){
             const variable = this.value.execute(env)
-            env.saveVariable(this.id, variable.value, this.type, this.line, this.column)
+            if (variable.type === this.type){
+                env.saveVariable(this.id, variable.value, this.type, this.line, this.column)
+            }
+            else{
+                const consoleResponse = 'Error semántico: '+ `La variable declarada como '${this.id}' debe de ser de tipo ${Type[this.type]}` + ' genere el reporte de errores para mas detalles'
+                singleton.appendConsole(consoleResponse)
+                throw singleton.addError(new Error("Semantico",`La variable declarada como '${this.id}' debe de ser de tipo ${Type[this.type]}`,this.line,this.column));
+            }
+            
         }
         else{
            switch(this.type){

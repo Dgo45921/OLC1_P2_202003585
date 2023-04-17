@@ -33,7 +33,7 @@ export class Primitive extends Expression{
                 return(this.value === 'true' ? { value: true, type: Type.BOOLEAN } : { value: false, type: Type.BOOLEAN })
 
             default:
-                return { value: this.value, type: Type.NULL}
+                return { value: null, type: Type.NULL}
 
         }
     }

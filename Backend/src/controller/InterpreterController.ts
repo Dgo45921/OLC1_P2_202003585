@@ -33,10 +33,11 @@ class InterpreterController{
             
         }
         catch(err){
+
+            console.log('algo malo paso')
             res.json(
                 {
-                    consola:err,
-                    errores:err,
+                    console: singleton.getConsola()
                 }
             )
         }

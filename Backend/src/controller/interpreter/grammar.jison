@@ -5,6 +5,8 @@
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
   const {VariableAccess} = require('./expressions/VariableAccess')
+  const {TypeOf} = require('./expressions/TypeOf')
+  const {Cast} = require('./expressions/Cast')
   const {Print} = require('./instruction/Print')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
@@ -21,7 +23,7 @@
 /* Definición Léxica */
 %lex
 
-%options case-insensitive
+%options case-insensitive 
 
 %x string
 
@@ -122,7 +124,10 @@
 
 .                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
                           const newError = new Error('Léxico', 'token desconocido: ' + yytext,  yylloc.first_line, yylloc.first_column)
+                          const consoleResponse = 'Error léxico'+ ' ' + yytext + ' en linea y columna: ' + yylloc.first_line + yylloc.first_column + ' genere el reporte de errores para mas detalles'
                           instance.addError(newError)
+                          instance.appendConsole(consoleResponse)
+
                         }
 /lex
 
@@ -182,7 +187,7 @@ OPERAND:  integerNum {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type
 
 // built-in functions
 
-CAST: '(' TYPE ')' EXPRESSION  ;
+CAST: '(' TYPE ')' EXPRESSION {$$=new Cast($4, $2);} ;
 
 
 LOWER_UPPER: reserved_toLower '(' EXPRESSION ')' 
@@ -200,7 +205,7 @@ TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')';
 
 TRUNCATE:reserved_truncate '(' EXPRESSION ')';
 
-TYPE_OF:reserved_typeof '(' EXPRESSION ')';
+TYPE_OF:reserved_typeof '(' EXPRESSION ')' {$$= new TypeOf($3, @1.first_line, @1.first_column);};
 
 
 // ============================================================================================================================
@@ -237,19 +242,20 @@ EXPRESSION : OPERAND  {$$=$1;}
     | '!' EXPRESION	                    {$$= new LogicalOperation($2,$2,'!', @1.first_line, @1.first_column);}
     | EXPRESSION '&&'  EXPRESSION       {$$= new LogicalOperation($1,$3,'&&', @1.first_line, @1.first_column);}
     | EXPRESSION '||'  EXPRESSION       {$$= new LogicalOperation($1,$3,'||', @1.first_line, @1.first_column);}                                                             
-    | CAST                                                                                                                                                  
+    | CAST                              {$$=$1;}                                                                                                                    
     | LOWER_UPPER                                               
     | ROUND                                                     
     | LENGTH                                                    
     | TO_STRING                                                
     | TO_CHAR_ARRAY                                             
     | TRUNCATE                                                  
-    | TYPE_OF     
+    | TYPE_OF                           {$$=$1;}
     | VECTOR_ACCESS
     | LIST_ACCESS
     | FUNCTION_CALL
     | TERNARY                              
     | identifier                        {$$= new VariableAccess($1, @1.first_line, @1.first_column);} 
+
     ;         
 // ====================================================================================================================================
 // basic expressions
@@ -288,6 +294,12 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
 INSTRUCTION: DECLARATION {$$ = $1;}
            | reserved_main FUNCTION_CALL
            | PRINT {$$ = $1;}
+           | error ';' {
+
+
+             console.log("error sintactico en linea " + (yylineno+1) );
+
+           }
            
 ;
 

@@ -68,6 +68,7 @@ function InputArea() {
             });
         
             const result = await response.json();
+            console.log(result.console)
             updateOutputText(result.console)
           } catch (error) {
             console.error("Error:", error);

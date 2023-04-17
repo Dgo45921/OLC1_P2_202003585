@@ -18,7 +18,7 @@ export class LogicalOperation extends Expression {
         let valueLeft = this.leftExp.execute(env)
         let valueRight = this.rightExp.execute(env)
 
-        let response:Return =  { value: 'error', type: Type.NULL}
+        let response:Return =  { value: null, type: Type.NULL}
 
         if (valueLeft.type !== Type.BOOLEAN || valueRight.type !== Type.BOOLEAN) {
             console.log('error semantico, operacion con datos no booleanos')

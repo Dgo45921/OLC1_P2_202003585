@@ -1,6 +1,7 @@
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
+import { Error } from "../Error";
 
 
 export class ArithmeticOperation extends Expression {
@@ -21,10 +22,11 @@ export class ArithmeticOperation extends Expression {
         let valueLeft = this.leftExp.execute(env)
         let valueRight = this.rightExp.execute(env)
 
-        let response:Return =  { value: 'error', type: Type.NULL}
+        let response:Return =  { value: null, type: Type.NULL}
 
         if (valueLeft.type === Type.NULL || valueRight.type === Type.NULL) {
             console.log('error semantico, operacion con null')
+            
             return response
         }
 

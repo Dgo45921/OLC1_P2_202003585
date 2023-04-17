@@ -9,7 +9,7 @@ async function errorReport() {
     const jsonbody = JSON.parse(textData)
    // console.log(jsonbody.dotCode);
     const url = "https://quickchart.io/graphviz?graph=" +  encodeURIComponent(jsonbody.dotCode);
-    console.log(url)
+    // console.log(url)
     window.open(url, "_blank");
 
 
