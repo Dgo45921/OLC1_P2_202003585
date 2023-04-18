@@ -5,6 +5,7 @@
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
   const {VariableAccess} = require('./expressions/VariableAccess')
+  const {Ternary} = require('./expressions/Ternary')
   const {TypeOf} = require('./expressions/TypeOf')
   const {Cast} = require('./expressions/Cast')
   const {Print} = require('./instruction/Print')
@@ -136,18 +137,22 @@
 
 
 /*Operaciones logicas*/
-
+%left '?'
 %left '||'
 %left '&&'
 %left '>' '<' '<=' '>=' '!=' '=='
 
 /*Operaciones numericas*/
 %left '+' '-'
-%left '*' '/' '%' 
+%left '*' '/' '%'
 %nonassoc  '^'
-%right negativo '!' '(' 
-%right '?'
-%left '++' '--' 
+%right negativo '!' '('
+
+%left '++' '--'
+%right ':'
+
+
+
 
 
 
@@ -244,16 +249,16 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '||'  EXPRESSION       {$$= new LogicalOperation($1,$3,'||', @1.first_line, @1.first_column);}                                                             
     | CAST                              {$$=$1;}                                                                                                                    
     | LOWER_UPPER                                               
-    | ROUND                                                     
-    | LENGTH                                                    
+    | ROUND                             //TODO                        
+    | LENGTH                            //TODO                        
     | TO_STRING                                                
-    | TO_CHAR_ARRAY                                             
+    | TO_CHAR_ARRAY                     //TODO                        
     | TRUNCATE                                                  
     | TYPE_OF                           {$$=$1;}
-    | VECTOR_ACCESS
-    | LIST_ACCESS
-    | FUNCTION_CALL
-    | TERNARY                              
+    | VECTOR_ACCESS                     //TODO
+    | LIST_ACCESS                       //TODO
+    | FUNCTION_CALL                     //TODO
+    | TERNARY                           {$$=$1;}
     | identifier                        {$$= new VariableAccess($1, @1.first_line, @1.first_column);} 
 
     ;         
@@ -273,7 +278,7 @@ FUNCTION_CALL: identifier '(' EXPRESSIONS ')'
                 | identifier  '('')' 
 ;
 
-TERNARY:	EXPRESSION '?' EXPRESSION ':' EXPRESSION 
+TERNARY:	EXPRESSION '?' EXPRESSION ':' EXPRESSION     {$$= new Ternary($1, $3, $5, @1.first_line, @1.first_column);} 
 ;
 
 
