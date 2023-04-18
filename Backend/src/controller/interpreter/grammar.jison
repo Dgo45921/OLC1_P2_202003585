@@ -9,6 +9,7 @@
   const {TypeOf} = require('./expressions/TypeOf')
   const {Cast} = require('./expressions/Cast')
   const {ToUpper} = require('./expressions/ToUpper')
+  const {ToString} = require('./expressions/ToString')
   const {Round} = require('./expressions/Round')
   const {Truncate} = require('./expressions/Truncate')
   const {Print} = require('./instruction/Print')
@@ -208,7 +209,7 @@ LENGTH:reserved_length '(' EXPRESSION ')';
 
 ROUND: reserved_round '(' EXPRESSION ')'  {$$ = new Round($3,@1.first_line,@1.first_column);};
 
-TO_STRING: reserved_tostring '(' EXPRESSION ')';
+TO_STRING: reserved_tostring '(' EXPRESSION ')' {$$ = new ToString($3,@1.first_line,@1.first_column);};
 
 TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')';
 
@@ -255,7 +256,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | LOWER_UPPER                       {$$=$1;}                       
     | ROUND                             {$$=$1;}                        
     | LENGTH                            //TODO                        
-    | TO_STRING                                                
+    | TO_STRING                         {$$=$1;}                     
     | TO_CHAR_ARRAY                     //TODO                        
     | TRUNCATE                          {$$=$1;}                        
     | TYPE_OF                           {$$=$1;}

@@ -16,8 +16,8 @@ export class ToString extends Instruction {
 
     public execute(env: Environment): Return {
         const node = this.expression.execute(env)
-        if (node.type === Type.STRING){
-            return {value:node.value.toUpperCase(), type:Type.STRING}
+        if (node.type === Type.INT || node.type === Type.BOOLEAN){
+            return {value:node.value.toString(), type:Type.STRING}
         }
 
 
