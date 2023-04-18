@@ -13,6 +13,7 @@
   const {Round} = require('./expressions/Round')
   const {Truncate} = require('./expressions/Truncate')
   const {Print} = require('./instruction/Print')
+  const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
@@ -339,7 +340,7 @@ RETURN_STATEMENT: reserved_return ';'
 ;
 
 DECLARATION: VARIABLE_DECLARATION  {$$=$1}
-           | VECTOR_DECLARATION
+           | VECTOR_DECLARATION    {$$=$1}
            | LIST_DECLARATION
 ;
 
@@ -352,13 +353,13 @@ VARIABLE_ASIGNATION: identifier '=' OPERAND ';'
                      |identifier '=' identifier ';'
                    ;       
 
-VECTOR_DECLARATION:TYPE '[' ']' identifier '=' reserved_new TYPE '[' EXPRESSION ']' ';' 
-                   |TYPE '[' ']' identifier '=' '{' VALUE_LIST '}' ';'
+VECTOR_DECLARATION: TYPE '[' ']' identifier '=' reserved_new TYPE '[' EXPRESSION ']' ';' {$$=new VectorDeclaration($4, $1, $7, $9 ,@1.first_line, @1.first_column )}
+                   |TYPE '[' ']' identifier '=' '{' VALUE_LIST '}' ';' {$$=new VectorDeclaration($4, $1, $1, $7 ,@1.first_line, @1.first_column )}
                     ;
 
 
-VALUE_LIST: VALUE_LIST ',' EXPRESSION
-          |EXPRESSION
+VALUE_LIST: VALUE_LIST ',' EXPRESSION  {$1.push($3); $$=$1;}
+          |EXPRESSION                  {$$ = [$1];}
 ;
 
 

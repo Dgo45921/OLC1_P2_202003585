@@ -24,7 +24,22 @@ export class Environment {
   
       if (!env.variables.has(id.toLowerCase())) {
 
-        env.variables.set(id.toLowerCase(), new Symbol(value, id, type));
+        env.variables.set(id.toLowerCase(), new Symbol(value, id, type, 0));
+      }else {
+        console.log('error, variable ya definida')
+
+      }
+  
+
+    }
+
+
+    public saveVector(id:string, value:any, type:Type, line:number, column:number, size:number):void{
+        let env: Environment | null = this;
+  
+      if (!env.variables.has(id.toLowerCase())) {
+
+        env.variables.set(id.toLowerCase(), new Symbol(value, id, type, size));
       }else {
         console.log('error, variable ya definida')
 

@@ -217,7 +217,7 @@ break;
 case 83:
 this.$ = new Print(_$[$0-4].first_line,_$[$0-4].first_column ,$$[$0-2])
 break;
-case 86:
+case 86: case 87:
 this.$=$$[$0]
 break;
 case 89:
@@ -225,6 +225,18 @@ this.$=new VariableDeclaration($$[$0-1], $$[$0-2], null, _$[$0-2].first_line, _$
 break;
 case 90:
 this.$=new VariableDeclaration($$[$0-3], $$[$0-4], $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column )
+break;
+case 93:
+this.$=new VectorDeclaration($$[$0-7], $$[$0-10], $$[$0-4], $$[$0-2] ,_$[$0-10].first_line, _$[$0-10].first_column )
+break;
+case 94:
+this.$=new VectorDeclaration($$[$0-5], $$[$0-8], $$[$0-8], $$[$0-2] ,_$[$0-8].first_line, _$[$0-8].first_column )
+break;
+case 95:
+$$[$0-2].push($$[$0]); this.$=$$[$0-2];
+break;
+case 96:
+this.$ = [$$[$0]];
 break;
 }
 },
@@ -492,6 +504,7 @@ _handle_error:
   const {Round} = require('./expressions/Round')
   const {Truncate} = require('./expressions/Truncate')
   const {Print} = require('./instruction/Print')
+  const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
