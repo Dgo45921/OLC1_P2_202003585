@@ -5,6 +5,7 @@
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
   const {VariableAccess} = require('./expressions/VariableAccess')
+  const {VectorAccess} = require('./expressions/VectorAccess')
   const {Ternary} = require('./expressions/Ternary')
   const {TypeOf} = require('./expressions/TypeOf')
   const {Cast} = require('./expressions/Cast')
@@ -261,7 +262,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | TO_CHAR_ARRAY                     //TODO                        
     | TRUNCATE                          {$$=$1;}                        
     | TYPE_OF                           {$$=$1;}
-    | VECTOR_ACCESS                     //TODO
+    | VECTOR_ACCESS                     {$$=$1;}
     | LIST_ACCESS                       //TODO
     | FUNCTION_CALL                     //TODO
     | TERNARY                           {$$=$1;}
@@ -273,7 +274,7 @@ EXPRESSION : OPERAND  {$$=$1;}
 
 
 
-VECTOR_ACCESS: identifier '[' EXPRESSION ']'
+VECTOR_ACCESS: identifier '[' EXPRESSION ']' {$$= new VectorAccess($1, $3 ,@1.first_line, @1.first_column);} 
                ;
 
 LIST_ACCESS: identifier '[' '[' EXPRESSION ']' ']' ;

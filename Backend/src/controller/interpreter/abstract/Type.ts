@@ -6,7 +6,11 @@ export enum Type {
     CHAR,           //4
     NULL,           //5
     LIST,           //6
-    VECTOR          //7
+    VECTOR_INT,          //7
+    VECTOR_DOUBLE,
+    VECTOR_CHAR,
+    VECTOR_STRING,
+    VECTOR_BOOLEAN
 }
 
 

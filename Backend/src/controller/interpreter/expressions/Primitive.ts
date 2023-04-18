@@ -1,3 +1,4 @@
+import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
 
@@ -13,7 +14,7 @@ export class Primitive extends Expression{
         super(line, column)
     }
 
-    public execute():Return {
+    public execute(env:Environment):Return {
         switch(this.type){
             case Type.INT:
                 return {value:parseInt(this.value), type: this.type}
@@ -33,7 +34,7 @@ export class Primitive extends Expression{
                 return(this.value === 'true' ? { value: true, type: Type.BOOLEAN } : { value: false, type: Type.BOOLEAN })
 
             default:
-                return { value: null, type: Type.NULL}
+                return { value: null    , type: Type.NULL}
 
         }
     }

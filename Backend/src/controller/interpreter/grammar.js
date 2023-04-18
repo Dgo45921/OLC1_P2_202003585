@@ -137,7 +137,7 @@ break;
 case 21:
 this.$= new TypeOf($$[$0-1], _$[$0-3].first_line, _$[$0-3].first_column);
 break;
-case 26: case 44: case 45: case 46: case 48: case 50: case 51: case 55:
+case 26: case 44: case 45: case 46: case 48: case 50: case 51: case 52: case 55:
 this.$=$$[$0];
 break;
 case 27:
@@ -193,6 +193,9 @@ this.$= new LogicalOperation($$[$0-2],$$[$0],'||', _$[$0-2].first_line, _$[$0-2]
 break;
 case 56:
 this.$= new VariableAccess($$[$0], _$[$0].first_line, _$[$0].first_column);
+break;
+case 57:
+this.$= new VectorAccess($$[$0-3], $$[$0-1] ,_$[$0-3].first_line, _$[$0-3].first_column);
 break;
 case 61:
 this.$= new Ternary($$[$0-4], $$[$0-2], $$[$0], _$[$0-4].first_line, _$[$0-4].first_column);
@@ -496,6 +499,7 @@ _handle_error:
   const {RelationalOperation} = require('./expressions/RelationalOperation')
   const {LogicalOperation} = require('./expressions/LogicalOperation')
   const {VariableAccess} = require('./expressions/VariableAccess')
+  const {VectorAccess} = require('./expressions/VectorAccess')
   const {Ternary} = require('./expressions/Ternary')
   const {TypeOf} = require('./expressions/TypeOf')
   const {Cast} = require('./expressions/Cast')

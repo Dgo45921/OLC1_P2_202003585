@@ -36,15 +36,24 @@ export class VectorDeclaration extends Instruction {
 
                     if (this.type1 === Type.INT) {
                         new_vector.fill(0)
+                        env.saveVariable(this.id, new_vector, Type.VECTOR_INT, this.line, this.column)
                     }
                     else if (this.type1 === Type.DOUBLE) {
                         new_vector.fill(0.0)
+                        env.saveVariable(this.id, new_vector, Type.VECTOR_DOUBLE, this.line, this.column)
                     }
-                    else if (this.type1 === Type.STRING || this.type1 === Type.CHAR) {
+                    else if (this.type1 === Type.CHAR) {
                         new_vector.fill("")
+                        env.saveVariable(this.id, new_vector, Type.VECTOR_CHAR, this.line, this.column)
+                    }
+
+                    else if (this.type1 === Type.STRING) {
+                        new_vector.fill("")
+                        env.saveVariable(this.id, new_vector, Type.VECTOR_STRING, this.line, this.column)
                     }
                     else if (this.type1 === Type.BOOLEAN) {
                         new_vector.fill(true)
+                        env.saveVariable(this.id, new_vector, Type.VECTOR_BOOLEAN, this.line, this.column)
                     }
                     else{
                         const consoleResponse = 'Error semántico: '+ `Vector:'${this.id}' tipo de inicializacion de vector no valida` + ' genere el reporte de errores para mas detalles'
@@ -54,7 +63,7 @@ export class VectorDeclaration extends Instruction {
                     }
 
 
-                    env.saveVariable(this.id, new_vector, this.type1, this.line, this.column)
+                    
                 }
             }
             else {
@@ -63,10 +72,35 @@ export class VectorDeclaration extends Instruction {
                
 
                 for(let i = 0; i<arrayvalues.length;i++){
-                    new_vector.push(arrayvalues[i].value)
 
+                    let val = arrayvalues[i].execute(env)
+                    new_vector.push(val.value)
+                
                 }
-                 env.saveVariable(this.id, new_vector, this.type1, this.line, this.column)
+
+
+                if (arrayvalues[0].execute(env).type === Type.INT) {
+
+                    env.saveVariable(this.id, new_vector, Type.VECTOR_INT, this.line, this.column)
+                }
+                else if (arrayvalues[0].execute(env).type === Type.DOUBLE) {
+
+                    env.saveVariable(this.id, new_vector, Type.VECTOR_DOUBLE, this.line, this.column)
+                }
+                else if (arrayvalues[0].execute(env).type === Type.CHAR) {
+
+                    env.saveVariable(this.id, new_vector, Type.VECTOR_CHAR, this.line, this.column)
+                }
+
+                else if (arrayvalues[0].execute(env).type === Type.STRING) {
+
+                    env.saveVariable(this.id, new_vector, Type.VECTOR_STRING, this.line, this.column)
+                }
+                else if (arrayvalues[0].execute(env).type === Type.BOOLEAN) {
+
+                    env.saveVariable(this.id, new_vector, Type.VECTOR_BOOLEAN, this.line, this.column)
+                }
+
             }
 
 
