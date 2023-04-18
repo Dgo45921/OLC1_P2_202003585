@@ -8,7 +8,11 @@
   const {Ternary} = require('./expressions/Ternary')
   const {TypeOf} = require('./expressions/TypeOf')
   const {Cast} = require('./expressions/Cast')
+  const {ToUpper} = require('./expressions/ToUpper')
+  const {Round} = require('./expressions/Round')
+  const {Truncate} = require('./expressions/Truncate')
   const {Print} = require('./instruction/Print')
+  const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
   const {Singleton} = require('./Singleton')
@@ -195,20 +199,20 @@ OPERAND:  integerNum {$$ = new Primitive(@1.first_line,@1.first_column ,$1, Type
 CAST: '(' TYPE ')' EXPRESSION {$$=new Cast($4, $2);} ;
 
 
-LOWER_UPPER: reserved_toLower '(' EXPRESSION ')' 
-            | reserved_toUpper '(' EXPRESSION ')'
+LOWER_UPPER: reserved_toLower '(' EXPRESSION ')'  {$$ = new ToLower($3,@1.first_line,@1.first_column);}
+            | reserved_toUpper '(' EXPRESSION ')'  {$$ = new ToUpper($3,@1.first_line,@1.first_column);}
         
 ;
 
 LENGTH:reserved_length '(' EXPRESSION ')';
 
-ROUND: reserved_round '(' EXPRESSION ')';
+ROUND: reserved_round '(' EXPRESSION ')'  {$$ = new Round($3,@1.first_line,@1.first_column);};
 
 TO_STRING: reserved_tostring '(' EXPRESSION ')';
 
 TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')';
 
-TRUNCATE:reserved_truncate '(' EXPRESSION ')';
+TRUNCATE:reserved_truncate '(' EXPRESSION ')'  {$$ = new Truncate($3,@1.first_line,@1.first_column);};  
 
 TYPE_OF:reserved_typeof '(' EXPRESSION ')' {$$= new TypeOf($3, @1.first_line, @1.first_column);};
 
@@ -248,12 +252,12 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '&&'  EXPRESSION       {$$= new LogicalOperation($1,$3,'&&', @1.first_line, @1.first_column);}
     | EXPRESSION '||'  EXPRESSION       {$$= new LogicalOperation($1,$3,'||', @1.first_line, @1.first_column);}                                                             
     | CAST                              {$$=$1;}                                                                                                                    
-    | LOWER_UPPER                                               
-    | ROUND                             //TODO                        
+    | LOWER_UPPER                       {$$=$1;}                       
+    | ROUND                             {$$=$1;}                        
     | LENGTH                            //TODO                        
     | TO_STRING                                                
     | TO_CHAR_ARRAY                     //TODO                        
-    | TRUNCATE                                                  
+    | TRUNCATE                          {$$=$1;}                        
     | TYPE_OF                           {$$=$1;}
     | VECTOR_ACCESS                     //TODO
     | LIST_ACCESS                       //TODO

@@ -35,6 +35,7 @@ class InterpreterController{
         catch(err){
 
             console.log('algo malo paso')
+            console.log(err)
             res.json(
                 {
                     console: singleton.getConsola()
