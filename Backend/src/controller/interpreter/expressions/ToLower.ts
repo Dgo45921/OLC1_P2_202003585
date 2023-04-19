@@ -1,11 +1,10 @@
-import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
 
 
 
-export class ToLower extends Instruction {
+export class ToLower extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {

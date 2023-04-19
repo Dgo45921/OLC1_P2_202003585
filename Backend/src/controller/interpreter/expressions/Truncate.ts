@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class Truncate extends Instruction {
+export class Truncate extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {

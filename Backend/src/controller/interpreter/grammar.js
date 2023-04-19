@@ -125,6 +125,9 @@ break;
 case 15:
 this.$ = new ToUpper($$[$0-1],_$[$0-3].first_line,_$[$0-3].first_column);
 break;
+case 16:
+this.$ = new Length($$[$0-1],_$[$0-3].first_line,_$[$0-3].first_column);
+break;
 case 17:
 this.$ = new Round($$[$0-1],_$[$0-3].first_line,_$[$0-3].first_column);
 break;
@@ -137,7 +140,7 @@ break;
 case 21:
 this.$= new TypeOf($$[$0-1], _$[$0-3].first_line, _$[$0-3].first_column);
 break;
-case 26: case 44: case 45: case 46: case 48: case 50: case 51: case 52: case 55:
+case 26: case 44: case 45: case 46: case 47: case 48: case 50: case 51: case 52: case 55:
 this.$=$$[$0];
 break;
 case 27:
@@ -507,6 +510,7 @@ _handle_error:
   const {ToString} = require('./expressions/ToString')
   const {Round} = require('./expressions/Round')
   const {Truncate} = require('./expressions/Truncate')
+  const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {ToLower} = require('./expressions/ToLower')

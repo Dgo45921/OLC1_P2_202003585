@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class TypeOf extends Instruction {
+export class TypeOf extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {

@@ -1,11 +1,10 @@
-import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
 
 
 
-export class ToString extends Expression {
+export class Length extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {
@@ -16,8 +15,8 @@ export class ToString extends Expression {
 
     public execute(env: Environment): Return {
         const node = this.expression.execute(env)
-        if (node.type === Type.INT || node.type === Type.BOOLEAN){
-            return {value:node.value.toString(), type:Type.STRING}
+        if (node.type === Type.STRING || node.type === Type.VECTOR_BOOLEAN || node.type === Type.VECTOR_CHAR || node.type === Type.VECTOR_STRING || node.type === Type.VECTOR_INT || node.type === Type.VECTOR_DOUBLE){
+            return {value:node.value.length, type:Type.INT}
         }
 
 
@@ -26,3 +25,4 @@ export class ToString extends Expression {
     }
 
 }
+

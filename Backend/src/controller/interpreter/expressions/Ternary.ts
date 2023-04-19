@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class Ternary extends Instruction {
+export class Ternary extends Expression {
 
     private expression1: Expression
     private expression2: Expression

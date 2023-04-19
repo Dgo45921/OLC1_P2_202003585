@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class Round extends Instruction {
+export class Round extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {

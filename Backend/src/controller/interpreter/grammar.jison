@@ -13,6 +13,7 @@
   const {ToString} = require('./expressions/ToString')
   const {Round} = require('./expressions/Round')
   const {Truncate} = require('./expressions/Truncate')
+  const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {ToLower} = require('./expressions/ToLower')
@@ -207,7 +208,8 @@ LOWER_UPPER: reserved_toLower '(' EXPRESSION ')'  {$$ = new ToLower($3,@1.first_
         
 ;
 
-LENGTH:reserved_length '(' EXPRESSION ')';
+LENGTH:reserved_length '(' EXPRESSION ')'  {$$ = new Length($3,@1.first_line,@1.first_column);}
+        ;
 
 ROUND: reserved_round '(' EXPRESSION ')'  {$$ = new Round($3,@1.first_line,@1.first_column);};
 
@@ -257,7 +259,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | CAST                              {$$=$1;}                                                                                                                    
     | LOWER_UPPER                       {$$=$1;}                       
     | ROUND                             {$$=$1;}                        
-    | LENGTH                            //TODO                        
+    | LENGTH                            {$$=$1;}                       
     | TO_STRING                         {$$=$1;}                     
     | TO_CHAR_ARRAY                     //TODO                        
     | TRUNCATE                          {$$=$1;}                        

@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class Cast extends Instruction {
+export class Cast extends Expression {
 
     private expression: Expression
     private type : Type

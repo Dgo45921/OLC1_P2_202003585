@@ -5,7 +5,7 @@ import { Return, Type } from "../abstract/Type";
 
 
 
-export class ToUpper extends Instruction {
+export class ToUpper extends Expression {
 
     private expression: Expression
     constructor(value: Expression, line: number, column: number) {
