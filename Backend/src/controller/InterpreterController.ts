@@ -1,6 +1,8 @@
 import {Request, Response} from "express";
 import { Environment } from "./interpreter/Enviroment";
 import { Singleton } from "./interpreter/Singleton";
+import { MethodDeclaration } from "./interpreter/instruction/MethodDeclaration";
+import { FunctionDeclaration } from "./interpreter/instruction/FunctionDeclaration";
 let global_env = new Environment(null);
 let singleton = Singleton.getInstance()
 
@@ -21,9 +23,33 @@ class InterpreterController{
         try{
             let ast = parser.parse(code);
             global_env = new Environment(null);
-            for(const inst of ast){
-                inst.execute(global_env);
-            }
+
+
+            for (const elemento of ast) {
+                try {
+                  if (elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration) {
+                    elemento.execute(global_env);
+                  }
+                } catch (error) {
+                  console.log(error); 
+                }
+              }
+        
+        
+              for (const elemento of ast) {
+                try {
+                  if (!(elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration)) {
+                    elemento.execute(global_env);
+                  }
+                } catch (error) {
+                  console.log(error); 
+                }
+              }
+
+
+            // for(const inst of ast){
+            //     inst.execute(global_env);
+            // }
 
             res.json(
                 {

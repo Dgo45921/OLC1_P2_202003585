@@ -18,11 +18,15 @@
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {Block} = require('./instruction/Block')
+  const {MethodDeclaration} = require('./instruction/MethodDeclaration')
+  const {Call} = require('./instruction/Call')
   const {ListDeclaration} = require('./instruction/ListDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
   const {Singleton} = require('./Singleton')
+  const {Parameter} = require('./Parameter')
   const {Error} = require('./Error')
 
   const instance = Singleton.getInstance();
@@ -269,7 +273,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | TYPE_OF                           {$$=$1;}
     | VECTOR_ACCESS                     {$$=$1;}
     | LIST_ACCESS                       {$$=$1;}
-    | FUNCTION_CALL                     //TODO
+    | FUNCTION_CA LL                     {$$=$1;}
     | TERNARY                           {$$=$1;}
     | identifier                        {$$= new VariableAccess($1, @1.first_line, @1.first_column);} 
 
@@ -287,9 +291,20 @@ LIST_ACCESS: identifier '[' '[' EXPRESSION ']' ']' {$$= new ListAccess($1, $4 ,@
 
 
 
-FUNCTION_CALL: identifier '(' EXPRESSIONS ')' 
-                | identifier  '('')' 
+FUNCTION_CALL: identifier '(' ARGUMENTS ')' {$$=new Call($1,$3,@1.first_line, @1.first_column)}
+
+
+
 ;
+
+
+ARGUMENTS: ARGUMENT ',' ARGUMENTS  {$3.unshift($1); $$=$3;}
+            | ARGUMENT {$$=[$1];}
+            | 
+            ;
+
+ARGUMENT: EXPRESSION {$$=$1} ;
+
 
 TERNARY:	EXPRESSION '?' EXPRESSION ':' EXPRESSION     {$$= new Ternary($1, $3, $5, @1.first_line, @1.first_column);} 
 ;
@@ -304,24 +319,22 @@ INSTRUCTIONS: INSTRUCTIONS INSTRUCTION {$1.push($2); $$=$1; console.log('entre a
 
 ;
 
-INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2
-            | INSTRUCTION2
-
+INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2 {$1.push($2); $$=$1; console.log('entre a instrucciones2');}
+            | INSTRUCTION2                 {$$ = [$1]; console.log('entre a instruccion2');}
+ 
 ;
  
 INSTRUCTION: DECLARATION {$$ = $1;}
            | reserved_main FUNCTION_CALL
            | PRINT {$$ = $1;}
-           | error ';' {
-
-
-             console.log("error sintactico en linea " + (yylineno+1) );
-
-           }
+           | METHOD_DECLARATION {$$ = $1;}
+           | FUNCTION_CALL ';' {$$ = $1;}
+           | error ';' { console.log("error sintactico en linea " + (yylineno+1) );}
+             
            
 ;
 
-INSTRUCTION2: DECLARATION 
+INSTRUCTION2: DECLARATION  {$$ = $1;}
            | LIST_ADDITION
            | INCREASE
            | DECREASE
@@ -332,7 +345,7 @@ INSTRUCTION2: DECLARATION
            | reserved_break ';'
            | reserved_continue ';'
            | RETURN_STATEMENT
-           | FUNCTION_CALL
+           | FUNCTION_CALL';' {$$ = $1;}
            | PRINT {$$ = $1;}
            
 ;
@@ -346,10 +359,20 @@ RETURN_STATEMENT: reserved_return ';'
 
 ;
 
-DECLARATION: VARIABLE_DECLARATION  {$$=$1}
-           | VECTOR_DECLARATION    {$$=$1}
-           | LIST_DECLARATION      {$$=$1}
+DECLARATION: VARIABLE_DECLARATION    {$$=$1}
+           | VECTOR_DECLARATION      {$$=$1}
+           | LIST_DECLARATION        {$$=$1}
 ;
+
+
+
+METHOD_DECLARATION : reserved_void identifier '(' PARAMETERS ')' BLOCK   {$$=new MethodDeclaration($2,$4,$6,@1.first_line, @1.first_column)}
+;
+
+
+BLOCK :'{' INSTRUCTIONS2 '}'  {$$=new Block($2, @1.first_line, @1.first_column)}
+        | '{'  '}'            {}
+      ; 
 
 
 VARIABLE_DECLARATION: TYPE identifier  ';'                {$$=new VariableDeclaration($2, $1, null, @1.first_line, @1.first_column )}
@@ -424,13 +447,17 @@ DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESS
 
 
 FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'
-                    | reserved_void identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'                    
+                    | reserved_void identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'   
+
+                 
                     
 
 ;
 
-PARAMETERS:
-           PARAMETERS ',' TYPE identifier
-          |TYPE identifier
+PARAMETERS: PARAMETER ',' PARAMETERS {$3.unshift($1); $$=$3;}
+          |PARAMETER {$$=[$1];}
+          |
           
 ;
+
+PARAMETER:TYPE identifier  {$$=new Parameter($1,$2,@1.first_line, @1.first_column);};
