@@ -8,6 +8,7 @@
   const {VectorAccess} = require('./expressions/VectorAccess')
   const {Ternary} = require('./expressions/Ternary')
   const {TypeOf} = require('./expressions/TypeOf')
+  const {ToCharArray} = require('./expressions/ToCharArray')
   const {Cast} = require('./expressions/Cast')
   const {ToUpper} = require('./expressions/ToUpper')
   const {ToString} = require('./expressions/ToString')
@@ -216,7 +217,7 @@ ROUND: reserved_round '(' EXPRESSION ')'  {$$ = new Round($3,@1.first_line,@1.fi
 
 TO_STRING: reserved_tostring '(' EXPRESSION ')' {$$ = new ToString($3,@1.first_line,@1.first_column);};
 
-TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')';
+TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')'  {$$ = new ToCharArray($3,@1.first_line,@1.first_column);};
 
 TRUNCATE:reserved_truncate '(' EXPRESSION ')'  {$$ = new Truncate($3,@1.first_line,@1.first_column);};  
 
@@ -262,7 +263,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | ROUND                             {$$=$1;}                        
     | LENGTH                            {$$=$1;}                       
     | TO_STRING                         {$$=$1;}                     
-    | TO_CHAR_ARRAY                     //TODO                        
+    | TO_CHAR_ARRAY                     {$$=$1;}                       
     | TRUNCATE                          {$$=$1;}                        
     | TYPE_OF                           {$$=$1;}
     | VECTOR_ACCESS                     {$$=$1;}
@@ -367,7 +368,8 @@ VALUE_LIST: VALUE_LIST ',' EXPRESSION  {$1.push($3); $$=$1;}
 ;
 
 
-LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';'  {$$=new ListDeclaration($5, $3, $10 ,@1.first_line, @1.first_column )}
+LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';'  {$$=new ListDeclaration($5, $3, $10,null ,@1.first_line, @1.first_column )}
+                 | reserved_list '<' TYPE '>' identifier '=' reserved_toCharArray '(' stringValue ')' ';'  {$$=new ListDeclaration($5, $3, $3, $9 ,@1.first_line, @1.first_column )}
   ;
 
 LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' ;

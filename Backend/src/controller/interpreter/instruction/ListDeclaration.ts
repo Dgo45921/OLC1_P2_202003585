@@ -1,7 +1,7 @@
 import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
-import { Type } from "../abstract/Type";
+import { Return, Type } from "../abstract/Type";
 import { Error } from "../Error";
 import { Singleton } from "../Singleton";
 
@@ -10,12 +10,14 @@ export class ListDeclaration extends Instruction {
     private id: string
     private type1: Type
     private type2: Type
+    private value: any
 
-    constructor(id: string, type: Type, type2: Type, line: number, column: number) {
+    constructor(id: string, type: Type, type2: Type, value:any, line: number, column: number) {
         super(line, column)
         this.id = id
         this.type1 = type
         this.type2 = type2
+        this.value = value
 
     }
 
@@ -25,26 +27,37 @@ export class ListDeclaration extends Instruction {
             console.log('error semantico declaracion de vector dos tipos distintos')
         }
         else{
-            if (this.type1 === Type.INT) {
+            if(this.value === null){
+                if (this.type1 === Type.INT) {
 
-                env.saveVariable(this.id, new Array(), Type.LIST_INT, this.line, this.column)
+                    env.saveVariable(this.id, new Array(), Type.LIST_INT, this.line, this.column)
+                }
+                else if (this.type1 === Type.DOUBLE) {
+    
+                    env.saveVariable(this.id, new Array(), Type.LIST_DOUBLE, this.line, this.column)
+                }
+                else if (this.type1 === Type.CHAR) {
+    
+                    env.saveVariable(this.id, new Array(), Type.LIST_CHAR, this.line, this.column)
+                }
+    
+                else if (this.type1 === Type.STRING) {
+    
+                    env.saveVariable(this.id, new Array(), Type.LIST_STRING, this.line, this.column)
+                }
+                else if (this.type1 === Type.BOOLEAN) {
+    
+                    env.saveVariable(this.id, new Array(), Type.LIST_BOOLEAN, this.line, this.column)
+                }
             }
-            else if (this.type1 === Type.DOUBLE) {
-
-                env.saveVariable(this.id, new Array(), Type.LIST_DOUBLE, this.line, this.column)
-            }
-            else if (this.type1 === Type.CHAR) {
-
-                env.saveVariable(this.id, new Array(), Type.LIST_CHAR, this.line, this.column)
-            }
-
-            else if (this.type1 === Type.STRING) {
-
-                env.saveVariable(this.id, new Array(), Type.LIST_STRING, this.line, this.column)
-            }
-            else if (this.type1 === Type.BOOLEAN) {
-
-                env.saveVariable(this.id, new Array(), Type.LIST_BOOLEAN, this.line, this.column)
+            else{
+                this.value = (this.value).replaceAll('"','');
+                this.value = (this.value).replaceAll("\\n","\n");
+                this.value = (this.value).replaceAll("\\t","\t");
+                
+                env.saveVariable(this.id, this.value.split(''), Type.LIST_STRING, this.line, this.column)
+                
+               
             }
 
         }
