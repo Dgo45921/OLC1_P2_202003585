@@ -16,6 +16,7 @@
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {ListDeclaration} = require('./instruction/ListDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
@@ -344,7 +345,7 @@ RETURN_STATEMENT: reserved_return ';'
 
 DECLARATION: VARIABLE_DECLARATION  {$$=$1}
            | VECTOR_DECLARATION    {$$=$1}
-           | LIST_DECLARATION
+           | LIST_DECLARATION      {$$=$1}
 ;
 
 
@@ -366,7 +367,8 @@ VALUE_LIST: VALUE_LIST ',' EXPRESSION  {$1.push($3); $$=$1;}
 ;
 
 
-LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';';
+LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';'  {$$=new ListDeclaration($5, $3, $10 ,@1.first_line, @1.first_column )}
+  ;
 
 LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' ;
 

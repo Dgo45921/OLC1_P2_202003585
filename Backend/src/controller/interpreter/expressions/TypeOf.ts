@@ -32,6 +32,18 @@ export class TypeOf extends Expression {
             case Type.BOOLEAN:
                 return { value: "BOOLEAN", type: Type.STRING }
 
+            case Type.VECTOR_BOOLEAN:
+            case Type.VECTOR_CHAR:
+            case Type.VECTOR_STRING:
+            case Type.VECTOR_INT:
+                return { value: "VECTOR", type: Type.VECTOR }
+
+            case Type.LIST_BOOLEAN:
+            case Type.LIST_CHAR:
+            case Type.LIST_STRING:
+            case Type.LIST_INT:
+                return { value: "LIST", type: Type.LIST }
+
             default:
                 return { value: "NULL", type: Type.NULL }
         }

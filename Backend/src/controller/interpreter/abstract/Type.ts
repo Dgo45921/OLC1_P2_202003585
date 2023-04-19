@@ -10,7 +10,13 @@ export enum Type {
     VECTOR_DOUBLE,
     VECTOR_CHAR,
     VECTOR_STRING,
-    VECTOR_BOOLEAN
+    VECTOR_BOOLEAN,
+    VECTOR,
+    LIST_INT,          //7
+    LIST_DOUBLE,
+    LIST_CHAR,
+    LIST_STRING,
+    LIST_BOOLEAN,
 }
 
 

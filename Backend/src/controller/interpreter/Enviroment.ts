@@ -39,7 +39,7 @@ export class Environment {
   
       if (!env.variables.has(id.toLowerCase())) {
 
-        env.variables.set(id.toLowerCase(), new Symbol(value, id, type));
+        env.variables.set(id.toLowerCase(), new Symbol(value, id.toLowerCase(), type));
       }else {
         console.log('error, variable ya definida')
 
@@ -58,7 +58,7 @@ export class Environment {
     public getVariable(nombre: string): Symbol | undefined | null {
         let env: Environment | null = this;
         while (env != null) {
-            if (env.variables.has(nombre)) return env.variables.get(nombre);
+            if (env.variables.has(nombre.toLowerCase())) return env.variables.get(nombre.toLowerCase());
             env = env.prev;
         }
         return null;

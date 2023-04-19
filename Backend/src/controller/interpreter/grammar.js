@@ -223,7 +223,7 @@ break;
 case 83:
 this.$ = new Print(_$[$0-4].first_line,_$[$0-4].first_column ,$$[$0-2])
 break;
-case 86: case 87:
+case 86: case 87: case 88:
 this.$=$$[$0]
 break;
 case 89:
@@ -243,6 +243,9 @@ $$[$0-2].push($$[$0]); this.$=$$[$0-2];
 break;
 case 96:
 this.$ = [$$[$0]];
+break;
+case 97:
+this.$=new ListDeclaration($$[$0-7], $$[$0-9], $$[$0-2] ,_$[$0-11].first_line, _$[$0-11].first_column )
 break;
 }
 },
@@ -513,6 +516,7 @@ _handle_error:
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {ListDeclaration} = require('./instruction/ListDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Type} = require('./abstract/Type')
