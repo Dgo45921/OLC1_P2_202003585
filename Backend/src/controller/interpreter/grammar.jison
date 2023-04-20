@@ -20,8 +20,10 @@
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {Block} = require('./instruction/Block')
   const {MethodDeclaration} = require('./instruction/MethodDeclaration')
+  const {FunctionDeclaration} = require('./instruction/FunctionDeclaration')
   const {Call} = require('./instruction/Call')
   const {ListDeclaration} = require('./instruction/ListDeclaration')
+  const {Return} = require('./instruction/Return')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {Main} = require('./instruction/Main')
@@ -329,6 +331,7 @@ INSTRUCTION: DECLARATION {$$ = $1;}
            | reserved_main FUNCTION_CALL ';' {$$=new Main($2,@1.first_line, @1.first_column)}
            | PRINT {$$ = $1;}
            | METHOD_DECLARATION {$$ = $1;}
+           | FUNCTION_DECLARATION {$$ = $1;}
            | FUNCTION_CALL ';' {$$ = $1;}
            | error ';' { console.log("error sintactico en linea " + (yylineno+1) );}
              
@@ -345,7 +348,7 @@ INSTRUCTION2: DECLARATION  {$$ = $1;}
            | DO_WHILE_STATEMENT
            | reserved_break ';'
            | reserved_continue ';'
-           | RETURN_STATEMENT
+           | RETURN_STATEMENT {$$ = $1;}
            | FUNCTION_CALL';' {$$ = $1;}
            | PRINT {$$ = $1;}
            
@@ -355,8 +358,8 @@ INSTRUCTION2: DECLARATION  {$$ = $1;}
 PRINT : reserved_print '(' EXPRESSION ')' ';'  {$$ = new Print(@1.first_line,@1.first_column ,$3)} ;
 
 
-RETURN_STATEMENT: reserved_return ';'
-       | reserved_return EXPRESSION ';'
+RETURN_STATEMENT: reserved_return ';' {$$=new Return(null,@1.first_line, @1.first_column);}
+       | reserved_return EXPRESSION ';' {$$=new Return($2,@1.first_line, @1.first_column);}
 
 ;
 
@@ -447,8 +450,7 @@ FOR_THIRD_CONDITION: EXPRESSION INCREASE
 DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESSION ')' ';';                    
 
 
-FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'
-                    | reserved_void identifier '(' PARAMETERS ')' '{' INSTRUCTIONS2 '}'   
+FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' BLOCK {$$=new FunctionDeclaration($1,$2,$4,$6,@1.first_line, @1.first_column)}
 
                  
                     
