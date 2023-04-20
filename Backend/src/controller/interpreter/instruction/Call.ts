@@ -82,16 +82,17 @@ export class Call extends Instruction {
             return;
         }
         let instrucciones: any[] = func.insBlock.instructions;
-        //console.log(instrucciones);
+        // check if running a method or a function ------------------------------------------------------------
         if(func instanceof MethodDeclaration){
             for (const elemento of instrucciones) {
                 try {
                     const ins:any=elemento.execute(env);
-                    return
+                    
                 } catch (error) {
                     //console.log(error);
                 }
             }
+            return null
         }else if(func instanceof FunctionDeclaration){
             console.log("este es una funcion no un metodo")
             for (const elemento of instrucciones) {

@@ -26,6 +26,7 @@
   const {Return} = require('./instruction/Return')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
+  const {ListAddition} = require('./instruction/ListAddition')
   const {Main} = require('./instruction/Main')
   const {Type} = require('./abstract/Type')
   const {Singleton} = require('./Singleton')
@@ -245,8 +246,7 @@ DECREASE: identifier '--' ';';
 
 // list of expressions
 
-EXPRESSIONS: EXPRESSIONS ',' EXPRESSION
-          |  EXPRESSION ;
+
             
 EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '+' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'plus', @1.first_line, @1.first_column);}       
@@ -332,25 +332,24 @@ INSTRUCTION: DECLARATION {$$ = $1;}
            | PRINT {$$ = $1;}
            | METHOD_DECLARATION {$$ = $1;}
            | FUNCTION_DECLARATION {$$ = $1;}
-           | FUNCTION_CALL ';' {$$ = $1;}
            | error ';' { console.log("error sintactico en linea " + (yylineno+1) );}
              
            
 ;
 
-INSTRUCTION2: DECLARATION  {$$ = $1;}
-           | LIST_ADDITION
-           | INCREASE
-           | DECREASE
-           | IF_STATEMENT
-           | SWITCH_STATEMENT
-           | FOR_STATEMENT
-           | DO_WHILE_STATEMENT
-           | reserved_break ';'
-           | reserved_continue ';'
-           | RETURN_STATEMENT {$$ = $1;}
-           | FUNCTION_CALL';' {$$ = $1;}
-           | PRINT {$$ = $1;}
+INSTRUCTION2: DECLARATION          {$$ = $1;}
+           | LIST_ADDITION         {$$ = $1;}
+           | INCREASE              //TODO
+           | DECREASE              //TODO
+           | IF_STATEMENT          //TODO
+           | SWITCH_STATEMENT      //TODO
+           | FOR_STATEMENT         //TODO
+           | DO_WHILE_STATEMENT    //TODO
+           | reserved_break ';'    //TODO
+           | reserved_continue ';' //TODO
+           | RETURN_STATEMENT      {$$ = $1;}
+           | FUNCTION_CALL';'      {$$ = $1;}
+           | PRINT                 {$$ = $1;}
            
 ;
 
@@ -401,7 +400,7 @@ LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved
                  | reserved_list '<' TYPE '>' identifier '=' reserved_toCharArray '(' stringValue ')' ';'  {$$=new ListDeclaration($5, $3, $3, $9 ,@1.first_line, @1.first_column )}
   ;
 
-LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' ;
+LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' {$$=new ListAddition($1, $5 ,@1.first_line, @1.first_column )} ;
 
 
 IF_STATEMENT: reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
