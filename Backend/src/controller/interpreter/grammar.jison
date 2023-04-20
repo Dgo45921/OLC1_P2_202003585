@@ -24,6 +24,7 @@
   const {ListDeclaration} = require('./instruction/ListDeclaration')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
+  const {Main} = require('./instruction/Main')
   const {Type} = require('./abstract/Type')
   const {Singleton} = require('./Singleton')
   const {Parameter} = require('./Parameter')
@@ -273,7 +274,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | TYPE_OF                           {$$=$1;}
     | VECTOR_ACCESS                     {$$=$1;}
     | LIST_ACCESS                       {$$=$1;}
-    | FUNCTION_CA LL                     {$$=$1;}
+    | FUNCTION_CALL                     {$$=$1;}
     | TERNARY                           {$$=$1;}
     | identifier                        {$$= new VariableAccess($1, @1.first_line, @1.first_column);} 
 
@@ -325,7 +326,7 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2 {$1.push($2); $$=$1; console.log('entr
 ;
  
 INSTRUCTION: DECLARATION {$$ = $1;}
-           | reserved_main FUNCTION_CALL
+           | reserved_main FUNCTION_CALL ';' {$$=new Main($2,@1.first_line, @1.first_column)}
            | PRINT {$$ = $1;}
            | METHOD_DECLARATION {$$ = $1;}
            | FUNCTION_CALL ';' {$$ = $1;}

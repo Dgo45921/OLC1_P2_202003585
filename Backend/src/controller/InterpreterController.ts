@@ -3,6 +3,10 @@ import { Environment } from "./interpreter/Enviroment";
 import { Singleton } from "./interpreter/Singleton";
 import { MethodDeclaration } from "./interpreter/instruction/MethodDeclaration";
 import { FunctionDeclaration } from "./interpreter/instruction/FunctionDeclaration";
+import { Main } from "./interpreter/instruction/Main";
+import { VariableDeclaration } from "./interpreter/instruction/VariableDeclaration";
+import { VectorDeclaration } from "./interpreter/instruction/VectorDeclaration";
+import { ListDeclaration } from "./interpreter/instruction/ListDeclaration";
 let global_env = new Environment(null);
 let singleton = Singleton.getInstance()
 
@@ -38,13 +42,24 @@ class InterpreterController{
         
               for (const elemento of ast) {
                 try {
-                  if (!(elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration)) {
+                  if (!(elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration || elemento instanceof Main)) {
                     elemento.execute(global_env);
                   }
                 } catch (error) {
                   console.log(error); 
                 }
               }
+
+              for (const elemento of ast) {
+                try {
+                  if ((elemento instanceof Main)) {
+                    elemento.execute(global_env);
+                  }
+                } catch (error) {
+                  console.log(error); 
+                }
+              }
+
 
 
             // for(const inst of ast){
