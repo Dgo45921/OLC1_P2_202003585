@@ -15,7 +15,7 @@ export class Length extends Expression {
 
     public execute(env: Environment): Return {
         const node = this.expression.execute(env)
-        if (node.type === Type.STRING || node.type === Type.VECTOR_BOOLEAN || node.type === Type.VECTOR_CHAR || node.type === Type.VECTOR_STRING || node.type === Type.VECTOR_INT || node.type === Type.VECTOR_DOUBLE){
+        if (node.type === Type.STRING || node.type === Type.VECTOR_BOOLEAN || node.type === Type.VECTOR_CHAR || node.type === Type.VECTOR_STRING || node.type === Type.VECTOR_INT || node.type === Type.VECTOR_DOUBLE || node.type === Type.LIST_INT || node.type === Type.LIST_DOUBLE || node.type === Type.LIST_CHAR || node.type === Type.LIST_BOOLEAN || node.type === Type.LIST_STRING || node.type === Type.LIST || node.type === Type.VECTOR){
             return {value:node.value.length, type:Type.INT}
         }
 

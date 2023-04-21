@@ -18,6 +18,7 @@
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {ModVectorList} = require('./instruction/ModVectorList')
   const {IncreaseDecrease} = require('./instruction/IncreaseDecrease')
   const {ForLoop} = require('./instruction/ForLoop')
   const {WhileLoop} = require('./instruction/WhileLoop')
@@ -300,6 +301,14 @@ LIST_ACCESS: identifier '[' '[' EXPRESSION ']' ']' {$$= new ListAccess($1, $4 ,@
 ;
 
 
+VECTOR_MODIFICATION: identifier '[' EXPRESSION ']' '=' EXPRESSION ';' {$$= new ModVectorList($1, $3,$6 ,@1.first_line, @1.first_column);}
+
+;
+
+LIST_MODIFICATION: identifier '[' '[' EXPRESSION ']' ']' '=' EXPRESSION ';' {$$= new ModVectorList($1, $4,$8 ,@1.first_line, @1.first_column);}
+
+;
+
 
 FUNCTION_CALL: identifier '(' ARGUMENTS ')' {$$=new Call($1,$3,@1.first_line, @1.first_column)}
 
@@ -359,6 +368,8 @@ INSTRUCTION2: DECLARATION          {$$ = $1;}
            | RETURN_STATEMENT      {$$ = $1;}
            | FUNCTION_CALL';'      {$$ = $1;}
            | PRINT                 {$$ = $1;}
+           | VECTOR_MODIFICATION   {$$ = $1;}
+           | LIST_MODIFICATION     {$$ = $1;}
            
 ;
 
