@@ -16,12 +16,9 @@ export class Return extends Instruction {
     }
 
     public execute(env:Environment):any {
-        if(this.Exp){
+ 
             return this;
-        }
-        else{
-            return {value:"NULL", type:Type.NULL};
-        }
+
     }
 
 

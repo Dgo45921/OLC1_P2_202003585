@@ -91,6 +91,12 @@ export class Call extends Instruction {
                         return null
                     }
 
+                    else if(ins){
+                        if(ins.value === "NULL"){
+                           return {value:"NULL", type:Type.NULL};
+                       }
+                   }
+
                     
                 } catch (error) {
                     console.log(error);
@@ -105,6 +111,11 @@ export class Call extends Instruction {
                     if (ins instanceof Return) {
                         console.log(ins.Exp.execute(env))
                         return ins.Exp.execute(env);
+                    }
+                    else if(ins){
+                         if(ins.value === "NULL"){
+                            return {value:"NULL", type:Type.NULL};
+                        }
                     }
                 } catch (error) {
                     console.log(error);
