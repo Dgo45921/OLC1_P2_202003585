@@ -20,6 +20,7 @@
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
   const {IncreaseDecrease} = require('./instruction/IncreaseDecrease')
   const {ForLoop} = require('./instruction/ForLoop')
+  const {WhileLoop} = require('./instruction/WhileLoop')
   const {Asignation} = require('./instruction/Asignation')
   const {Block} = require('./instruction/Block')
   const {MethodDeclaration} = require('./instruction/MethodDeclaration')
@@ -351,6 +352,7 @@ INSTRUCTION2: DECLARATION          {$$ = $1;}
            | SWITCH_STATEMENT      //TODO
            | FOR_STATEMENT         {$$ = $1;}
            | DO_WHILE_STATEMENT    //TODO
+           | WHILE_STATEMENT       {$$ = $1;}
            | reserved_break ';'    //TODO
            | reserved_continue ';' //TODO
            | RETURN_STATEMENT      {$$ = $1;}
@@ -432,7 +434,7 @@ CASE_LIST: CASE_LIST reserved_case EXPRESSION ':' INSTRUCTIONS2
 
  ;
 
- WHILE_STATEMENT:reserved_while '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}';
+
 
 
  FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' VARIABLE_ASIGNATION2 ')' BLOCK  {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
@@ -453,7 +455,9 @@ FOR_THIRD_CONDITION: EXPRESSION INCREASE
                     ;
 
 
-DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESSION ')' ';';                    
+DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESSION ')' ';';  
+
+WHILE_STATEMENT: reserved_while '(' EXPRESSION ')'   BLOCK  {$$=new WhileLoop($3, $5 ,@1.first_line, @1.first_column )} ;      
 
 
 FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' BLOCK {$$=new FunctionDeclaration($1,$2,$4,$6,@1.first_line, @1.first_column)}

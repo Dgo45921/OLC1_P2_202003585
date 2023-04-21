@@ -19,23 +19,24 @@ export class IfStatement extends Instruction {
 
     public execute(env:Environment) {
 
+        const nuevoEnv=new Environment(env);
         const instancia=Singleton.getInstance();
-        let isvalid = this.condition.execute(env)
+        let isvalid = this.condition.execute(nuevoEnv)
 
         console.log(isvalid)
-        if(this.condition.execute(env).type!==Type.BOOLEAN){
+        if(this.condition.execute(nuevoEnv).type!==Type.BOOLEAN){
             throw instancia.addError(new Error("Semantico","Sentencia if requiere una condicion booleana ",this.line,this.column));
         }
 
         
 
-        if(this.condition.execute(env).value){
-            return this.trueBlock.execute(env)
+        if(this.condition.execute(nuevoEnv).value){
+            return this.trueBlock.execute(nuevoEnv)
             }
         else{
 
             if(this.falseBlock){
-                return this.falseBlock.execute(env)
+                return this.falseBlock.execute(nuevoEnv)
             }
         }
 

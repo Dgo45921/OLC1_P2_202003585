@@ -22,9 +22,7 @@ export class Call extends Instruction {
 
     public execute(env: Environment) {
 
-        if (this.id === "prueba2"){
-            console.log("A")
-        }
+
 
         const metodo = env.getMethod(this.id);
         const instancia = Singleton.getInstance();
