@@ -86,10 +86,16 @@ export class Call extends Instruction {
         if(func instanceof MethodDeclaration){
             for (const elemento of instrucciones) {
                 try {
+                    
                     const ins:any=elemento.execute(env);
+
+                    if (ins instanceof Return) {
+                        return null
+                    }
+
                     
                 } catch (error) {
-                    //console.log(error);
+                    console.log(error);
                 }
             }
             return null
@@ -103,7 +109,7 @@ export class Call extends Instruction {
                         return ins.Exp.execute(env);
                     }
                 } catch (error) {
-                    //console.log(error);
+                    console.log(error);
                 }
             }
         }

@@ -23,6 +23,7 @@
   const {Asignation} = require('./instruction/Asignation')
   const {Block} = require('./instruction/Block')
   const {MethodDeclaration} = require('./instruction/MethodDeclaration')
+  const {IfStatement} = require('./instruction/IfStatement')
   const {FunctionDeclaration} = require('./instruction/FunctionDeclaration')
   const {Call} = require('./instruction/Call')
   const {ListDeclaration} = require('./instruction/ListDeclaration')
@@ -346,7 +347,7 @@ INSTRUCTION2: DECLARATION          {$$ = $1;}
            | INCREASE    ';'       {$$ = $1;}
            | DECREASE    ';'       {$$ = $1;}
            | VARIABLE_ASIGNATION   {$$ = $1;}
-           | IF_STATEMENT          //TODO
+           | IF_STATEMENT          {$$ = $1;}
            | SWITCH_STATEMENT      //TODO
            | FOR_STATEMENT         {$$ = $1;}
            | DO_WHILE_STATEMENT    //TODO
@@ -363,7 +364,7 @@ PRINT : reserved_print '(' EXPRESSION ')' ';'  {$$ = new Print(@1.first_line,@1.
 
 
 RETURN_STATEMENT: reserved_return ';' {$$=new Return(null,@1.first_line, @1.first_column);}
-       | reserved_return EXPRESSION ';' {$$=new Return($2,@1.first_line, @1.first_column);}
+                 | reserved_return EXPRESSION ';' {$$=new Return($2,@1.first_line, @1.first_column);}
 
 ;
 
@@ -387,7 +388,7 @@ VARIABLE_DECLARATION: TYPE identifier  ';'                {$$=new VariableDeclar
                     | TYPE identifier '=' EXPRESSION ';'  {$$=new VariableDeclaration($2, $1, $4, @1.first_line, @1.first_column )}
                     ;
 
-VARIABLE_ASIGNATION: identifier '=' EXPRESSION ';'       {$$=new Asignation($1, $3, @1.first_line, @1.first_column )}
+VARIABLE_ASIGNATION: identifier '=' EXPRESSION ';'        {$$=new Asignation($1, $3, @1.first_line, @1.first_column )}
                    ;    
 
 
@@ -411,14 +412,12 @@ LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved
 LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' {$$=new ListAddition($1, $5 ,@1.first_line, @1.first_column )} ;
 
 
-IF_STATEMENT: reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
-            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' reserved_else '{' INSTRUCTIONS2 '}'
-            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' ELSE_IF_STATEMENT
-            | reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}' ELSE_IF_STATEMENT reserved_else '{' INSTRUCTIONS2 '}'
+IF_STATEMENT: reserved_if '(' EXPRESSION ')' BLOCK ELSE_IF_STATEMENT {$$ = new IfStatement($3, $5, $6 ,@1.first_line, @1.first_column )} 
             ;
 
-ELSE_IF_STATEMENT: ELSE_IF_STATEMENT reserved_else reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
-                  | reserved_else reserved_if '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}'
+ELSE_IF_STATEMENT:  reserved_else IF_STATEMENT  {$$ =$2}
+                  | reserved_else BLOCK         {$$ =$2}
+                  |                             {$$ =null}
                   ;
 
 
@@ -437,8 +436,8 @@ CASE_LIST: CASE_LIST reserved_case EXPRESSION ':' INSTRUCTIONS2
 
 
  FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' VARIABLE_ASIGNATION2 ')' BLOCK  {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
-               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' INCREASE   ')' BLOCK  {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
-               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' DECREASE  ')' BLOCK   {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' INCREASE   ')' BLOCK            {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' DECREASE  ')' BLOCK             {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
  
               ;
 

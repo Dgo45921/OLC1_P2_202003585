@@ -1,9 +1,7 @@
 import { Expression } from "../abstract/Expression";
 import { Instruction } from "../abstract/Instruction";
-import { Singleton } from "../Singleton";
 import { Environment } from "../Enviroment";
-import { Type } from "../abstract/Type";
-import { Error } from "../Error";
+
 
 
 export class ForLoop extends Instruction {
@@ -29,9 +27,8 @@ export class ForLoop extends Instruction {
             if(exp.value){
                 this.insBlock.execute(newEnv);
                 this.Step.execute(newEnv);
-            }else{
-                break;
             }
+            else break;
         }
 
         
