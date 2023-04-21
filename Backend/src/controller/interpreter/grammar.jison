@@ -21,6 +21,7 @@
   const {IncreaseDecrease} = require('./instruction/IncreaseDecrease')
   const {ForLoop} = require('./instruction/ForLoop')
   const {WhileLoop} = require('./instruction/WhileLoop')
+  const {DoWhileLoop} = require('./instruction/DoWhileLoop')
   const {Asignation} = require('./instruction/Asignation')
   const {Block} = require('./instruction/Block')
   const {MethodDeclaration} = require('./instruction/MethodDeclaration')
@@ -55,8 +56,8 @@
 %%
 
 /* Whitespaces */
-[\r|\f|\s|\t|\n]                   {}              // white spaces
-\/\/.*                           {}              // oneLineComment
+[\r\f\s\t\n]          {}                           // white spaces
+\/\/.*                           {}                // oneLineComment
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]   {}           // multilineComment
 
 // reserved words
@@ -455,7 +456,7 @@ FOR_THIRD_CONDITION: EXPRESSION INCREASE
                     ;
 
 
-DO_WHILE_STATEMENT: reserved_do '{' INSTRUCTIONS2 '}' reserved_while '(' EXPRESSION ')' ';';  
+DO_WHILE_STATEMENT: reserved_do BLOCK reserved_while '(' EXPRESSION ')' ';' {$$ = new DoWhileLoop($5, $2 ,@1.first_line, @1.first_column )}     ;  
 
 WHILE_STATEMENT: reserved_while '(' EXPRESSION ')'   BLOCK  {$$=new WhileLoop($3, $5 ,@1.first_line, @1.first_column )} ;      
 

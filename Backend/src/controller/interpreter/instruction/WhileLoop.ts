@@ -8,7 +8,6 @@ import { Environment } from "../Enviroment";
 
 export class WhileLoop extends Instruction {
     constructor(
-        
         public Condition:Expression,
         public insBlock:Instruction,
         line: number, 
