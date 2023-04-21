@@ -63,8 +63,8 @@
 
 // reserved words
 "int"                 {console.log("Se encontró token con valor: " + yytext); return 'reserved_int';}
-"true"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_true';}
-"false"               {console.log("Se encontró token con valor: " + yytext); return 'reserved_false';}
+"true"                {console.log("Se encontró token true con valor: " + yytext); return 'reserved_true';}
+"false"               {console.log("Se encontró token false con valor: " + yytext); return 'reserved_false';}
 "double"              {console.log("Se encontró token con valor: " + yytext); return 'reserved_double';}
 "boolean"             {console.log("Se encontró token con valor: " + yytext); return 'reserved_boolean';}
 "char"                {console.log("Se encontró token con valor: " + yytext); return 'reserved_char';}
@@ -256,7 +256,7 @@ DECREASE: identifier '--'  {$$= new IncreaseDecrease($1, '--', @1.first_line, @1
 
 
             
-EXPRESSION : OPERAND  {$$=$1;}
+EXPRESSION : OPERAND                    {$$=$1;}
     | EXPRESSION '+' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'plus', @1.first_line, @1.first_column);}       
     | EXPRESSION '-' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'minus', @1.first_line, @1.first_column);}           
     | EXPRESSION '*' EXPRESSION         {$$= new ArithmeticOperation($1,$3,'multiply', @1.first_line, @1.first_column);}            
@@ -271,7 +271,7 @@ EXPRESSION : OPERAND  {$$=$1;}
     | EXPRESSION '>'   EXPRESSION       {$$= new RelationalOperation($1,$3,'>', @1.first_line, @1.first_column);}           
     | EXPRESSION '<='  EXPRESSION       {$$= new RelationalOperation($1,$3,'<=', @1.first_line, @1.first_column);}            
     | EXPRESSION '>='  EXPRESSION       {$$= new RelationalOperation($1,$3,'>=', @1.first_line, @1.first_column);}    
-    | '!' EXPRESION	                    {$$= new LogicalOperation($2,$2,'!', @1.first_line, @1.first_column);}
+    | '!' EXPRESSION	                  {$$= new LogicalOperation($2,$2,'!', @1.first_line, @1.first_column);}
     | EXPRESSION '&&'  EXPRESSION       {$$= new LogicalOperation($1,$3,'&&', @1.first_line, @1.first_column);}
     | EXPRESSION '||'  EXPRESSION       {$$= new LogicalOperation($1,$3,'||', @1.first_line, @1.first_column);}                                                             
     | CAST                              {$$=$1;}                                                                                                                    
