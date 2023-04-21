@@ -5,7 +5,7 @@ import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 
 
-export class ListAddition extends Instruction {
+export class Asignation extends Instruction {
     constructor(
         public id: string,
         public exp:Expression,
@@ -20,11 +20,9 @@ export class ListAddition extends Instruction {
         const instancia = Singleton.getInstance()
         let simbol=env.getVariable(this.id);
 
-        if(simbol !== null || simbol !== undefined){
-            if(simbol?.value && Array.isArray(simbol.value)){
-                simbol.value.push(this.exp.execute(env).value)
+        if(simbol){
+            simbol.value = this.exp.execute(env).value
 
-            }
         }
         
 

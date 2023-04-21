@@ -5,10 +5,10 @@ import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 
 
-export class ListAddition extends Instruction {
+export class IncreaseDecrease extends Instruction {
     constructor(
         public id: string,
-        public exp:Expression,
+        public op:string,
         public line: number,
         public column: number
     ) {
@@ -19,11 +19,13 @@ export class ListAddition extends Instruction {
     public execute(env: Environment) {
         const instancia = Singleton.getInstance()
         let simbol=env.getVariable(this.id);
-
-        if(simbol !== null || simbol !== undefined){
-            if(simbol?.value && Array.isArray(simbol.value)){
-                simbol.value.push(this.exp.execute(env).value)
-
+        console.log(simbol)
+        if(simbol){
+            if(this.op === '++'){
+                simbol.value = simbol.value +1
+            }
+            else{
+                simbol.value = simbol.value -1
             }
         }
         

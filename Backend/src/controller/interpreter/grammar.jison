@@ -18,6 +18,9 @@
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {IncreaseDecrease} = require('./instruction/IncreaseDecrease')
+  const {ForLoop} = require('./instruction/ForLoop')
+  const {Asignation} = require('./instruction/Asignation')
   const {Block} = require('./instruction/Block')
   const {MethodDeclaration} = require('./instruction/MethodDeclaration')
   const {FunctionDeclaration} = require('./instruction/FunctionDeclaration')
@@ -236,9 +239,10 @@ TYPE_OF:reserved_typeof '(' EXPRESSION ')' {$$= new TypeOf($3, @1.first_line, @1
 // ============================================================================================================================
 
 // statements
-INCREASE: identifier '++' ';';
-
-DECREASE: identifier '--' ';';
+INCREASE: identifier '++'  {$$= new IncreaseDecrease($1, '++', @1.first_line, @1.first_column);}
+ ;
+DECREASE: identifier '--'  {$$= new IncreaseDecrease($1, '--', @1.first_line, @1.first_column);} 
+;
 
 
 
@@ -339,11 +343,12 @@ INSTRUCTION: DECLARATION {$$ = $1;}
 
 INSTRUCTION2: DECLARATION          {$$ = $1;}
            | LIST_ADDITION         {$$ = $1;}
-           | INCREASE              //TODO
-           | DECREASE              //TODO
+           | INCREASE    ';'       {$$ = $1;}
+           | DECREASE    ';'       {$$ = $1;}
+           | VARIABLE_ASIGNATION   {$$ = $1;}
            | IF_STATEMENT          //TODO
            | SWITCH_STATEMENT      //TODO
-           | FOR_STATEMENT         //TODO
+           | FOR_STATEMENT         {$$ = $1;}
            | DO_WHILE_STATEMENT    //TODO
            | reserved_break ';'    //TODO
            | reserved_continue ';' //TODO
@@ -382,9 +387,12 @@ VARIABLE_DECLARATION: TYPE identifier  ';'                {$$=new VariableDeclar
                     | TYPE identifier '=' EXPRESSION ';'  {$$=new VariableDeclaration($2, $1, $4, @1.first_line, @1.first_column )}
                     ;
 
-VARIABLE_ASIGNATION: identifier '=' OPERAND ';'
-                     |identifier '=' identifier ';'
-                   ;       
+VARIABLE_ASIGNATION: identifier '=' EXPRESSION ';'       {$$=new Asignation($1, $3, @1.first_line, @1.first_column )}
+                   ;    
+
+
+VARIABLE_ASIGNATION2: identifier '=' EXPRESSION          {$$=new Asignation($1, $3, @1.first_line, @1.first_column )}
+                   ;      
 
 VECTOR_DECLARATION: TYPE '[' ']' identifier '=' reserved_new TYPE '[' EXPRESSION ']' ';' {$$=new VectorDeclaration($4, $1, $7, $9 ,@1.first_line, @1.first_column )}
                    |TYPE '[' ']' identifier '=' '{' VALUE_LIST '}' ';' {$$=new VectorDeclaration($4, $1, $1, $7 ,@1.first_line, @1.first_column )}
@@ -428,14 +436,14 @@ CASE_LIST: CASE_LIST reserved_case EXPRESSION ':' INSTRUCTIONS2
  WHILE_STATEMENT:reserved_while '(' EXPRESSION ')' '{' INSTRUCTIONS2 '}';
 
 
- FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION EXPRESSION ';' ')' '{' INSTRUCTIONS2 '}'
-
+ FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' VARIABLE_ASIGNATION2 ')' BLOCK  {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' INCREASE   ')' BLOCK  {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' DECREASE  ')' BLOCK   {$$=new ForLoop($3, $4 ,$6,$8,@1.first_line, @1.first_column )} 
  
               ;
 
-FOR_FIRST_CONDITION:
-                    VARIABLE_ASIGNATION
-                    | VARIABLE_DECLARATION
+FOR_FIRST_CONDITION: VARIABLE_ASIGNATION   {$$=$1}
+                    | VARIABLE_DECLARATION {$$=$1}
 
 ;              
 
