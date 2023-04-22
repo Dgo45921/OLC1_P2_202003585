@@ -18,6 +18,9 @@
   const {Length} = require('./expressions/Length')
   const {Print} = require('./instruction/Print')
   const {VectorDeclaration} = require('./instruction/VectorDeclaration')
+  const {Switch} = require('./instruction/Switch')
+  const {Default} = require('./instruction/Default')
+  const {Case} = require('./instruction/Case')
   const {ModVectorList} = require('./instruction/ModVectorList')
   const {IncreaseDecrease} = require('./instruction/IncreaseDecrease')
   const {ForLoop} = require('./instruction/ForLoop')
@@ -465,16 +468,31 @@ ELSE_IF_STATEMENT:  reserved_else IF_STATEMENT  {$$ =$2}
                   ;
 
 
-SWITCH_STATEMENT: reserved_switch '(' EXPRESSION ')' '{' CASE_LIST '}'
-                  | reserved_switch '(' EXPRESSION ')' '{' reserved_default ':' INSTRUCTIONS2 '}'
-                  | reserved_switch '(' EXPRESSION ')' '{' CASE_LIST reserved_default ':' INSTRUCTIONS2 '}'
+SWITCH_STATEMENT:  reserved_switch '(' EXPRESSION ')' '{' CASE_LIST '}' {$$ = new Switch($3,$6,@1.first_line, @1.first_column)}
+                
+                 
 ;
 
-CASE_LIST: CASE_LIST reserved_case EXPRESSION ':' INSTRUCTIONS2
-          | reserved_case EXPRESSION ':' INSTRUCTIONS2
-
+CASE_LIST: CASE_LIST CASE {$1.push($2); $$=$1}
+           | CASE {$$ = [$1];}
+ 
 
  ;
+
+
+
+
+
+CASE:       reserved_case EXPRESSION ':' BLOCKCASE          {$$=new Case($2,$4 ,@1.first_line, @1.first_column);}
+          | reserved_default ':' BLOCKCASE                  {$$=new Default($3,@1.first_line, @1.first_column);}
+
+;
+
+ 
+
+ BLOCKCASE: INSTRUCTIONS2  {$$=new Block($1, @1.first_line, @1.first_column)}
+           |               {}
+   ;
 
 
 
@@ -499,8 +517,6 @@ FOR_THIRD_CONDITION: EXPRESSION INCREASE
 BLOCKLOOP :'{' INSTRUCTIONS3 '}'  {$$=new Block($2, @1.first_line, @1.first_column)}
         | '{'  '}'            {}
       ; 
-
-
 
 
 
