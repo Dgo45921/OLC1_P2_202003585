@@ -22,10 +22,10 @@ export class Block extends Instruction {
         for (const ins of this.instructions) {
             try {
                 const x: any = ins.execute(new_env);
-                if (x instanceof Return) {
-                    console.log("encontre un return en el bloque")
-                    return x;
-                }
+                
+            if(x){
+                return x
+            }
             } catch (error) {
                 //console.log("Error------------------------------------------------")
                 //console.log(elemento);

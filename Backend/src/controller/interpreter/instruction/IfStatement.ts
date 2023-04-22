@@ -31,12 +31,18 @@ export class IfStatement extends Instruction {
         
 
         if(this.condition.execute(nuevoEnv).value){
-            return this.trueBlock.execute(nuevoEnv)
+            let response = this.trueBlock.execute(nuevoEnv)
+            if(response){
+                return response
+            }
             }
         else{
 
             if(this.falseBlock){
-                return this.falseBlock.execute(nuevoEnv)
+                let response = this.falseBlock.execute(nuevoEnv)
+            if(response){
+                return response
+            }
             }
         }
 

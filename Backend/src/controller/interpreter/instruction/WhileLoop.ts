@@ -23,14 +23,17 @@ export class WhileLoop extends Instruction {
 
         while(true && contador<1000){
             if(exp.value){
-                this.insBlock.execute(newEnv);
+                let response = this.insBlock.execute(newEnv);
                 contador++
+
+                if(response){
+                    return response
+                }
             }
             else{
                 break
 
             }
-            exp = this.Condition.execute(env)   
         }
 
         

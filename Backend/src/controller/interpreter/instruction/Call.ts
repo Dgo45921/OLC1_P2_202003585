@@ -86,14 +86,9 @@ export class Call extends Instruction {
                 try {
                     
                     const ins:any=elemento.execute(env);
-
-                    if (ins instanceof Return) {
-                        return null
-                    }
-
-                    else if(ins){
+                      if(ins){
                         if(ins.value === "NULL"){
-                           return {value:"NULL", type:Type.NULL};
+                            return {value:"NULL", type:Type.NULL};
                        }
                    }
 
@@ -102,21 +97,17 @@ export class Call extends Instruction {
                     console.log(error);
                 }
             }
-            return null
+            return {value:"NULL", type:Type.NULL};
         }else if(func instanceof FunctionDeclaration){
             console.log("este es una funcion no un metodo")
             for (const elemento of instrucciones) {
                 try {
                     const ins:any=elemento.execute(env);
-                    if (ins instanceof Return) {
-                        console.log(ins.Exp.execute(env))
-                        return ins.Exp.execute(env);
+                    if (ins) {
+                        let response = ins
+                        return response
                     }
-                    else if(ins){
-                         if(ins.value === "NULL"){
-                            return {value:"NULL", type:Type.NULL};
-                        }
-                    }
+                    
                 } catch (error) {
                     console.log(error);
                 }

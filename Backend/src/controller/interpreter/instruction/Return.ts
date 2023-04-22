@@ -16,8 +16,20 @@ export class Return extends Instruction {
     }
 
     public execute(env:Environment):any {
+
+
+        if(this.Exp){
+
+            let value = this.Exp.execute(env)
+
+            let response:returncito = {value:value.value, type:value.type}
+            return response
+
+        }
+
  
-            return this;
+            let response:returncito = {value:"NULL", type:Type.NULL}
+            return response
 
     }
 
