@@ -23,7 +23,7 @@ export class IfStatement extends Instruction {
         const instancia=Singleton.getInstance();
         let isvalid = this.condition.execute(nuevoEnv)
 
-        console.log(isvalid)
+        
         if(this.condition.execute(nuevoEnv).type!==Type.BOOLEAN){
             throw instancia.addError(new Error("Semantico","Sentencia if requiere una condicion booleana ",this.line,this.column));
         }

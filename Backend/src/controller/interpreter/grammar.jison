@@ -31,6 +31,8 @@
   const {Call} = require('./instruction/Call')
   const {ListDeclaration} = require('./instruction/ListDeclaration')
   const {Return} = require('./instruction/Return')
+  const {Break} = require('./instruction/Break')
+  const {Continue} = require('./instruction/Continue')
   const {ToLower} = require('./expressions/ToLower')
   const {VariableDeclaration} = require('./instruction/VariableDeclaration')
   const {ListAddition} = require('./instruction/ListAddition')
@@ -342,6 +344,34 @@ INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2 {$1.push($2); $$=$1; console.log('entr
             | INSTRUCTION2                 {$$ = [$1]; console.log('entre a instruccion2');}
  
 ;
+
+INSTRUCTIONS3: INSTRUCTIONS3 INSTRUCTION3 {$1.push($2); $$=$1; console.log('entre a instrucciones2');}
+            | INSTRUCTION3                 {$$ = [$1]; console.log('entre a instruccion2');}
+;
+
+// for loops body
+INSTRUCTION3: DECLARATION          {$$ = $1;}
+           | LIST_ADDITION         {$$ = $1;}
+           | INCREASE    ';'       {$$ = $1;}
+           | DECREASE    ';'       {$$ = $1;}
+           | VARIABLE_ASIGNATION   {$$ = $1;}
+           | IF_STATEMENT          {$$ = $1;}
+           | SWITCH_STATEMENT      //TODO
+           | FOR_STATEMENT         {$$ = $1;}
+           | DO_WHILE_STATEMENT    {$$ = $1;}
+           | WHILE_STATEMENT       {$$ = $1;}
+           | reserved_break ';'    {$$=new Break(@1.first_line, @1.first_column);}
+           | reserved_continue ';' {$$=new Continue(@1.first_line, @1.first_column);}
+           | RETURN_STATEMENT      {$$ = $1;}
+           | FUNCTION_CALL';'      {$$ = $1;}
+           | PRINT                 {$$ = $1;}
+           | VECTOR_MODIFICATION   {$$ = $1;}
+           | LIST_MODIFICATION     {$$ = $1;}
+           
+;
+
+
+
  
 INSTRUCTION: DECLARATION {$$ = $1;}
            | reserved_main FUNCTION_CALL ';' {$$=new Main($2,@1.first_line, @1.first_column)}
@@ -353,7 +383,7 @@ INSTRUCTION: DECLARATION {$$ = $1;}
            
 ;
 
-INSTRUCTION2: DECLARATION          {$$ = $1;}
+INSTRUCTION2:  DECLARATION          {$$ = $1;}
            | LIST_ADDITION         {$$ = $1;}
            | INCREASE    ';'       {$$ = $1;}
            | DECREASE    ';'       {$$ = $1;}
@@ -361,10 +391,10 @@ INSTRUCTION2: DECLARATION          {$$ = $1;}
            | IF_STATEMENT          {$$ = $1;}
            | SWITCH_STATEMENT      //TODO
            | FOR_STATEMENT         {$$ = $1;}
-           | DO_WHILE_STATEMENT    //TODO
+           | DO_WHILE_STATEMENT    {$$ = $1;}
            | WHILE_STATEMENT       {$$ = $1;}
-           | reserved_break ';'    //TODO
-           | reserved_continue ';' //TODO
+           | reserved_break ';'    {$$=new Break(@1.first_line, @1.first_column);}
+           | reserved_continue ';' {$$=new Continue(@1.first_line, @1.first_column);}
            | RETURN_STATEMENT      {$$ = $1;}
            | FUNCTION_CALL';'      {$$ = $1;}
            | PRINT                 {$$ = $1;}
@@ -466,10 +496,17 @@ FOR_THIRD_CONDITION: EXPRESSION INCREASE
 
                     ;
 
+BLOCKLOOP :'{' INSTRUCTIONS3 '}'  {$$=new Block($2, @1.first_line, @1.first_column)}
+        | '{'  '}'            {}
+      ; 
+
+
+
+
 
 DO_WHILE_STATEMENT: reserved_do BLOCK reserved_while '(' EXPRESSION ')' ';' {$$ = new DoWhileLoop($5, $2 ,@1.first_line, @1.first_column )}     ;  
 
-WHILE_STATEMENT: reserved_while '(' EXPRESSION ')'   BLOCK  {$$=new WhileLoop($3, $5 ,@1.first_line, @1.first_column )} ;      
+WHILE_STATEMENT: reserved_while '(' EXPRESSION ')'   BLOCKLOOP  {$$=new WhileLoop($3, $5 ,@1.first_line, @1.first_column )} ;      
 
 
 FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' BLOCK {$$=new FunctionDeclaration($1,$2,$4,$6,@1.first_line, @1.first_column)}

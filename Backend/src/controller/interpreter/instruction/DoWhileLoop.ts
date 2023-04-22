@@ -5,6 +5,8 @@ import { Instruction } from "../abstract/Instruction";
 import { Type } from "../abstract/Type";
 import { Environment } from "../Enviroment";
 import { Singleton } from "../Singleton";
+import { Break } from "./Break";
+import { Continue } from "./Continue";
 
 
 
@@ -33,8 +35,18 @@ export class DoWhileLoop extends Instruction {
          while(true && counter<1000){
              let exp=this.Condition.execute(newEnv);
              if(exp.value==true){
-                 this.insBlock.execute(newEnv);
+                let response = this.insBlock.execute(newEnv);
                  counter++
+
+                 if (response) {
+                    if (response instanceof Break) {
+                      break
+                    } else if (response instanceof Continue) {
+                      continue;
+                    }
+              
+                    return response;
+                  }
              }else{
                  break;
              }
