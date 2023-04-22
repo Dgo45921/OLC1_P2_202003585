@@ -175,7 +175,7 @@
 %right negativo '!' '('
 
 %left '++' '--'
-%right ':'
+
 
 
 
