@@ -154,9 +154,13 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
-                          const newError = new Error('Léxico', 'token desconocido: ' + yytext,  yylloc.first_line, yylloc.first_column)
-                          const consoleResponse = 'Error léxico'+ ' ' + yytext + ' en linea y columna: ' + yylloc.first_line + yylloc.first_column + ' genere el reporte de errores para mas detalles'
+.                       {
+
+  
+  
+   console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + (yylineno+1) + ', en la columna: ' + yylloc.first_column);
+                          const newError = new Error('Léxico', 'token desconocido: ' + yytext,  (yylineno+1), yylloc.first_column)
+                          const consoleResponse = 'Error léxico'+ ' ' + yytext + ' en linea y columna: ' + (yylineno+1) + ', '+ yylloc.first_column + ' genere el reporte de errores para mas detalles\n'
                           instance.addError(newError)
                           instance.appendConsole(consoleResponse)
 
@@ -359,7 +363,7 @@ INSTRUCTION3: DECLARATION          {$$ = $1;}
            | DECREASE    ';'       {$$ = $1;}
            | VARIABLE_ASIGNATION   {$$ = $1;}
            | IF_STATEMENT          {$$ = $1;}
-           | SWITCH_STATEMENT      //TODO
+           | SWITCH_STATEMENT      {$$ = $1;}
            | FOR_STATEMENT         {$$ = $1;}
            | DO_WHILE_STATEMENT    {$$ = $1;}
            | WHILE_STATEMENT       {$$ = $1;}
@@ -370,7 +374,8 @@ INSTRUCTION3: DECLARATION          {$$ = $1;}
            | PRINT                 {$$ = $1;}
            | VECTOR_MODIFICATION   {$$ = $1;}
            | LIST_MODIFICATION     {$$ = $1;}
-           
+           | error ';'  
+
 ;
 
 
@@ -381,7 +386,11 @@ INSTRUCTION: DECLARATION {$$ = $1;}
            | PRINT {$$ = $1;}
            | METHOD_DECLARATION {$$ = $1;}
            | FUNCTION_DECLARATION {$$ = $1;}
-           | error ';' { console.log("error sintactico en linea " + (yylineno+1) );}
+           | error '}'  { 
+   
+  
+
+}
              
            
 ;
@@ -392,7 +401,7 @@ INSTRUCTION2:  DECLARATION          {$$ = $1;}
            | DECREASE    ';'       {$$ = $1;}
            | VARIABLE_ASIGNATION   {$$ = $1;}
            | IF_STATEMENT          {$$ = $1;}
-           | SWITCH_STATEMENT      //TODO
+           | SWITCH_STATEMENT      {$$ = $1;}
            | FOR_STATEMENT         {$$ = $1;}
            | DO_WHILE_STATEMENT    {$$ = $1;}
            | WHILE_STATEMENT       {$$ = $1;}
@@ -403,6 +412,12 @@ INSTRUCTION2:  DECLARATION          {$$ = $1;}
            | PRINT                 {$$ = $1;}
            | VECTOR_MODIFICATION   {$$ = $1;}
            | LIST_MODIFICATION     {$$ = $1;}
+           | error ';'  { 
+
+   
+ 
+
+}
            
 ;
 

@@ -1,7 +1,7 @@
 import { Type } from "./abstract/Type";
 import { MethodDeclaration } from "./instruction/MethodDeclaration";
 import { Symbol } from "./Symbol";
-
+import { Singleton } from "./Singleton";
 
 
 export class Environment {
@@ -55,12 +55,12 @@ export class Environment {
 
 
     public saveMethod(name:string, value:any){
-      this.method_symbolTable.set(name, value)
+      this.method_symbolTable.set(name.toLowerCase(), value)
     }
 
     public searchMethod(nombre: string): boolean {
       for (let entry of Array.from(this.method_symbolTable.entries())) {
-          if (entry[0] == nombre) return true;
+          if (entry[0] == nombre.toLowerCase()) return true;
       }
       return false;
   }
@@ -68,10 +68,37 @@ export class Environment {
   public getMethod(nombre: string): MethodDeclaration | undefined | null {
     let env: Environment | null = this;
     while (env != null) {
-        if (env.method_symbolTable.has(nombre)) return env.method_symbolTable.get(nombre);
+        if (env.method_symbolTable.has(nombre.toLowerCase())) return env.method_symbolTable.get(nombre.toLowerCase());
         env = env.prev;
     }
     return null;
+}
+
+
+public graphST():string{
+  let singleton = Singleton.getInstance()
+  let vizCode:string="";
+  let env: Environment | null = this;
+  vizCode="[label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" width=\"100%\" height=\"100%\">\n";
+  
+  let contador:number=0;
+  while (env != null) {
+      vizCode+=`<tr><td colspan="4">NIVEL ${contador}</td></tr>\n`
+      vizCode+=`<tr>
+          <td>VALOR</td>
+          <td>NOMBRE</td>
+          <td>TIPO</td>
+          <td>EDITABLE</td>
+          </tr>\n`
+      contador++;
+      
+      
+     
+  vizCode+=`</table>>];\n`
+  //console.log(cadena);
+  
+}
+ return vizCode;
 }
 
 }

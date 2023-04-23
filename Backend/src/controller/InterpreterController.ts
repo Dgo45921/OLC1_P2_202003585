@@ -7,6 +7,13 @@ import { Main } from "./interpreter/instruction/Main";
 import { VariableDeclaration } from "./interpreter/instruction/VariableDeclaration";
 import { VectorDeclaration } from "./interpreter/instruction/VectorDeclaration";
 import { ListDeclaration } from "./interpreter/instruction/ListDeclaration";
+import { Instruction } from "./interpreter/abstract/Instruction";
+import { IfStatement } from "./interpreter/instruction/IfStatement";
+import { Switch } from "./interpreter/instruction/Switch";
+import { ForLoop } from "./interpreter/instruction/ForLoop";
+import { WhileLoop } from "./interpreter/instruction/WhileLoop";
+import { DoWhileLoop } from "./interpreter/instruction/DoWhileLoop";
+import { Call } from "./interpreter/instruction/Call";
 let global_env = new Environment(null);
 let singleton = Singleton.getInstance()
 
@@ -29,6 +36,7 @@ class InterpreterController{
             global_env = new Environment(null);
 
 
+            // save the methods and functions declared
             for (const elemento of ast) {
                 try {
                   if (elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration) {
@@ -39,6 +47,8 @@ class InterpreterController{
                 }
               }
         
+
+              // saving all global variables declared
         
               for (const elemento of ast) {
                 try {
@@ -50,6 +60,8 @@ class InterpreterController{
                 }
               }
 
+              // execute the program from the main method
+
               for (const elemento of ast) {
                 try {
                   if ((elemento instanceof Main)) {
@@ -59,6 +71,23 @@ class InterpreterController{
                   console.log(error); 
                 }
               }
+
+
+              // genereate dot code for the symbol table
+
+          //     for (const elemento of ast) {
+          //       try {
+          //         if ((elemento instanceof IfStatement || elemento instanceof Switch || elemento instanceof ForLoop || elemento instanceof WhileLoop || elemento instanceof DoWhileLoop  ||  elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration )) {
+          //           console.log(elemento)
+          //         }
+          //       } catch (error) {
+          //         console.log(error); 
+          //       }
+          //     }
+
+          //     singleton.symboltableDot += `</TABLE>
+          //     >];
+          // }`
 
 
 

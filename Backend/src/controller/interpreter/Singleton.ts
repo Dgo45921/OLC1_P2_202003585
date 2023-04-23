@@ -4,12 +4,27 @@ export class Singleton{
     private static instance: Singleton;
     private console:string="";
     private errors:Error[]=[];
+    public symboltableDot = `digraph G {
+        rankdir=LR
+        node [shape=none fontname=Helvetica]
+    
+        A [label=<
+          <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+           <TR>
+    <TD BGCOLOR="#ff6363">ID</TD>
+    <TD BGCOLOR="#ff6363">Tipo</TD>
+    <TD BGCOLOR="#ff6363">Tipo</TD>
+    <TD BGCOLOR="#ff6363">Entorno</TD>
+    <TD BGCOLOR="#ff6363">Linea</TD>
+    <TD BGCOLOR="#ff6363">Columna</TD>
+    </TR>`
 
     constructor(){}
 
     public reset(){
         this.errors=[];
         this.console="";
+        this.symboltableDot = ''
     }
 
     public static getInstance():Singleton{
@@ -65,5 +80,8 @@ export class Singleton{
 
         return dotCode
     }
+
+
+    
 
 }

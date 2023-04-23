@@ -75,7 +75,7 @@ export class Call extends Instruction {
 
     public runInstructions(env: Environment):any {
         const func:any = env.getMethod(this.id);
-        //console.log(metodo);
+
         if (func == null || func == undefined) {
             return;
         }
@@ -99,7 +99,7 @@ export class Call extends Instruction {
             }
             return {value:"NULL", type:Type.NULL};
         }else if(func instanceof FunctionDeclaration){
-            console.log("este es una funcion no un metodo")
+            
             for (const elemento of instrucciones) {
                 try {
                     const ins:any=elemento.execute(env);

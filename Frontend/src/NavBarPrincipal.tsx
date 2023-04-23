@@ -1,20 +1,35 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import * as ReactBootstrap from 'react-bootstrap';
-
+import * as d3 from 'd3-graphviz'
 
 
 async function errorReport() {
     const response = await fetch("http://localhost:5000/interpreter/getErrors");
     const textData = await response.text();
-    const jsonbody = JSON.parse(textData)
-   // console.log(jsonbody.dotCode);
-    const url = "https://quickchart.io/graphviz?graph=" +  encodeURIComponent(jsonbody.dotCode);
-    // console.log(url)
-    window.open(url, "_blank");
-
-
-}
-
+    const jsonbody = JSON.parse(textData);
+  
+    // Create a new div element to serve as the container for the graph
+    const graphContainer = document.createElement("div");
+    console.log(jsonbody.dotCode)
+  
+    // Render the graph using d3-graphviz
+    d3.graphviz(graphContainer)
+      .renderDot(jsonbody.dotCode)
+      .on("end", () => {
+        // Create a new HTML document for the new tab
+        const newTab = window.open("", "_blank");
+        if (newTab) {
+          // Append the graph container to the new document's body
+          newTab.document.body.appendChild(graphContainer.cloneNode(true));
+        } else {
+          console.error("Failed to open new tab");
+        }
+      });
+  }
+  
+  
+  
+  
 function ASTreport() {
     console.log("reporte ast")
 }
