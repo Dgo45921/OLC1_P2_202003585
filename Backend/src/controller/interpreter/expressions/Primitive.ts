@@ -38,5 +38,22 @@ export class Primitive extends Expression{
 
         }
     }
+
+    public ast() {
+
+        const name = `node_${this.line}_${this.column}_`
+        if (this.type == Type.STRING) return `
+        ${name};
+        ${name}[label="\\"${this.value.toString()}\\""];`
+
+        else  if (this.type == Type.CHAR) return `
+        ${name};
+        ${name}[label="\\'${this.value.toString()}\\'"];`
+
+        else return `
+        ${name};
+        ${name}[label="${this.value.toString()}"];`
+
+    }
 }
 

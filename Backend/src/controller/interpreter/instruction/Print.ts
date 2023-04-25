@@ -17,5 +17,13 @@ export abstract class Print extends Instruction {
         
 
     }
+
+    public ast() {
+        const s = Singleton.getInstance()
+        const node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${node}[label="\\<Instruccion\\>\\nPrint"];`)
+        if (this.expression!= null){s.add_ast(`${node}->${this.expression.ast()}`)}
+    }
 }
     

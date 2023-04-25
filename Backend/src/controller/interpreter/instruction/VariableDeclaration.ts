@@ -55,4 +55,28 @@ export class VariableDeclaration extends Instruction{
            }
         }
     }
+
+    public ast() {
+        const s = Singleton.getInstance()
+        const nombreNodo = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${nombreNodo}[label="\\<Instruccion\\>\\nDeclaracion const"];
+        ${nombreNodo}1[label="\\<Nombre\\>\\n${this.id}"];
+        ${nombreNodo}2[label="\\<Tipo\\>\\n${Type[this.type]}"];
+        ${nombreNodo}->${nombreNodo}1
+        ${nombreNodo}->${nombreNodo}2
+        `)
+
+        if (this.value){
+            s.add_ast(`${nombreNodo}->${this.value.ast()}`)
+        }
+        else{
+            
+        }
+
+    }
+
+    
+
+
 }

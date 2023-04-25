@@ -3,6 +3,7 @@ import { Return } from "../abstract/Type";
 import { Environment } from "../Enviroment";
 import { Type } from "../abstract/Type";
 import { Instruction } from "../abstract/Instruction";
+import { Singleton } from "../Singleton";
 
 
 
@@ -46,6 +47,13 @@ export class ModVectorList extends Instruction {
 
 
   
+
+    }
+
+    public ast() {
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        
 
     }
 

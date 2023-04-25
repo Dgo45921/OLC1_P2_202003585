@@ -47,4 +47,15 @@ export class LogicalOperation extends Expression {
     }
 
 
+    
+    public ast() {
+        const node = `node_${this.line}_${this.column}_`
+        return `
+        ${node};
+        ${node}[label="${this.sign}"];
+        ${node}->${this.leftExp.ast()}
+        ${node}->${this.rightExp.ast()}
+        `
+    }
+
 }

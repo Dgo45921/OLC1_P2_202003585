@@ -1,6 +1,7 @@
 import { Expression } from "../abstract/Expression";
 import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
+import { Singleton } from "../Singleton";
 
 
 
@@ -32,6 +33,23 @@ export class ForLoop extends Instruction {
         }
 
         
+    }
+
+    public ast() {
+
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\nFor"];
+        ${name_node}->node_${this.firstCondition.line}_${this.firstCondition.column}_;
+        ${name_node}->node_${this.Step.line}_${this.Step.column}_;
+        ${name_node}->node_${this.insBlock.line}_${this.insBlock.column}_;
+        ${name_node}->${this.Condition.ast()}
+        `)
+        this.firstCondition.ast();
+        this.Step.ast();
+        this.insBlock.ast()
+
     }
 
 }

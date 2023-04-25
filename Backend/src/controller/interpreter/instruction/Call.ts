@@ -125,5 +125,22 @@ export class Call extends Instruction {
     }
 
 
+    public ast() {
+        const s= Singleton.getInstance()
+        const node=`node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${node} [label="\\<Instruccion\\>\\nLlamada funcion"];
+        ${node}1 [label="{${this.id}}"];
+        ${node}2 [label="<\\Parametros\\>"];
+        ${node}->${node}2;
+        ${node}->${node}1;
+        `)
+        this.parameters.forEach(element => {
+            s.add_ast(`
+            ${node}2->${element.ast()}
+            `)
+        })
+    }
+
 
 }

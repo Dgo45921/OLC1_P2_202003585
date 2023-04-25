@@ -25,4 +25,14 @@ export class ToString extends Expression {
 
     }
 
+    public ast() {
+        const node=`node_${this.line}_${this.column}_`
+        return `
+        /**/${node}1;
+        ${node}1[label="tostring()"];
+        ${node}[label="${this.expression}"];
+        ${node}1->${node};
+        `
+    }
+
 }

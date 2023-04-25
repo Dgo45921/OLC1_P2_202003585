@@ -30,5 +30,21 @@ export class ListAddition extends Instruction {
 
     }
 
+    public ast() {
+        
+         const s = Singleton.getInstance()
+        const node = `node_${this.line}_${this.column}_`
+        const label =  "AdicionLista"
+
+        s.add_ast(`
+        ${node}[label="\\<Instruccion\\>\\n${label}"];
+        ${node}1[label="{${this.id}}"];
+        ${node}2[label="{${this.id}}"];
+        ${node}->${node}1;
+        `)
+        }
+     
+
+
 
 }

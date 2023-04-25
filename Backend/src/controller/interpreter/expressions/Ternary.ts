@@ -31,5 +31,26 @@ export class Ternary extends Expression {
     
 
     }
+    public ast() {
+
+        const node=`node_${this.line}_${this.column}_`
+        return `
+        /**/${node}1;
+        ${node}1[label="Ternary"];
+        ${node}2[label="${this.expression1}"];
+        ${node}3[label="?"];
+        ${node}4[label="${this.expression2}"];
+        ${node}5[label=":"];
+        ${node}6[label=${this.expression3}"];
+        ${node}1->$2{node};
+        ${node}1->$3{node};
+        ${node}1->$4{node};
+        ${node}1->$5{node};
+        ${node}1->$6{node};
+        `
+    }
+
+
+
 
 }

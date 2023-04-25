@@ -2,6 +2,7 @@ import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
+import { Singleton } from "../Singleton";
 
 
 
@@ -51,6 +52,17 @@ export class Cast extends Expression {
                 return badResponse
         }
 
+    }
+
+    public ast() {
+        const s= Singleton.getInstance()
+        const node=`node_${this.line}_${this.column}_`
+        return `
+        /**/${node}1;
+        ${node}1[label="{${this.expression}}"];
+        ${node}[label="${Type[this.type]}"];
+        ${node}1->${node};
+        `
     }
 
 }

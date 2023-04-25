@@ -34,4 +34,12 @@ export class VariableAccess extends Expression{
 
     }
 
+    public ast() {
+        const node = `node_${this.line}_${this.column}_`
+        return `
+        ${node};
+        ${node}[label="{${this.id}}"];
+        `
+    }
+
 }

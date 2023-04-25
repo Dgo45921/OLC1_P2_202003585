@@ -70,8 +70,28 @@ export class ListDeclaration extends Instruction {
     }
 
 
-
-
-
+    public ast() {
+        const s = Singleton.getInstance()
+        const node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${node}[label="\\<Instruccion\\>\\nLista Declaracion"];
+        ${node}1[label="\\<Nombre\\>\\n{${this.id}}"];
+        ${node}2[label="\\<Tipo\\>\\n${this.type1}"];
+        ${node}3[label="\\<Contenido\\>"];
+        ${node}->${node}1;
+        ${node}->${node}2;
+        ${node}->${node}3;
+        `)
+        this.value.forEach((element: { ast: () => any; }) => {
+            s.add_ast(`
+            ${node}3->${element.ast()}
+            `)
+        })
+    }
 
 }
+
+
+
+
+

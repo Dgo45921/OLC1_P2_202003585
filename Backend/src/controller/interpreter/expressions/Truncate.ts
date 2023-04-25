@@ -25,6 +25,17 @@ export class Truncate extends Expression {
 
     }
 
+
+    public ast() {
+        const node=`node_${this.line}_${this.column}_`
+        return `
+        /**/${node}1;
+        ${node}1[label="truncate()"];
+        ${node}[label="${this.expression}"];
+        ${node}1->${node};
+        `
+    }
+
 }
 
 

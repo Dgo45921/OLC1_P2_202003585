@@ -4,6 +4,7 @@ import { Return, Type } from "../abstract/Type";
 import { Error } from "../Error";
 
 
+
 export class ArithmeticOperation extends Expression {
     
     constructor(
@@ -661,5 +662,17 @@ export class ArithmeticOperation extends Expression {
     return response
 
         } 
+
+
+    public ast() {
+
+            const node = `node_${this.line}_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
 }
 

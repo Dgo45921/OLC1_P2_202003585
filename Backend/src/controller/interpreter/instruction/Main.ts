@@ -1,6 +1,7 @@
 import { Instruction } from "../abstract/Instruction";
 import { Call } from "./Call";
 import { Environment } from "../Enviroment";
+import { Singleton } from "../Singleton";
 
 
 
@@ -14,5 +15,21 @@ export class Main extends Instruction {
     public execute(env: Environment) {
         this.call.execute(env);
     }
-  
+
+    public ast() {
+        
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        const label = "Main" 
+
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\n${label}"];
+        ${name_node}1[label="{${this.call.id}}"];
+        ${name_node}->${name_node}1;
+        `)
+        
+
+        
+    }
+
 }

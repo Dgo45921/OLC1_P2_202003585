@@ -31,5 +31,36 @@ export class FunctionDeclaration extends Instruction {
 
 
     }
+
+
+    public ast() {
+        
+        const s= Singleton.getInstance()
+        const nombre_nodo=`node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${nombre_nodo} [label="\\<Instruccion\\>\\nFuncionDeclaracion"];
+        ${nombre_nodo}1[label="\\<Nombre\\>\\n${this.id}"];
+        ${nombre_nodo}2[label="\\<Parametros\\>"];
+        ${nombre_nodo}->${nombre_nodo}1;
+        ${nombre_nodo}->${nombre_nodo}2;
+
+        `)
+    
+        this.insBlock.forEach(x => {
+            s.add_ast(`${nombre_nodo}->node_${x.line}_${x.column}_;`)
+            x.ast()
+        })
+
+       
+        
+        let tmp = 5 
+        this.parameters.forEach(x => {
+            s.add_ast(`
+            ${nombre_nodo}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
+            ${nombre_nodo}2->${nombre_nodo}${tmp};
+            `)
+            tmp++
+        })
+    }
   
 }

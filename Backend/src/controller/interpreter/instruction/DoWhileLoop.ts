@@ -58,4 +58,19 @@ export class DoWhileLoop extends Instruction {
         
     }
 
+
+    public ast() {
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\ndo while"];
+        ${name_node}1[label="\\<Condicion\\>"];
+        ${name_node}->${name_node}1;
+        ${name_node}1->${this.Condition.ast()}
+        ${name_node}->node_${this.insBlock.line}_${this.insBlock.column}_;        
+        `)
+        this.insBlock.ast()
+
+    }
+
 }

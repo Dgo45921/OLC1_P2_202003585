@@ -19,12 +19,15 @@ export class Singleton{
     <TD BGCOLOR="#ff6363">Columna</TD>
     </TR>`
 
+    public astViz = ''
+
     constructor(){}
 
     public reset(){
         this.errors=[];
         this.console="";
         this.symboltableDot = ''
+        this.astViz = ''
     }
 
     public static getInstance():Singleton{
@@ -79,6 +82,11 @@ export class Singleton{
 
 
         return dotCode
+    }
+
+
+    public add_ast(value:string){
+        this.astViz  += value
     }
 
 

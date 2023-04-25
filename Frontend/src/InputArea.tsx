@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import './InputArea.css';
 import { Button } from 'react-bootstrap';
+import ReactD3Tree from 'react-d3-tree';
 
 function InputArea() {
     const [outputText, setOutputText] = useState("");
@@ -69,6 +70,10 @@ function InputArea() {
         
             const result = await response.json();
             console.log(result.console)
+            console.log(result.jison)
+            console.log(result.vizcode)
+            
+            
             updateOutputText(result.console)
           } catch (error) {
             console.error("Error:", error);

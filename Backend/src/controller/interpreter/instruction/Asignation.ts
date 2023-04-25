@@ -29,4 +29,18 @@ export class Asignation extends Instruction {
     }
 
 
+    public ast() {
+
+        const s = Singleton.getInstance()
+        const node =`node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${node}[label="\\<Instruccion\\>\\nAsignacion"];
+        ${node}1[label="\\<Nombre\\>\\n${this.id}"];
+        ${node}->${node}1;
+        ${node}->${this.exp.ast()}
+        `)
+
+    }
+
+
 }

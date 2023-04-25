@@ -32,5 +32,32 @@ export class IncreaseDecrease extends Instruction {
 
     }
 
+    public ast() {
+        if(this.op === '--'){
+            const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        const label =  "Decremento"
+
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\n${label}"];
+        ${name_node}1[label="{${this.id}}"];
+        ${name_node}->${name_node}1;
+        `)
+        }
+        else{
+            const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        const label = "Incremento" 
+
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\n${label}"];
+        ${name_node}1[label="{${this.id}}"];
+        ${name_node}->${name_node}1;
+        `)
+        }
+
+        
+    }
+
 
 }

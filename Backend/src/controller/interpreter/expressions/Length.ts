@@ -1,4 +1,5 @@
 import { Environment } from "../Enviroment";
+import { Singleton } from "../Singleton";
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Type";
 
@@ -22,6 +23,17 @@ export class Length extends Expression {
 
         return { value: "NULL", type: Type.NULL }
 
+    }
+
+
+    public ast() {
+        const node=`node_${this.line}_${this.column}_`
+        return `
+        /**/${node}1;
+        ${node}1[label="Length"];
+        ${node}[label="${this.expression.toString()}"];
+        ${node}1->${node};
+        `
     }
 
 }

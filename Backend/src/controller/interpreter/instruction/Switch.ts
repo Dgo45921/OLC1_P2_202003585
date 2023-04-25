@@ -77,4 +77,17 @@ export class Switch extends Instruction {
 
     }
 
+    public ast() {
+        const s = Singleton.getInstance()
+        const node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${node}[label="\\<Instruccion\\>\\nif"];
+        ${node}1[label="\\<True\\>"];
+        ${node}2[label="\\<Else\\>"];
+        ${node}->${node}1;
+        ${node}->${node}2;
+        `)
+        
+    }
+
 }

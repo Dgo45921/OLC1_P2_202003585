@@ -3,6 +3,7 @@ import * as ReactBootstrap from 'react-bootstrap';
 import * as d3 from 'd3-graphviz'
 
 
+
 async function errorReport() {
     const response = await fetch("http://localhost:5000/interpreter/getErrors");
     const textData = await response.text();
@@ -25,6 +26,8 @@ async function errorReport() {
           console.error("Failed to open new tab");
         }
       });
+
+      
   }
   
   

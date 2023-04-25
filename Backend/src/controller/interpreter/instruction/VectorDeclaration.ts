@@ -107,4 +107,23 @@ export class VectorDeclaration extends Instruction {
 
         }
     }
+
+
+
+    public ast() {
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${name_node}[label="\\<Instruccion\\>\\nArray Declaracion"];
+        ${name_node}1[label="\\<Nombre\\>\\n{${this.id}}"];
+        ${name_node}2[label="\\<Tipo\\>\\n${this.type1}"];
+        ${name_node}3[label="\\<Contenido\\>"];
+        ${name_node}->${name_node}1;
+        ${name_node}->${name_node}2;
+        ${name_node}->${name_node}3;
+        `)
+
+       
+    }
+
 }

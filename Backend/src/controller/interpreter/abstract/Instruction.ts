@@ -10,5 +10,6 @@ export abstract class Instruction {
 
 
     public abstract execute(env:Environment): any;
+    public abstract ast(): void
 }
 

@@ -25,6 +25,16 @@ export class Round extends Expression {
 
     }
 
+    public ast() {
+      const node=`node_${this.line}_${this.column}_`
+      return `
+      /**/${node}1;
+      ${node}1[label="round()"];
+      ${node}[label="${this.expression}"];
+      ${node}1->${node};
+      `
+  }
+
 }
 
 
@@ -36,3 +46,4 @@ function round(value: number): number {
       return Math.floor(value);
     }
   }
+

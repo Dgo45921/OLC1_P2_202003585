@@ -4,18 +4,11 @@ import { Singleton } from "./interpreter/Singleton";
 import { MethodDeclaration } from "./interpreter/instruction/MethodDeclaration";
 import { FunctionDeclaration } from "./interpreter/instruction/FunctionDeclaration";
 import { Main } from "./interpreter/instruction/Main";
-import { VariableDeclaration } from "./interpreter/instruction/VariableDeclaration";
-import { VectorDeclaration } from "./interpreter/instruction/VectorDeclaration";
-import { ListDeclaration } from "./interpreter/instruction/ListDeclaration";
-import { Instruction } from "./interpreter/abstract/Instruction";
-import { IfStatement } from "./interpreter/instruction/IfStatement";
-import { Switch } from "./interpreter/instruction/Switch";
-import { ForLoop } from "./interpreter/instruction/ForLoop";
-import { WhileLoop } from "./interpreter/instruction/WhileLoop";
-import { DoWhileLoop } from "./interpreter/instruction/DoWhileLoop";
-import { Call } from "./interpreter/instruction/Call";
+
 let global_env = new Environment(null);
 let singleton = Singleton.getInstance()
+let ast
+
 
 class InterpreterController{
     public parsear(req:Request, res:Response){
@@ -32,7 +25,7 @@ class InterpreterController{
         let code = req.body.code
         // console.log(code);
         try{
-            let ast = parser.parse(code);
+            ast = parser.parse(code);
             global_env = new Environment(null);
 
 
@@ -73,31 +66,33 @@ class InterpreterController{
               }
 
 
-              // genereate dot code for the symbol table
+               //generar el ast primero
+        for (const instr of ast) {
+          try {
+              instr.ast();
+          } catch (error) {
+          }
+      }
 
-          //     for (const elemento of ast) {
-          //       try {
-          //         if ((elemento instanceof IfStatement || elemento instanceof Switch || elemento instanceof ForLoop || elemento instanceof WhileLoop || elemento instanceof DoWhileLoop  ||  elemento instanceof MethodDeclaration || elemento instanceof FunctionDeclaration )) {
-          //           console.log(elemento)
-          //         }
-          //       } catch (error) {
-          //         console.log(error); 
-          //       }
-          //     }
-
-          //     singleton.symboltableDot += `</TABLE>
-          //     >];
-          // }`
-
+      for (const instr of ast) {
+        try {
+            singleton.add_ast(`nodeOriginal->node_${instr.line}_${instr.column}_ \n;`)
+        } catch (error) {
+        }
+    }
 
 
-            // for(const inst of ast){
-            //     inst.execute(global_env);
-            // }
+      console.log("digraph G {\nnode[shape=box];" + singleton.astViz + "\n}")
 
+
+
+             
             res.json(
                 {
-                   console: singleton.getConsola()
+                   console: singleton.getConsola(),
+                   jison: JSON.stringify(ast, null, 2),
+                   vizcode: "digraph G {\nnode[shape=box];" + singleton.astViz + "\n}"
+
                 }
             )
             

@@ -2,7 +2,7 @@ import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";
 import { Break } from "./Break";
 import { Continue } from "./Continue";
-import { Return } from "./Return";
+import { Singleton } from "../Singleton";
 
 
 export class Block extends Instruction {
@@ -36,7 +36,19 @@ export class Block extends Instruction {
           }
         }
       }
-      
+      public ast() {
+
+        const s = Singleton.getInstance()
+        const name_node = `node_${this.line}_${this.column}_`
+        s.add_ast(`
+        ${name_node}[label="Lista Instrucciones"];        
+        `)
+        this.instructions.forEach(x => {
+            s.add_ast(`${name_node}->node_${x.line}_${x.column}_;`)
+            x.ast()
+        })
+
+    }      
 
 
 }
