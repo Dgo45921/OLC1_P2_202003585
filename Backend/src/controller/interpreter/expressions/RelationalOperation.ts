@@ -55,13 +55,75 @@ export class RelationalOperation extends Expression {
     }
 
     public ast() {
-        const node = `node_${this.line}_${this.column}_`
-        return `
-        ${node};
-        ${node}[label="${this.sign}"];
-        ${node}->${this.leftExp.ast()}
-        ${node}->${this.rightExp.ast()}
-        `
-    }
+
+        if(this.sign === '!='){
+            const node = `node_${this.line}distinto_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="-"];
+            ${node}->${this.rightExp.ast()}  
+            `
+
+        }
+        else if(this.sign === '=='){
+            const node = `node_${this.line}igualigual_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="*"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+
+        else if(this.sign === '<'){
+            const node = `node_${this.line}menorque_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="/"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else if(this.sign === '>'){
+            const node = `node_${this.line}mayorque_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="+"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else if(this.sign === '>='){
+            const node = `node_${this.line}mayorigual_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else if(this.sign === '<='){
+            const node = `node_${this.line}menorigual${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else{
+            
+            const node = `node_${this.line}8_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        
+        }
+
+           
+        }
 
 }

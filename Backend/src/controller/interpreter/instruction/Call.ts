@@ -135,11 +135,13 @@ export class Call extends Instruction {
         ${node}->${node}2;
         ${node}->${node}1;
         `)
-        this.parameters.forEach(element => {
-            s.add_ast(`
-            ${node}2->${element.ast()}
-            `)
-        })
+        if(this.parameters){
+            this.parameters.forEach(element => {
+                s.add_ast(`
+                ${node}2->${element.ast()}
+                `)
+            })
+        }
     }
 
 

@@ -666,13 +666,65 @@ export class ArithmeticOperation extends Expression {
 
     public ast() {
 
-            const node = `node_${this.line}_${this.column}_`
+        if(this.sign === 'negation'){
+            const node = `node_${this.line}nn_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="-"];
+            ${node}->${this.rightExp.ast()}  
+            `
+
+        }
+        else if(this.sign === 'multiply'){
+            const node = `node_${this.line}m_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="*"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+
+        else if(this.sign === 'division'){
+            const node = `node_${this.line}d_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="/"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else if(this.sign === 'plus'){
+            const node = `node_${this.line}p_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="+"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else if(this.sign === 'minus'){
+            const node = `node_${this.line}m_${this.column}_`
             return `
             ${node};
             ${node}[label="${this.sign}"];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `
+        }
+        else{
+            
+            const node = `node_${this.line}8_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        
+        }
+
+           
         }
 }
 

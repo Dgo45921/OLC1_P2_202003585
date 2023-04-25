@@ -24,7 +24,7 @@ export class Main extends Instruction {
 
         s.add_ast(`
         ${name_node}[label="\\<Instruccion\\>\\n${label}"];
-        ${name_node}1[label="{${this.call.id}}"];
+        ${name_node}1[label="(${this.call.id})"];
         ${name_node}->${name_node}1;
         `)
         

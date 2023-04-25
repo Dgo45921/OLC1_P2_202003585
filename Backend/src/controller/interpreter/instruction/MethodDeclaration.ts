@@ -44,7 +44,8 @@ export class MethodDeclaration extends Instruction {
         `)
         this.insBlock.ast();
         
-        let tmp = 5 
+        if(this.parameters){
+            let tmp = 5 
         this.parameters.forEach(x => {
             s.add_ast(`
             ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
@@ -52,6 +53,7 @@ export class MethodDeclaration extends Instruction {
             `)
             tmp++
         })
+        }
     }
 
 

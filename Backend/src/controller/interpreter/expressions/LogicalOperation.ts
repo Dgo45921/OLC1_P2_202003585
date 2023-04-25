@@ -49,13 +49,48 @@ export class LogicalOperation extends Expression {
 
     
     public ast() {
-        const node = `node_${this.line}_${this.column}_`
-        return `
-        ${node};
-        ${node}[label="${this.sign}"];
-        ${node}->${this.leftExp.ast()}
-        ${node}->${this.rightExp.ast()}
-        `
-    }
+
+        if(this.sign === '!'){
+            const node = `node_${this.line}logicnegation_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="-"];
+            ${node}->${this.rightExp.ast()}  
+            `
+
+        }
+        else if(this.sign === '&&'){
+            const node = `node_${this.line}andlogical_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="*"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+
+        else if(this.sign === '||'){
+            const node = `node_${this.line}orLogical_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="/"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        }
+        else{
+            
+            const node = `node_${this.line}8_${this.column}_`
+            return `
+            ${node};
+            ${node}[label="${this.sign}"];
+            ${node}->${this.leftExp.ast()}
+            ${node}->${this.rightExp.ast()}
+            `
+        
+        }
+
+           
+        }
 
 }

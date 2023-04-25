@@ -11,7 +11,7 @@ export class FunctionDeclaration extends Instruction {
         public type:Type,
         public id:string,
         public parameters:Parameter[],
-        public insBlock: Instruction[],
+        public insBlock: Instruction,
         line: number, 
         column : number
     ) {
@@ -36,31 +36,27 @@ export class FunctionDeclaration extends Instruction {
     public ast() {
         
         const s= Singleton.getInstance()
-        const nombre_nodo=`node_${this.line}_${this.column}_`
+        const node=`node_${this.line}_${this.column}_`
         s.add_ast(`
-        ${nombre_nodo} [label="\\<Instruccion\\>\\nFuncionDeclaracion"];
-        ${nombre_nodo}1[label="\\<Nombre\\>\\n${this.id}"];
-        ${nombre_nodo}2[label="\\<Parametros\\>"];
-        ${nombre_nodo}->${nombre_nodo}1;
-        ${nombre_nodo}->${nombre_nodo}2;
-
+        ${node} [label="\\<Instruccion\\>\\nMetodoDeclaracion"];
+        ${node}1[label="\\<Nombre\\>\\n${this.id}"];
+        ${node}2[label="\\<Parametros\\>"];
+        ${node}->${node}1;
+        ${node}->${node}2;
+        ${node}->node_${this.insBlock.line}_${this.insBlock.column}_;
         `)
-    
-        this.insBlock.forEach(x => {
-            s.add_ast(`${nombre_nodo}->node_${x.line}_${x.column}_;`)
-            x.ast()
-        })
-
-       
+        this.insBlock.ast();
         
-        let tmp = 5 
+        if(this.parameters){
+            let tmp = 5 
         this.parameters.forEach(x => {
             s.add_ast(`
-            ${nombre_nodo}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
-            ${nombre_nodo}2->${nombre_nodo}${tmp};
+            ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
+            ${node}2->${node}${tmp};
             `)
             tmp++
         })
+        }
     }
   
 }
