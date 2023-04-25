@@ -76,22 +76,19 @@ class InterpreterController{
 
       for (const instr of ast) {
         try {
-            singleton.add_ast(`nodeOriginal->node_${instr.line}_${instr.column}_ \n;`)
+            singleton.add_ast(`RootNode->node_${instr.line}_${instr.column}_ \n;`)
         } catch (error) {
         }
     }
 
 
-      console.log("digraph G {\nnode[shape=box];" + singleton.astViz + "\n}")
 
 
 
              
             res.json(
                 {
-                   console: singleton.getConsola(),
-                   jison: JSON.stringify(ast, null, 2),
-                   vizcode: "digraph G {\nnode[shape=box];" + singleton.astViz + "\n}"
+                   console: singleton.getConsola()
 
                 }
             )
@@ -123,6 +120,19 @@ class InterpreterController{
        
         
     }
+
+    public getAST(req:Request, res:Response){
+
+      
+      res.json(
+          {
+             vizcode: "digraph G {\nnode[shape=box];" + singleton.astViz + "\n}"
+          }
+      )
+      
+     
+      
+  }
 
 
 }

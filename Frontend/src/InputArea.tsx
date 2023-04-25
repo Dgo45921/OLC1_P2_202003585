@@ -69,9 +69,7 @@ function InputArea() {
             });
         
             const result = await response.json();
-            console.log(result.console)
-            console.log(result.jison)
-            console.log(result.vizcode)
+
             
             
             updateOutputText(result.console)
