@@ -18,32 +18,31 @@ export class WhileLoop extends Instruction {
         super(line,column);
     }
 
-    public execute(env:Environment) {
-        const newEnv=new Environment(env);
-        let exp=this.Condition.execute(newEnv);
-        let contador  = 0
+   public execute(env: Environment) {
+  const newEnv = new Environment(env);
+  let exp = this.Condition.execute(newEnv);
+  let contador = 0;
 
-        outerLoop: while (true && contador < 1000) {
-            if (exp.value) {
-              let response = this.insBlock.execute(newEnv);
-              contador++;
-          
-              if (response) {
-                if (response instanceof Break) {
-                  break outerLoop; 
-                } else if (response instanceof Continue) {
-                  continue;
-                }
-          
-                return response;
-              }
-            } else {
-              break;
-            }
-          }
-          
+  outerLoop: while (contador < 1000) {
+    if (exp.value) {
+      let response = this.insBlock.execute(newEnv);
+      contador++;
+      exp = this.Condition.execute(env)
 
-        
+      if (response) {
+        if (response instanceof Break) {
+          break outerLoop;
+        } else if (response instanceof Continue) {
+          continue;
+        }
+
+        return response;
+      }
+    } else {
+      break;
     }
+  }
+}
+
 
 }

@@ -60,7 +60,16 @@ export class Call extends Instruction {
                 });
                 if (diferente == false) {
                     //metodo.bloque.ejecutar(env_para_parametros);
-                    return this.runInstructions(parameter_env);
+                    const func:any = env.getMethod(this.id);
+                    if(func instanceof MethodDeclaration){
+                        this.runInstructions(parameter_env);
+                        return null
+                    }
+                    else{
+                        return this.runInstructions(parameter_env);
+                    }
+
+                    
                 } else {
                     throw instancia.addError(new Error("Semantico", "El metodo " + this.id + " no tiene parametros del mismo tipo", this.line, this.column));
                 }
@@ -85,7 +94,7 @@ export class Call extends Instruction {
             for (const elemento of instrucciones) {
                 try {
                     
-                    const ins:any=elemento.execute(env);
+                    const ins:any=elemento. execute(env);
                       if(ins){
                         if(ins.value === "NULL"){
                             return {value:"NULL", type:Type.NULL};
@@ -97,7 +106,7 @@ export class Call extends Instruction {
                     console.log(error);
                 }
             }
-            return {value:"NULL", type:Type.NULL};
+            
         }else if(func instanceof FunctionDeclaration){
             
             for (const elemento of instrucciones) {
