@@ -44,7 +44,7 @@ export class ForLoop extends Instruction {
         ${name_node}->node_${this.firstCondition.line}_${this.firstCondition.column}_;
         ${name_node}->${this.Condition.ast()}
         ${name_node}->node_${this.Step.line}_${this.Step.column}_;
-        ${name_node}->node_${this.insBlock.line}_${this.insBlock.column}_;
+        ${name_node}->node_${this.insBlock.line}block_${this.insBlock.column}_;
         `)
         this.firstCondition.ast();
         this.Condition.ast();

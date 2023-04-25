@@ -30,10 +30,11 @@ export class Round extends Expression {
       return `
       /**/${node}1;
       ${node}1[label="round()"];
-      ${node}[label="${this.expression}"];
-      ${node}1->${node};
+
+      ${node}1->${this.expression.ast()}
       `
   }
+
 
 }
 

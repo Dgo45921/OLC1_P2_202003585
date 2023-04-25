@@ -5,6 +5,7 @@ import { Environment } from "../Enviroment";
 import { Expression } from "../abstract/Expression";
 
 
+
 export class Asignation extends Instruction {
     constructor(
         public id: string,
@@ -30,17 +31,19 @@ export class Asignation extends Instruction {
 
 
     public ast() {
-
         const s = Singleton.getInstance()
-        const node =`node_${this.line}_${this.column}_`
+        const nombreNodo = `node_${this.line}_${this.column}_`
         s.add_ast(`
-        ${node}[label="\\<Instruccion\\>\\nAsignacion"];
-        ${node}1[label="\\<Nombre\\>\\n${this.id}"];
-        ${node}->${node}1;
-        ${node}->${this.exp.ast()}
-        `)
+        ${nombreNodo}[label="\\<Instruccion\\>\\nAsignacion variable"];
+        ${nombreNodo}1[label="\\<Nombre\\>\\n${this.id}"];
+        ${nombreNodo}->${nombreNodo}1
+        `)  
+
+        if (this.exp){
+            s.add_ast(`${nombreNodo}->${this.exp.ast()}`)
+        }
+        
 
     }
-
 
 }

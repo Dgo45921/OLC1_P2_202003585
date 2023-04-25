@@ -31,10 +31,11 @@ export class Truncate extends Expression {
         return `
         /**/${node}1;
         ${node}1[label="truncate()"];
-        ${node}[label="${this.expression}"];
-        ${node}1->${node};
+  
+        ${node}1->${this.expression.ast()}
         `
     }
+
 
 }
 

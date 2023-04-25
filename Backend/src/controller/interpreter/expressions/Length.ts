@@ -30,11 +30,12 @@ export class Length extends Expression {
         const node=`node_${this.line}_${this.column}_`
         return `
         /**/${node}1;
-        ${node}1[label="Length"];
-        ${node}[label="${this.expression.toString()}"];
-        ${node}1->${node};
+        ${node}1[label="length()"];
+  
+        ${node}1->${this.expression.ast()}
         `
     }
+
 
 }
 

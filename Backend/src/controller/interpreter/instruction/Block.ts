@@ -39,7 +39,7 @@ export class Block extends Instruction {
       public ast() {
 
         const s = Singleton.getInstance()
-        const name_node = `node_${this.line}_${this.column}_`
+        const name_node = `node_${this.line}block_${this.column}_`
         s.add_ast(`
         ${name_node}[label="Lista Instrucciones"];        
         `)

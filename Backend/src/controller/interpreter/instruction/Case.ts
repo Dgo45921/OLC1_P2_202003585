@@ -18,9 +18,10 @@ export class Case extends Instruction {
         const s = Singleton.getInstance()
         const node = `node_${this.line}_${this.column}_`
         s.add_ast(`
-        ${node}[label="\\<Instruccion\\>\\nCase"];
+        ${node}[label="\\<Instruccion\\>\\ncase"];
+        ${node}1[label="\\<True\\>"];
         ${node}->${node}1;
-        ${node}->node_${this.insBlock.line}_${this.insBlock.column}_;`)
+        ${node}1->node_${this.insBlock.line}block_${this.insBlock.column}_;`)
         this.insBlock.ast()
         
     }

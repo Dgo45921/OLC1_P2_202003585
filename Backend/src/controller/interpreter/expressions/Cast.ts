@@ -55,11 +55,12 @@ export class Cast extends Expression {
     }
 
     public ast() {
-        const s= Singleton.getInstance()
         const node=`node_${this.line}_${this.column}_`
         return `
         /**/${node}1;
-        ${node}1[label="${this.expression}"];
+        ${node}1[label="casteo()"];
+  
+        ${node}1->${this.expression.ast()}
         `
     }
 

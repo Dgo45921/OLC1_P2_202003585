@@ -62,12 +62,15 @@ export class ListAccess extends Expression {
     }
 
     public ast() {
+
+      
         const node=`node_${this.line}_${this.column}_`
+        console.log(`aaaaaaa ${node}->${this.index.ast()}`)
         return `
         /**/${node}1;
         ${node}1[label="ListAccess"];
-        ${node}[label="${this.id}[${this.index.toString()}]"];
-        ${node}1->${node};
+        ${node}1->${this.index.ast()}
+        
         `
     }
 }

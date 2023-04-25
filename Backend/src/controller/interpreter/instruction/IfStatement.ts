@@ -51,10 +51,10 @@ export class IfStatement extends Instruction {
         ${node}2[label="\\<Else\\>"];
         ${node}->${node}1;
         ${node}->${node}2;
-        ${node}1->node_${this.trueBlock.line}_${this.trueBlock.column}_;`)
+        ${node}1->node_${this.trueBlock.line}block_${this.trueBlock.column}_;`)
         this.trueBlock.ast()
         if (this.falseBlock) {
-            s.add_ast(`${node}2->node_${this.falseBlock.line}_${this.falseBlock.column}_`)
+            s.add_ast(`${node}2->node_${this.falseBlock.line}block_${this.falseBlock.column}_`)
             this.falseBlock.ast()
         }
     }

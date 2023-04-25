@@ -39,9 +39,8 @@ export class ListAddition extends Instruction {
         s.add_ast(`
         ${node}[label="\\<Instruccion\\>\\n${label}"];
         ${node}1[label="${this.id}"];
-        ${node}2[label="${this.exp}"];
         ${node}->${node}1;
-        ${node}->${node}2;
+        ${node}->${this.exp.ast()}
         `)
         }
      

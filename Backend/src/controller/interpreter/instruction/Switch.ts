@@ -7,6 +7,7 @@ import { Error } from "../Error";
 import { Break } from "./Break";
 import { Case } from "./Case";
 import { Default } from "./Default";
+let hash = require('object-hash')
 
 
 export class Switch extends Instruction {
@@ -82,11 +83,12 @@ export class Switch extends Instruction {
         const node = `node_${this.line}_${this.column}_`
         s.add_ast(`
         ${node}[label="\\<Instruccion\\>\\nSwitch"];
-        ${node}1[label="\\<True\\>"];
-        ${node}2[label="\\<Else\\>"];
-        ${node}->${node}1;
-        ${node}->${node}2;
+       
         `)
+        this.caseBlock.forEach(x => {
+            s.add_ast(`${node}->node_${x.line}_${x.column}_;`)
+            x.ast()
+        })
         
     }
 

@@ -54,7 +54,7 @@ public ast() {
   ${name_node}1[label="\\<Condicion\\>"];
   ${name_node}->${name_node}1;
   ${name_node}1->${this.Condition.ast()}
-  ${name_node}->node_${this.insBlock.line}_${this.insBlock.column}_;        
+  ${name_node}->node_${this.insBlock.line}block_${this.insBlock.column}_;        
   `)
   this.insBlock.ast()
 

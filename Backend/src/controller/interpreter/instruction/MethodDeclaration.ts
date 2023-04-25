@@ -40,7 +40,7 @@ export class MethodDeclaration extends Instruction {
         ${node}2[label="\\<Parametros\\>"];
         ${node}->${node}1;
         ${node}->${node}2;
-        ${node}->node_${this.insBlock.line}_${this.insBlock.column}_;
+        ${node}->node_${this.insBlock.line}block_${this.insBlock.column}_;
         `)
         this.insBlock.ast();
         

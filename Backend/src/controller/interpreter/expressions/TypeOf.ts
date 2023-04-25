@@ -54,10 +54,11 @@ export class TypeOf extends Expression {
         const node=`node_${this.line}_${this.column}_`
         return `
         /**/${node}1;
-        ${node}1[label="typeof()"];
-        ${node}[label="${this.expression}"];
-        ${node}1->${node};
+        ${node}1[label="typeOf()"];
+  
+        ${node}1->${this.expression.ast()}
         `
     }
+
 
 }
