@@ -30,7 +30,7 @@ export class ToString extends Expression {
         return `
         /**/${node}1;
         ${node}1[label="tostring()"];
-        ${node}[label="${this.expression}"];
+        ${node}[label="${this.expression.ast()}"];
         ${node}1->${node};
         `
     }

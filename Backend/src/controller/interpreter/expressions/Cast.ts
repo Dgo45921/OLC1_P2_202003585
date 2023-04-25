@@ -59,9 +59,7 @@ export class Cast extends Expression {
         const node=`node_${this.line}_${this.column}_`
         return `
         /**/${node}1;
-        ${node}1[label="{${this.expression}}"];
-        ${node}[label="${Type[this.type]}"];
-        ${node}1->${node};
+        ${node}1[label="${this.expression}"];
         `
     }
 

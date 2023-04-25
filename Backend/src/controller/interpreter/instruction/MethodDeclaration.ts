@@ -2,7 +2,7 @@ import { Instruction } from "../abstract/Instruction";
 import { Environment } from "../Enviroment";    
 import { Parameter } from "../Parameter";
 import { Singleton } from "../Singleton";
-
+import { Type } from "../abstract/Type";
 
 export class MethodDeclaration extends Instruction {
     constructor(
@@ -48,7 +48,7 @@ export class MethodDeclaration extends Instruction {
             let tmp = 5 
         this.parameters.forEach(x => {
             s.add_ast(`
-            ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
+            ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x.id + ', ' + Type[x.tipo]}"];
             ${node}2->${node}${tmp};
             `)
             tmp++

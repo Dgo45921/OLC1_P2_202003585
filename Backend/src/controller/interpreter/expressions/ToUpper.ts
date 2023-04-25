@@ -31,8 +31,8 @@ export class ToUpper extends Expression {
         return `
         /**/${node}1;
         ${node}1[label="toupper()"];
-        ${node}[label="${this.expression}"];
-        ${node}1->${node};
+  
+        ${node}1->${this.expression.ast()}
         `
     }
 

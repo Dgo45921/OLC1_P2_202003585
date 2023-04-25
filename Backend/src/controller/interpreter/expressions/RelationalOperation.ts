@@ -60,7 +60,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}distinto_${this.column}_`
             return `
             ${node};
-            ${node}[label="-"];
+            ${node}[label="!="];
             ${node}->${this.rightExp.ast()}  
             `
 
@@ -69,7 +69,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}igualigual_${this.column}_`
             return `
             ${node};
-            ${node}[label="*"];
+            ${node}[label="=="];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `
@@ -79,7 +79,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}menorque_${this.column}_`
             return `
             ${node};
-            ${node}[label="/"];
+            ${node}[label="<"];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `
@@ -88,7 +88,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}mayorque_${this.column}_`
             return `
             ${node};
-            ${node}[label="+"];
+            ${node}[label=">"];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `
@@ -97,7 +97,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}mayorigual_${this.column}_`
             return `
             ${node};
-            ${node}[label="${this.sign}"];
+            ${node}[label=">="];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `
@@ -106,7 +106,7 @@ export class RelationalOperation extends Expression {
             const node = `node_${this.line}menorigual${this.column}_`
             return `
             ${node};
-            ${node}[label="${this.sign}"];
+            ${node}[label="<="];
             ${node}->${this.leftExp.ast()}
             ${node}->${this.rightExp.ast()}
             `

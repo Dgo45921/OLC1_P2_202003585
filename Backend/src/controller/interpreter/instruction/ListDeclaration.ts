@@ -82,11 +82,13 @@ export class ListDeclaration extends Instruction {
         ${node}->${node}2;
         ${node}->${node}3;
         `)
-        this.value.forEach((element: { ast: () => any; }) => {
-            s.add_ast(`
-            ${node}3->${element.ast()}
-            `)
-        })
+        if(this.value){
+            this.value.forEach((element: { ast: () => any; }) => {
+                s.add_ast(`
+                ${node}3->${element.ast()}
+                `)
+            })
+        }
     }
 
 }

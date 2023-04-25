@@ -51,7 +51,7 @@ export class FunctionDeclaration extends Instruction {
             let tmp = 5 
         this.parameters.forEach(x => {
             s.add_ast(`
-            ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x}"];
+            ${node}${tmp}[label="\\<Nombre,Tipo\\>\\n${x.id + ', ' + Type[x.tipo]}"];
             ${node}2->${node}${tmp};
             `)
             tmp++

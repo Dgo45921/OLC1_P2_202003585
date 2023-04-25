@@ -81,7 +81,7 @@ export class Switch extends Instruction {
         const s = Singleton.getInstance()
         const node = `node_${this.line}_${this.column}_`
         s.add_ast(`
-        ${node}[label="\\<Instruccion\\>\\nif"];
+        ${node}[label="\\<Instruccion\\>\\nSwitch"];
         ${node}1[label="\\<True\\>"];
         ${node}2[label="\\<Else\\>"];
         ${node}->${node}1;

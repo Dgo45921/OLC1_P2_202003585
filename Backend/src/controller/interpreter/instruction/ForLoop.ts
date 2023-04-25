@@ -42,11 +42,12 @@ export class ForLoop extends Instruction {
         s.add_ast(`
         ${name_node}[label="\\<Instruccion\\>\\nFor"];
         ${name_node}->node_${this.firstCondition.line}_${this.firstCondition.column}_;
+        ${name_node}->${this.Condition.ast()}
         ${name_node}->node_${this.Step.line}_${this.Step.column}_;
         ${name_node}->node_${this.insBlock.line}_${this.insBlock.column}_;
-        ${name_node}->${this.Condition.ast()}
         `)
         this.firstCondition.ast();
+        this.Condition.ast();
         this.Step.ast();
         this.insBlock.ast()
 

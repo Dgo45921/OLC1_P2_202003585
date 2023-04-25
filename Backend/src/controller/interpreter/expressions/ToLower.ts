@@ -29,8 +29,8 @@ export class ToLower extends Expression {
         return `
         /**/${node}1;
         ${node}1[label="tolower()"];
-        ${node}[label="${this.expression}"];
-        ${node}1->${node};
+  
+        ${node}1->${this.expression.ast()}
         `
     }
 
