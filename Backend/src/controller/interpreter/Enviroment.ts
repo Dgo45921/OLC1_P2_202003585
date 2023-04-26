@@ -21,11 +21,20 @@ export class Environment {
     }
 
     public saveVariable(id:string, value:any, type:Type, line:number, column:number):void{
+      let singleton = Singleton.getInstance()
         let env: Environment | null = this;
   
       if (!env.variables.has(id.toLowerCase())) {
 
-        env.variables.set(id.toLowerCase(), new Symbol(value, id, type));
+        if(this.prev){
+          env.variables.set(id.toLowerCase(), new Symbol(value, id, type, 'local', line, column));
+          singleton.variables.set(id.toLowerCase(),  new Symbol(value, id, type, 'local', line, column))
+        }
+        else{
+          env.variables.set(id.toLowerCase(), new Symbol(value, id, type, 'global', line, column));
+          singleton.variables.set(id.toLowerCase(),  new Symbol(value, id, type, 'global', line, column))
+        }
+
       }else {
         console.log('error, variable ya definida')
 
@@ -55,7 +64,9 @@ export class Environment {
 
 
     public saveMethod(name:string, value:any){
+      let singleton = Singleton.getInstance()
       this.method_symbolTable.set(name.toLowerCase(), value)
+      singleton.method_symbolTable.set(name.toLowerCase(), value)
     }
 
     public searchMethod(nombre: string): boolean {
@@ -75,30 +86,6 @@ export class Environment {
 }
 
 
-public graphST():string{
-  let singleton = Singleton.getInstance()
-  let vizCode:string="";
-  let env: Environment | null = this;
-  vizCode="[label=<<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" width=\"100%\" height=\"100%\">\n";
-  
-  let contador:number=0;
-  while (env != null) {
-      vizCode+=`<tr><td colspan="4">NIVEL ${contador}</td></tr>\n`
-      vizCode+=`<tr>
-          <td>VALOR</td>
-          <td>NOMBRE</td>
-          <td>TIPO</td>
-          <td>EDITABLE</td>
-          </tr>\n`
-      contador++;
-      
-      
-     
-  vizCode+=`</table>>];\n`
-  //console.log(cadena);
-  
-}
- return vizCode;
-}
+
 
 }

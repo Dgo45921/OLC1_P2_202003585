@@ -84,7 +84,6 @@ class InterpreterController{
 
 
 
-
              
             res.json(
                 {
@@ -133,6 +132,19 @@ class InterpreterController{
      
       
   }
+
+  public getST(req:Request, res:Response){
+
+      
+    res.json(
+        {
+           vizcode: singleton.getST()
+        }
+    )
+    
+   
+    
+}
 
 
 }

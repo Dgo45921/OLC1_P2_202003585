@@ -12,6 +12,8 @@ router.post('/parse', morgan('tiny'), interpreterController.interpretar)
 router.get('/getErrors', morgan('tiny'), interpreterController.getErrores)
 router.get('/getAST', morgan('tiny'), interpreterController.getAST)
 
+router.get('/getST', morgan('tiny'), interpreterController.getST)
+
 router.get('/', morgan('tiny'), (req, res) =>{
 
     res.send("hola")

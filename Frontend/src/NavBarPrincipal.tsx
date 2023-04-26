@@ -61,8 +61,28 @@ async function errorReport() {
   
 
 
-function SymbolTableReport() {
-    console.log("Reporte tabla de simbolos")
+async function SymbolTableReport() {
+  const response = await fetch("http://localhost:5000/interpreter/getST");
+  const textData = await response.text();
+  const jsonbody = JSON.parse(textData);
+
+  // Create a new div element to serve as the container for the graph
+  const graphContainer = document.createElement("div");
+  console.log(jsonbody.vizcode)
+
+  // Render the graph using d3-graphviz
+  d3.graphviz(graphContainer)
+    .renderDot(jsonbody.vizcode)
+    .on("end", () => {
+      // Create a new HTML document for the new tab
+      const newTab = window.open("", "_blank");
+      if (newTab) {
+        // Append the graph container to the new document's body
+        newTab.document.body.appendChild(graphContainer.cloneNode(true));
+      } else {
+        console.error("Failed to open new tab");
+      }
+    });
 }
 
 
