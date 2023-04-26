@@ -55,6 +55,18 @@ class InterpreterController{
 
               // execute the program from the main method
 
+              let maincounter = 0
+              for (const elemento of ast) {
+                try {
+                  if ((elemento instanceof Main)) {
+                    maincounter++
+                  }
+                } catch (error) {
+                  console.log(error); 
+                }
+              }
+
+             if(maincounter === 1){
               for (const elemento of ast) {
                 try {
                   if ((elemento instanceof Main)) {
@@ -65,6 +77,12 @@ class InterpreterController{
                 }
               }
 
+             }
+             else{
+              throw singleton.appendConsole("Se encontro mas de un metodo main, por favor corrijalo")
+             }
+
+             
 
                //generar el ast primero
         for (const instr of ast) {

@@ -1,0 +1,464 @@
+
+
+ANALISIS LEXICO
+
+/* Whitespaces */
+[\r\f\s\t\n]          {}                           // white spaces
+\/\/.*                           {}                // oneLineComment
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]   {}           // multilineComment
+
+// reserved words
+"int"                
+"true"               
+"false"             
+"double"             
+"boolean"            
+"char"              
+"string"             
+"list"               
+"add"                
+"if"                               
+"print"              
+"switch"            
+"case"               
+"default"            
+"break"              
+"while"              
+"for"                
+"do"                           
+"return"             
+"void"               
+"toLower"            
+"toUpper"            
+"Length"             
+"Truncate"           
+"round"              
+"typeof"             
+"tostring"           
+"toCharArray"        
+"main"               
+"new"                
+
+/*  regex   */
+
+[a-zA-Z][a-zA-Z0-9_]*                     // identifier          
+[0-9]+"."[0-9]+                           // decimalNum           
+[0-9]+                                    // num           
+[\']([^']|"\\n"|"\\t"|(\\)(\\))?[\']      // charvalue           
+[\"]("\\""\""|[^"])*[\"]                  // stringValue           
+
+
+
+// reserved symbols
+";"                 
+"=="                
+"++"                
+"--"                
+"<="                
+">="                
+"="                 
+"!="                
+"+"                
+"-"                 
+"*"                 
+"/"                 
+"^"                 
+"%"                 
+"<"                 
+">"                 
+"!"                 
+"?"                 
+":"                 
+"||"                
+"&&"                
+"("                 
+")"                 
+"{"                 
+"}"                 
+","                 
+"["                 
+"]"                 
+"."                 
+
+<<EOF>>                  // END OF FILE
+
+
+
+
+
+
+// PRECEDENCIA DE OPERADORES
+%left '?'
+%left '||'
+%left '&&'
+%left '>' '<' '<=' '>=' '!=' '=='
+
+/*Operaciones numericas*/
+%left '+' '-'
+%left '*' '/' '%'
+%nonassoc  '^'
+%right negativo '!' '('
+
+%left '++' '--'
+
+
+
+
+
+
+
+
+
+ /* Definición de la gramática */
+
+INICIO
+	: INSTRUCTIONS EOF
+;
+
+
+// reserved words for type of variables
+TYPE:
+reserved_char      
+|reserved_boolean  
+|reserved_int      
+|reserved_double  
+|reserved_string   
+;
+
+
+//=========================================================================================================================
+
+// primitive values
+OPERAND:  integerNum 
+        | decimalNum 
+        | charValue  
+        | stringValue 
+        | reserved_false 
+        | reserved_true  
+        ;
+
+// =========================================================================================================================
+
+// built-in functions
+
+CAST: '(' TYPE ')' EXPRESSION 
+
+
+LOWER_UPPER: reserved_toLower '(' EXPRESSION ')'  
+            | reserved_toUpper '(' EXPRESSION ')'  
+        
+;
+
+LENGTH:reserved_length '(' EXPRESSION ')'  
+        ;
+
+ROUND: reserved_round '(' EXPRESSION ')'  
+
+TO_STRING: reserved_tostring '(' EXPRESSION ')' 
+
+TO_CHAR_ARRAY: reserved_toCharArray '(' EXPRESSION ')'  
+
+TRUNCATE:reserved_truncate '(' EXPRESSION ')' 
+
+TYPE_OF:reserved_typeof '(' EXPRESSION ')' 
+
+
+// ============================================================================================================================
+
+// statements
+INCREASE: identifier '++'  
+ ;
+DECREASE: identifier '--'  
+;
+
+
+
+// ============================================================================================================================
+
+// list of expressions
+
+
+            
+EXPRESSION : OPERAND                    
+    | EXPRESSION '+' EXPRESSION                
+    | EXPRESSION '-' EXPRESSION                 
+    | EXPRESSION '*' EXPRESSION                      
+    | EXPRESSION '/' EXPRESSION          
+    | EXPRESSION '^' EXPRESSION          
+    | EXPRESSION '%' EXPRESSION                   
+    | '-' EXPRESSION %prec negativo                    
+    | '(' EXPRESSION ')'                           
+    | EXPRESSION '=='  EXPRESSION                      
+    | EXPRESSION '!='  EXPRESSION                   
+    | EXPRESSION '<'   EXPRESSION                 
+    | EXPRESSION '>'   EXPRESSION                  
+    | EXPRESSION '<='  EXPRESSION                    
+    | EXPRESSION '>='  EXPRESSION            
+    | '!' EXPRESSION	                 
+    | EXPRESSION '&&'  EXPRESSION        
+    | EXPRESSION '||'  EXPRESSION                                                                  
+    | CAST                                                                                                                                                  
+    | LOWER_UPPER                                              
+    | ROUND                                                     
+    | LENGTH                                                   
+    | TO_STRING                                              
+    | TO_CHAR_ARRAY                                            
+    | TRUNCATE                                                  
+    | TYPE_OF                           
+    | VECTOR_ACCESS                     
+    | LIST_ACCESS                       
+    | FUNCTION_CALL                     
+    | TERNARY                           
+    | identifier                        
+
+    ;         
+// ====================================================================================================================================
+// basic expressions
+
+
+
+VECTOR_ACCESS: identifier '[' EXPRESSION ']' 
+               ;
+
+LIST_ACCESS: identifier '[' '[' EXPRESSION ']' ']' 
+;
+
+
+VECTOR_MODIFICATION: identifier '[' EXPRESSION ']' '=' EXPRESSION ';' 
+
+;
+
+LIST_MODIFICATION: identifier '[' '[' EXPRESSION ']' ']' '=' EXPRESSION ';' 
+
+;
+
+
+FUNCTION_CALL: identifier '(' ARGUMENTS ')'
+
+
+
+;
+
+
+ARGUMENTS: ARGUMENT ',' ARGUMENTS 
+            | ARGUMENT 
+            | 
+            ;
+
+ARGUMENT: EXPRESSION  ;
+
+
+TERNARY:	EXPRESSION '?' EXPRESSION ':' EXPRESSION     
+;
+
+
+
+
+// list of instructions
+
+INSTRUCTIONS: INSTRUCTIONS INSTRUCTION 
+            | INSTRUCTION             
+
+;
+
+INSTRUCTIONS2: INSTRUCTIONS2 INSTRUCTION2 
+            | INSTRUCTION2                 
+ 
+;
+
+INSTRUCTIONS3: INSTRUCTIONS3 INSTRUCTION3 
+            | INSTRUCTION3                 
+;
+
+// for loops body
+INSTRUCTION3: DECLARATION          
+           | LIST_ADDITION         
+           | INCREASE    ';'       
+           | DECREASE    ';'       
+           | VARIABLE_ASIGNATION   
+           | IF_STATEMENT          
+           | SWITCH_STATEMENT      
+           | FOR_STATEMENT         
+           | DO_WHILE_STATEMENT    
+           | WHILE_STATEMENT       
+           | reserved_break ';'    
+           | reserved_continue ';' 
+           | RETURN_STATEMENT      
+           | FUNCTION_CALL';'      
+           | PRINT                 
+           | VECTOR_MODIFICATION   
+           | LIST_MODIFICATION     
+
+
+;
+
+
+
+ 
+INSTRUCTION: DECLARATION 
+           | reserved_main FUNCTION_CALL ';' 
+           | PRINT 
+           | METHOD_DECLARATION 
+           | FUNCTION_DECLARATION 
+
+   
+  
+
+
+             
+           
+;
+
+INSTRUCTION2:  DECLARATION         
+           | LIST_ADDITION         
+           | INCREASE    ';'       
+           | DECREASE    ';'       
+           | VARIABLE_ASIGNATION   
+           | IF_STATEMENT          
+           | SWITCH_STATEMENT      
+           | FOR_STATEMENT         
+           | DO_WHILE_STATEMENT    
+           | WHILE_STATEMENT       
+           | reserved_break ';'    
+           | reserved_continue ';' 
+           | RETURN_STATEMENT      
+           | FUNCTION_CALL';'      
+           | PRINT                 
+           | VECTOR_MODIFICATION   
+           | LIST_MODIFICATION     
+           | error ';'  
+
+ 
+
+
+PRINT : reserved_print '(' EXPRESSION ')' ';' 
+
+
+RETURN_STATEMENT: reserved_return ';' 
+                 | reserved_return EXPRESSION ';' 
+
+;
+
+DECLARATION: VARIABLE_DECLARATION    
+           | VECTOR_DECLARATION      
+           | LIST_DECLARATION        
+;
+
+
+
+METHOD_DECLARATION : reserved_void identifier '(' PARAMETERS ')' BLOCK 
+;
+
+
+BLOCK :'{' INSTRUCTIONS2 '}'  
+        | '{'  '}'            
+      ; 
+
+
+VARIABLE_DECLARATION: TYPE identifier  ';'               
+                    | TYPE identifier '=' EXPRESSION ';'  
+                    ;
+
+VARIABLE_ASIGNATION: identifier '=' EXPRESSION ';'       
+                   ;    
+
+
+VARIABLE_ASIGNATION2: identifier '=' EXPRESSION          
+                   ;      
+
+VECTOR_DECLARATION: TYPE '[' ']' identifier '=' reserved_new TYPE '[' EXPRESSION ']' ';' 
+                   |TYPE '[' ']' identifier '=' '{' VALUE_LIST '}' ';'
+                    ;
+
+
+VALUE_LIST: VALUE_LIST ',' EXPRESSION  
+          |EXPRESSION                  
+;
+
+
+LIST_DECLARATION:reserved_list '<' TYPE '>' identifier '=' reserved_new reserved_list '<' TYPE '>' ';' 
+                 | reserved_list '<' TYPE '>' identifier '=' reserved_toCharArray '(' stringValue ')' ';'  
+  ;
+
+LIST_ADDITION:identifier '.' reserved_add '(' EXPRESSION ')' ';' 
+
+
+IF_STATEMENT: reserved_if '(' EXPRESSION ')' BLOCK ELSE_IF_STATEMENT
+            ;
+
+ELSE_IF_STATEMENT:  reserved_else IF_STATEMENT  
+                  | reserved_else BLOCK         
+                  |                             
+                  ;
+
+
+SWITCH_STATEMENT:  reserved_switch '(' EXPRESSION ')' '{' CASE_LIST '}' 
+                
+                 
+;
+
+CASE_LIST: CASE_LIST CASE 
+           | CASE 
+ 
+
+ ;
+
+
+
+
+
+CASE:       reserved_case EXPRESSION ':' BLOCKCASE         
+          | reserved_default ':' BLOCKCASE                  
+
+;
+
+ 
+
+ BLOCKCASE: INSTRUCTIONS2  
+           | epsilon               
+   ;
+
+
+
+
+ FOR_STATEMENT: reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' VARIABLE_ASIGNATION2 ')' BLOCK  
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' INCREASE   ')' BLOCK            
+               |reserved_for '(' FOR_FIRST_CONDITION  EXPRESSION ';' DECREASE  ')' BLOCK            
+ 
+              ;
+
+FOR_FIRST_CONDITION: VARIABLE_ASIGNATION   
+                    | VARIABLE_DECLARATION 
+
+;              
+
+FOR_THIRD_CONDITION: EXPRESSION INCREASE
+                    | EXPRESSION DECREASE
+                    | identifier '=' EXPRESSION
+
+                    ;
+
+BLOCKLOOP :'{' INSTRUCTIONS3 '}' 
+        | '{'  '}'            
+      ; 
+
+
+
+DO_WHILE_STATEMENT: reserved_do BLOCK reserved_while '(' EXPRESSION ')' ';' 
+
+WHILE_STATEMENT: reserved_while '(' EXPRESSION ')'   BLOCKLOOP      
+
+
+FUNCTION_DECLARATION: TYPE identifier '(' PARAMETERS ')' BLOCK 
+                 
+                    
+
+;
+
+PARAMETERS: PARAMETER ',' PARAMETERS 
+          |PARAMETER 
+          |epsilon
+          
+;
+
+PARAMETER:TYPE identifier 
